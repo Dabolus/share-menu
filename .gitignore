@@ -1,0 +1,4 @@
+# IntelliJ IDEA configuration
+.idea/
+# bower_components directory
+bower_components/

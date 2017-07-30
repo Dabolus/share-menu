@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>share-menu demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../paper-input/paper-input.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../share-menu.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic share-menu demo</h3>
+      <demo-snippet>
+        <template>
+          <dom-bind>
+            <template>
+              <paper-input label="Title" value="{{title}}"></paper-input>
+              <paper-input label="Text" value="{{text}}"></paper-input>
+              <paper-input label="URL" value="{{url}}"></paper-input>
+              <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
+
+              <share-menu id="shareMenu" title="[[title]]" text="[[text]]" url="[[url]]"></share-menu>
+            </template>
+          </dom-bind>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,482 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<!-- neon-animation is deprecated! going to remove the dependency as soon as paper-dialog gets updated -->
+<link rel="import" href="../neon-animation/web-animations.html">
+<link rel="import" href="../neon-animation/neon-animation.html">
+<link rel="import" href="../neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../neon-animation/animations/scale-down-animation.html">
+<link rel="import" href="social-icons.html">
+
+<script src="../clipboard/dist/clipboard.min.js"></script>
+
+<dom-module id="share-menu">
+  <template>
+    <style>
+      #shareDialog {
+        max-width: 480px;
+        @apply --share-dialog;
+      }
+      #copyDialog {
+        @apply --copy-dialog;
+      }
+      #shareDialog, #copyDialog {
+        background-color: var(--dialog-background-color, white);
+      }
+      #urlHeader, #dialogTitle, .social > div {
+        color: var(--dialog-text-color, black);
+      }
+      #copySuccess {
+        --paper-toast-background-color: var(--toast-background-color, #323232);
+        --paper-toast-color: var(--toast-text-color, #f1f1f1);
+      }
+      #dialogTitle {
+        padding: 16px;
+        margin: 0;
+        @apply --dialog-title;
+      }
+      #shareButtons {
+        border-top: 1px solid rgba(128, 128, 128, .5);
+        display: block;
+        text-align: center;
+        margin: auto;
+        padding: 8px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 50vh;
+      }
+      .social {
+        display: inline-block;
+        width: 72px;
+        margin: 8px 4px;
+        text-align: center;
+      }
+      .social > div {
+        margin-top: 8px;
+        color: black;
+        font-size: 14px;
+        @apply --social-text;
+      }
+      .icon {
+        cursor: pointer;
+        width: 64px;
+        height: 64px;
+        padding: 16px;
+        color: white;
+        border-radius: 50%;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        -webkit-transition: box-shadow .2s;
+        -moz-transition: box-shadow .2s;
+        -ms-transition: box-shadow .2s;
+        -o-transition: box-shadow .2s;
+        transition: box-shadow .2s;
+        @apply --social-icon;
+      }
+      .icon:hover, .icon:focus {
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.14), 0 2px 10px 0 rgba(0, 0, 0, 0.12), 0 6px 2px -4px rgba(0, 0, 0, 0.2);
+      }
+      .icon:active {
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      }
+      #clipboard {
+        background-color: #777;
+      }
+      #email {
+        background-color: #ffa930;
+      }
+      #evernote{
+        background-color: #2dbe60;
+      }
+      #facebook {
+        background-color: #3b5998;
+      }
+      #gplus {
+        background-color: #dd4b39;
+      }
+      #linkedin {
+        background-color: #0077b5;
+      }
+      #pinterest {
+        background-color: #bd081c;
+      }
+      #reddit {
+        background-color: #ff4500;
+      }
+      #skype {
+        background-color: #00aff0;
+      }
+      #sms {
+        background-color: #43695b;
+      }
+      #telegram {
+        background-color: #0088cc;
+      }
+      #tumblr {
+        background-color: #35465c;
+      }
+      #twitter {
+        background-color: #1da1f2;
+      }
+      #viber {
+        background-color: #59267c;
+      }
+      #vk {
+        background-color: #45668e;
+      }
+      #whatsapp {
+        background-color: #25d366;
+      }
+      #urlHeader {
+        font-weight: 700;
+        @apply --clipboard-fallback-url-header;
+      }
+      #urlContainer {
+        text-align: center;
+      }
+      #url {
+        display: inline-block;
+        padding: 4px 12px;
+        border-bottom: 1px solid rgba(128, 128, 128, .5);
+        text-decoration: none;
+        max-width: calc(100% - 72px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--clipboard-fallback-url-color, #ff6d00);
+        @apply --clipboard-fallback-url;
+      }
+      #url:hover, #url:focus {
+        text-decoration: underline;
+      }
+    </style>
+
+    <paper-toast id="copySuccess" text="[[copySuccessText]]"></paper-toast>
+    <paper-dialog id="copyDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop>
+      <div id="urlHeader">[[copyFailedText]]</div>
+      <div id="urlContainer">
+        <a href$="[[url]]" id="url">[[url]]</a>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="shareDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop>
+      <h2 id="dialogTitle">[[dialogTitle]]</h2>
+      <paper-dialog-scrollable id="shareButtons">
+
+        <div class="social" title="Copy to clipboard">
+          <paper-icon-button
+              icon="social:clipboard"
+              class="icon"
+              id="clipboard"
+              data-clipboard-text$="[[_fullText]]">
+          </paper-icon-button>
+          <div>Clipboard</div>
+        </div>
+        <div class="social" title="Email">
+          <paper-icon-button icon="social:email" class="icon" id="email"></paper-icon-button>
+          <div>Email</div>
+        </div>
+        <div class="social" title="Evernote">
+          <paper-icon-button icon="social:evernote" class="icon" id="evernote"></paper-icon-button>
+          <div>Evernote</div>
+        </div>
+        <div class="social" title="Facebook">
+          <paper-icon-button icon="social:facebook" class="icon" id="facebook"></paper-icon-button>
+          <div>Facebook</div>
+        </div>
+        <div class="social" title="Google+">
+          <paper-icon-button icon="social:gplus" class="icon" id="gplus"></paper-icon-button>
+          <div>Google+</div>
+        </div>
+        <div class="social" title="LinkedIn">
+          <paper-icon-button icon="social:linkedin" class="icon" id="linkedin"></paper-icon-button>
+          <div>LinkedIn</div>
+        </div>
+        <div class="social" title="Pinterest">
+          <paper-icon-button icon="social:pinterest" class="icon" id="pinterest"></paper-icon-button>
+          <div>Pinterest</div>
+        </div>
+        <div class="social" title="Reddit">
+          <paper-icon-button icon="social:reddit" class="icon" id="reddit"></paper-icon-button>
+          <div>Reddit</div>
+        </div>
+        <div class="social" title="Skype">
+          <paper-icon-button icon="social:skype" class="icon" id="skype"></paper-icon-button>
+          <div>Skype</div>
+        </div>
+        <div class="social" title="SMS">
+          <paper-icon-button icon="social:sms" class="icon" id="sms"></paper-icon-button>
+          <div>SMS</div>
+        </div>
+        <div class="social" title="Telegram">
+          <paper-icon-button icon="social:telegram" class="icon" id="telegram"></paper-icon-button>
+          <div>Telegram</div>
+        </div>
+        <div class="social" title="Tumblr">
+          <paper-icon-button icon="social:tumblr" class="icon" id="tumblr"></paper-icon-button>
+          <div>Tumblr</div>
+        </div>
+        <div class="social" title="Twitter">
+          <paper-icon-button icon="social:twitter" class="icon" id="twitter"></paper-icon-button>
+          <div>Twitter</div>
+        </div>
+        <div class="social" title="Viber">
+          <paper-icon-button icon="social:viber" class="icon" id="viber"></paper-icon-button>
+          <div>Viber</div>
+        </div>
+        <div class="social" title="VKontakte">
+          <paper-icon-button icon="social:vk" class="icon" id="vk"></paper-icon-button>
+          <div>VK</div>
+        </div>
+        <div class="social" title="WhatsApp">
+          <paper-icon-button icon="social:whatsapp" class="icon" id="whatsapp"></paper-icon-button>
+          <div>WhatsApp</div>
+        </div>
+      </paper-dialog-scrollable>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+    /**
+     * `share-menu`
+     * A complete and simple to use share menu
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ShareMenu extends Polymer.Element {
+      static get is() {
+        return 'share-menu';
+      }
+
+      static get properties() {
+        return {
+          title: {
+            type: String,
+            value: document.title,
+          },
+          text: String,
+          url: {
+            type: String,
+            value: () => {
+              const canonical = document.querySelector('link[rel=canonical]');
+              if (canonical && canonical.href)
+                return canonical.href;
+              return window.location.href;
+            },
+          },
+          dialogTitle: {
+            type: String,
+            value: 'Share',
+          },
+          copySuccessText: {
+            type: String,
+            value: 'Copied to clipboard',
+          },
+          copyFailedText: {
+            type: String,
+            value: 'Unable to automatically copy to clipboard. Please, copy your link manually:',
+          },
+          facebookAppId: String,
+          _fullText: {
+            type: String,
+            readOnly: true,
+            computed: '_computeFullText(title, text, url)',
+          },
+          _nativeShare: {
+            type: Boolean,
+            readOnly: true,
+            value: navigator.share !== undefined,
+          },
+          _secureContext: {
+            type: Boolean,
+            readOnly: true,
+            value: window.isSecureContext || window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '[::1]',
+          },
+        };
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        if (!this._nativeShare || !this._secureContext) {
+          if (this.facebookAppId) {
+            const appId = this.facebookAppId;
+            window.fbAsyncInit = function() {
+              FB.init({
+                appId            : appId,
+                autoLogAppEvents : true,
+                xfbml            : true,
+                version          : 'v2.10'
+              });
+              FB.AppEvents.logPageView();
+            };
+            (function(d, s, id){
+              let js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) {return;}
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/en_US/sdk.js";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            // Twitter script
+            const twitterScript = document.createElement('script');
+            twitterScript.src = 'https://platform.twitter.com/widgets.js';
+            twitterScript.async = 'async';
+            twitterScript.defer = 'defer';
+            document.head.appendChild(twitterScript);
+          }
+
+          // Setup the copy to clipboard
+          const copySuccess = this.$.copySuccess;
+          const copyDialog = this.$.copyDialog;
+          const clipboard = new Clipboard(this.$.clipboard);
+          clipboard.on('success', _ => {
+            copySuccess.open();
+          });
+          clipboard.on('error', e => {
+            console.error(e);
+            copyDialog.open();
+          });
+
+          this.$.email.addEventListener('tap', _ => this._emailShare());
+          this.$.evernote.addEventListener('tap', _ => this._evernoteShare());
+          this.$.facebook.addEventListener('tap', _ => this._facebookShare());
+          this.$.gplus.addEventListener('tap', _ => this._gplusShare());
+          this.$.linkedin.addEventListener('tap', _ => this._linkedinShare());
+          this.$.pinterest.addEventListener('tap', _ => this._pinterestShare());
+          this.$.reddit.addEventListener('tap', _ => this._redditShare());
+          this.$.skype.addEventListener('tap', _ => this._skypeShare());
+          this.$.sms.addEventListener('tap', _ => this._smsShare());
+          this.$.telegram.addEventListener('tap', _ => this._telegramShare());
+          this.$.tumblr.addEventListener('tap', _ => this._tumblrShare());
+          this.$.twitter.addEventListener('tap', _ => this._twitterShare());
+          this.$.viber.addEventListener('tap', _ => this._viberShare());
+          this.$.vk.addEventListener('tap', _ => this._vkShare());
+          this.$.whatsapp.addEventListener('tap', _ => this._whatsappShare());
+        }
+      }
+
+      share() {
+        let done = false;
+
+        if (this._nativeShare && this._secureContext) {
+          navigator.share({
+            title: this.title,
+            text: this.text,
+            url: this.url,
+          }).then(() => done = true)
+            .catch(error => console.error);
+        }
+        if (!done)
+          this.$.shareDialog.open();
+      }
+
+      _emailShare() {
+        window.open(`mailto:?subject=${encodeURIComponent(this.title)}&body=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      }
+
+      _evernoteShare() {
+        ShareMenu._openWindow(`http://www.evernote.com/clip.action?url=${encodeURIComponent(this.url)}`);
+      }
+
+      _facebookShare() {
+        if (this.facebookAppId)
+          FB.ui({
+            method: 'share',
+            quote: this.text,
+            href: this.url,
+            mobile_iframe: true,
+          });
+        else
+          ShareMenu._openWindow(`https://www.facebook.com/sharer.php?u=${encodeURIComponent(this.url)}&description=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}`);
+      }
+
+      _gplusShare() {
+        ShareMenu._openWindow(`https://plus.google.com/share?url=${encodeURIComponent(this.url)}`);
+      }
+
+      _linkedinShare() {
+        ShareMenu._openWindow(`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+      }
+
+      _pinterestShare() {
+        // Kinda hacky
+        const button = document.createElement('button');
+        button.onclick = _ => {
+          const script = document.createElement('script');
+          script.src = `https://assets.pinterest.com/js/pinmarklet.js?r=${Math.random()*99999999}`;
+          document.body.appendChild(script);
+        };
+        button.style.display = 'none';
+        const img = document.createElement('img');
+        img.src = this.url;
+        img.alt = this.text;
+        img.title = this.title;
+        img.style.width = '400px';
+        img.style.height = 'auto';
+        button.appendChild(img);
+        document.body.appendChild(button);
+        button.click();
+      }
+
+      _redditShare() {
+        if (this.text)
+          ShareMenu._openWindow(`https://reddit.com/submit?text=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        else
+          ShareMenu._openWindow(`https://reddit.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+      }
+
+      _skypeShare() {
+        ShareMenu._openWindow(`https://web.skype.com/share?url=${encodeURIComponent(this.url)}`);
+      }
+
+      _smsShare() {
+        let separator = '?';
+        // iOS uses two different separators, so we have to check the iOS version and use the proper one
+        if (/iP(hone|od|ad)/.test(navigator.platform)) {
+          const v = (navigator.appVersion).match(/OS (\d+)/);
+          separator = parseInt(v[1], 10) < 8 ? ';' : '&';
+        }
+        window.open(`sms:${separator}body=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      }
+
+      _telegramShare() {
+        ShareMenu._openWindow(`https://t.me/share/url?url=${encodeURIComponent(this.url)}&text=*${encodeURIComponent(this.title)}*%0A${encodeURIComponent(this.text)}`);
+      }
+
+      _tumblrShare() {
+        ShareMenu._openWindow(`https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&caption=${encodeURIComponent(this.text)}`);
+      }
+
+      _twitterShare() {
+        ShareMenu._openWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(this.url)}`);
+      }
+
+      _viberShare() {
+        window.open(`viber://forward?text=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      }
+
+      _vkShare() {
+        ShareMenu._openWindow(`https://vk.com/share.php?url=${encodeURIComponent(this.url)}`);
+      }
+
+      _whatsappShare() {
+        window.open(`whatsapp://send?text=*${encodeURIComponent(this.title)}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      }
+
+      static _openWindow(url) {
+        window.open(url, '_blank', 'menubar=0,status=0,titlebar=0,toolbar=0', false);
+      }
+
+      _computeFullText(title, text, url) {
+        return `${title}\n\n${text}\n\n${url}`;
+      }
+    }
+
+    window.customElements.define(ShareMenu.is, ShareMenu);
+  </script>
+</dom-module>
