@@ -1,3 +1,39 @@
+<!--
+
+`share-menu` is a complete and simple to use share menu for Polymer 2 that uses
+[Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) when possible,
+with a fallback to a nice share menu that tries to emulate the experience of the native one.
+
+-----------------------------------------------------------------------------------------------------------------
+Here you can see the list of the supported socials, as well as the limitations that each one gives:
+
+ - Email
+ - Evernote - _URL only_
+ - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
+ - Google+ - _URL only_
+ - LinkedIn - _URL and title only_
+ - Pinterest - _Only works well if the URL is an image (for obvious reasons). The title is used as the image description._
+ - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
+ - Skype - _URL only_
+ - SMS
+ - Telegram
+ - Tumblr
+ - Twitter
+ - Viber
+ - VKontakte - _URL only_
+ - WhatsApp
+-----------------------------------------------------------------------------------------------------------------
+Example usage:
+```html
+<share-menu title="Ohai!" text="Hello, World!" url="https://www.example.com/"></share-menu>
+```
+-----------------------------------------------------------------------------------------------------------------
+_Browse the [API docs](https://www.webcomponents.org/element/Dabolus/share-menu) for a fully working example._
+
+@element share-menu
+@demo demo/index.html
+-->
+
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
@@ -241,7 +277,9 @@
   <script>
     /**
      * `share-menu`
-     * A complete and simple to use share menu
+     * A complete and simple to use share menu.
+     *
+     * _[Take a look at the component overview for more info](https://www.webcomponents.org/element/Dabolus/share-menu)_
      *
      * @customElement
      * @polymer
@@ -254,11 +292,20 @@
 
       static get properties() {
         return {
+          /**
+           * The title of the content you want to share.
+           */
           title: {
             type: String,
             value: document.title,
           },
+          /**
+           * The body of the content you want to share.
+           */
           text: String,
+          /**
+           * The URL of the content you want to share.
+           */
           url: {
             type: String,
             value: () => {
@@ -268,18 +315,33 @@
               return window.location.href;
             },
           },
+          /**
+           * The title of the dialog displayed if the user browser does not support the Web Share API.
+           */
           dialogTitle: {
             type: String,
             value: 'Share',
           },
+          /**
+           * The text displayed in the toast when the content is successfully copied to clipboard.
+           */
           copySuccessText: {
             type: String,
             value: 'Copied to clipboard',
           },
+          /**
+           * The header of the dialog displayed when the automatic copying to clipboard fails.
+           */
           copyFailedText: {
             type: String,
             value: 'Unable to automatically copy to clipboard. Please, copy your link manually:',
           },
+          /**
+           * Your Facebook App ID. Use it if you want to give the final user a better experience
+           * when he tries to share the content on Facebook.
+           *
+           * You can get one [here](https://developers.facebook.com/apps/).
+           */
           facebookAppId: String,
           _fullText: {
             type: String,
@@ -360,6 +422,9 @@
         }
       }
 
+      /**
+       * Displays the share dialog with the `title`, `text`, and `url` provided as parameters.
+       */
       share() {
         let done = false;
 

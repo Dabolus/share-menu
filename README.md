@@ -38,7 +38,9 @@ bower install --save Dabolus/share-menu
 </share-menu>
 ```
 
-As you can see in this last example, this component allows you to insert your own Facebook App ID to use the Facebook UI share. It is **heavily recommended** to use it if possible, since it offers a much better user experience.
+As you can see in this last example, this component allows you to insert your own Facebook App ID to use the Facebook UI share.
+It is **heavily recommended** to use it if possible, since it offers a much better user experience.
+You can get one [here](https://developers.facebook.com/apps/).
 
 ## Supported socials (in the fallback dialog)
 Here you can see the list of the supported socials, as well as the limitations that each one gives:
