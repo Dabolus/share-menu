@@ -1,39 +1,3 @@
-<!--
-
-`share-menu` is a complete and simple to use share menu for Polymer 2 that uses
-[Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) when possible,
-with a fallback to a nice share menu that tries to emulate the experience of the native one.
-
------------------------------------------------------------------------------------------------------------------
-Here you can see the list of the supported socials, as well as the limitations that each one gives:
-
- - Email
- - Evernote - _URL only_
- - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
- - Google+ - _URL only_
- - LinkedIn - _URL and title only_
- - Pinterest - _Only works well if the URL is an image (for obvious reasons). The title is used as the image description._
- - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
- - Skype - _URL only_
- - SMS
- - Telegram
- - Tumblr
- - Twitter
- - Viber
- - VKontakte - _URL only_
- - WhatsApp
------------------------------------------------------------------------------------------------------------------
-Example usage:
-```html
-<share-menu title="Ohai!" text="Hello, World!" url="https://www.example.com/"></share-menu>
-```
------------------------------------------------------------------------------------------------------------------
-_Browse the [API docs](https://www.webcomponents.org/element/Dabolus/share-menu) for a fully working example._
-
-@element share-menu
-@demo demo/index.html
--->
-
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
@@ -276,10 +240,40 @@ _Browse the [API docs](https://www.webcomponents.org/element/Dabolus/share-menu)
 
   <script>
     /**
-     * `share-menu`
-     * A complete and simple to use share menu.
+     * `share-menu` is a complete and simple to use share menu for Polymer 2 that uses
+     * [Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) when possible,
+     * with a fallback to a nice share menu that tries to emulate the experience of the native one.
      *
-     * _[Take a look at the component overview for more info](https://www.webcomponents.org/element/Dabolus/share-menu)_
+     * -----------------------------------------------------------------------------------------------------------------
+     *
+     * Here you can see the list of the supported socials, as well as the limitations that each one gives:
+     *
+     *  - Email
+     *  - Evernote - _URL only_
+     *  - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
+     *  - Google+ - _URL only_
+     *  - LinkedIn - _URL and title only_
+     *  - Pinterest - _Only works well if the URL is an image (for obvious reasons). The title is used as the image description._
+     *  - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
+     *  - Skype - _URL only_
+     *  - SMS
+     *  - Telegram
+     *  - Tumblr
+     *  - Twitter
+     *  - Viber
+     *  - VKontakte - _URL only_
+     *  - WhatsApp
+     *
+     * -----------------------------------------------------------------------------------------------------------------
+     *
+     * Example usage:
+     * ```html
+     * <share-menu title="Ohai!" text="Hello, World!" url="https://www.example.com/"></share-menu>
+     * ```
+     *
+     * -----------------------------------------------------------------------------------------------------------------
+     *
+     * _Browse the [API docs](https://www.webcomponents.org/element/Dabolus/share-menu) for a fully working example._
      *
      * @customElement
      * @polymer
@@ -426,17 +420,13 @@ _Browse the [API docs](https://www.webcomponents.org/element/Dabolus/share-menu)
        * Displays the share dialog with the `title`, `text`, and `url` provided as parameters.
        */
       share() {
-        let done = false;
-
         if (this._nativeShare && this._secureContext) {
           navigator.share({
             title: this.title,
             text: this.text,
             url: this.url,
-          }).then(() => done = true)
-            .catch(error => console.error);
-        }
-        if (!done)
+          }).catch(error => console.error);
+        } else
           this.$.shareDialog.open();
       }
 
