@@ -25,16 +25,19 @@ bower install --save Dabolus/share-menu
 
 <button onclick="shareMenu.share()">Share!</button>
 ```
-#### Every property set
+#### All the properties set
 ```html
 <share-menu
   title="Awesome!"
   text="More customized share menu"
   url="https://www.example.com/"
+  via="Dabolus"
   dialog-title="Share now!"
   copy-success-text="Text copied to clipboard!"
   copy-failed-text="Oh no! Couldn't copy the text automatically :("
-  facebook-app-id="<your Facebook App ID to use the Facebook UI share>">
+  facebook-app-id="<your Facebook App ID to use the Facebook UI share>"
+  is-image="auto"
+  hide-labels>
 </share-menu>
 ```
 
@@ -45,21 +48,46 @@ You can get one [here](https://developers.facebook.com/apps/).
 ## Supported socials (in the fallback dialog)
 Here you can see the list of the supported socials, as well as the limitations that each one gives:
 
+ - Baidu - _URL and title only_
+ - Blogger
+ - Buffer - _URL and title only_
+ - Copy to clipboard
+ - Delicious - _URL and title only_
+ - Digg - _URL and title only_
+ - Douban - _URL and title only_
  - Email
  - Evernote - _URL only_
  - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
+ - FlipBoard - _URL and title only_
  - Google+ - _URL only_
- - LinkedIn - _URL and title only_
- - Pinterest - _Only works well if the URL is an image (for obvious reasons). The title is used as the image description._
+ - Instapaper
+ - Line - _URL only_
+ - LinkedIn
+ - LiveJournal
+ - Myspace
+ - Odnoklassniki (OK.ru) - _URL and title only_
+ - Pinterest - _Will only be visible if the URL is an image. Look for the `isImage` parameter on the API docs for more info_
+ - Pocket - _URL only_
+ - Print - _Only prints the page at the given URL_
+ - QZone - _URL only_
  - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._ 
+ - RenRen - _Currently disabled because it does not seem to work
  - Skype - _URL only_
  - SMS
+ - StumbleUpon - _URL and title only_
  - Telegram
+ - Translate - _Only translates the page at the given URL_
  - Tumblr
  - Twitter
  - Viber
  - VKontakte - _URL only_
+ - Weibo
  - WhatsApp
+ - WordPress
+ - Xing - _URL only_
+ - Yahoo
+
+_The `via` parameter will only be used by Delicious, LinkedIn and Twitter._
 
 ## Icons
 The icons used by the component are a special iconset, so you can also use them everywhere in your app by importing `social-icons.html` located in this package.
