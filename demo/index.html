@@ -21,17 +21,17 @@
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
-      #toggleWrapper {
+      .toggleWrapper {
         @apply --layout-horizontal;
         margin-top: 12px;
       }
-      #toggleWrapper > #label {
+      .toggleWrapper > .label {
         @apply --paper-font-subhead;
       }
-      #toggleWrapper > #spacer {
+      .toggleWrapper > .spacer {
         @apply --layout-flex;
       }
-      #toggleWrapper > paper-toggle-button {
+      .toggleWrapper > paper-toggle-button {
         cursor: pointer;
       }
       #buttonWrapper {
@@ -58,16 +58,21 @@
           <paper-textarea label="Text" value="{{text}}" rows="3" max-rows="3"></paper-textarea>
           <paper-input label="URL" value="{{url}}"></paper-input>
           <paper-input label="Via" value="{{via}}"></paper-input>
-          <div id="toggleWrapper">
-            <div id="label">Hide labels</div>
-            <div id="spacer"></div>
+          <div class="toggleWrapper">
+            <div class="label">Hide labels</div>
+            <div class="spacer"></div>
             <paper-toggle-button checked="{{hideLabels}}"></paper-toggle-button>
+          </div>
+          <div class="toggleWrapper">
+            <div class="label">Hide backdrop</div>
+            <div class="spacer"></div>
+            <paper-toggle-button checked="{{hideBackdrop}}"></paper-toggle-button>
           </div>
           <div id="buttonWrapper">
             <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
           </div>
 
-          <share-menu id="shareMenu" title="[[title]]" text="[[text]]" url="[[url]]" via="[[via]]" hide-labels="[[hideLabels]]" is-image="auto"></share-menu>
+          <share-menu id="shareMenu" title="[[title]]" text="[[text]]" url="[[url]]" via="[[via]]" hide-labels="[[hideLabels]]" without-backdrop="[[hideBackdrop]]" is-image="auto"></share-menu>
         </template>
       </dom-bind>
     </template>

@@ -127,14 +127,14 @@
     </style>
 
     <paper-toast id="copySuccess" text="[[copySuccessText]]"></paper-toast>
-    <paper-dialog id="copyDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop>
+    <paper-dialog id="copyDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop="[[!withoutBackdrop]]">
       <div id="urlHeader">[[copyFailedText]]</div>
       <div id="urlContainer">
         <a href$="[[url]]" id="url">[[url]]</a>
       </div>
     </paper-dialog>
 
-    <paper-dialog id="shareDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop>
+    <paper-dialog id="shareDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop="[[!withoutBackdrop]]">
       <h2 id="dialogTitle">[[dialogTitle]]</h2>
       <paper-dialog-scrollable id="shareButtons">
 
@@ -379,11 +379,17 @@
           title: {
             type: String,
             value: document.title,
+            reflectToAttribute: true,
           },
           /**
            * The body of the content you want to share.
            */
-          text: String,
+          text: {
+            type: String,
+            // So we avoid that ugly 'undefined' value
+            value: '',
+            reflectToAttribute: true,
+          },
           /**
            * The URL of the content you want to share.
            */
@@ -396,6 +402,7 @@
               return window.location.href;
             },
             observer: '_urlChanged',
+            reflectToAttribute: true,
           },
           /**
            * The title of the dialog displayed if the user browser does not support the Web Share API.
@@ -429,7 +436,11 @@
            * The provider of the content.
            * For Twitter, this should be the tag of your/your application account.
            */
-          via: String,
+          via: {
+            type: String,
+            value: '',
+            reflectToAttribute: true,
+          },
           /**
            * Used to tell if the URL is an image or not.
            * It can have three different values:
@@ -442,6 +453,7 @@
             type: String,
             value: 'no',
             observer: '_isImageChanged',
+            reflectToAttribute: true,
           },
           /**
            * Set to true if you want to hide the socials' labels from the fallback menu.
@@ -449,6 +461,15 @@
           hideLabels: {
             type: Boolean,
             value: false,
+            reflectToAttribute: true,
+          },
+          /**
+           * Set to true if you want to hide the fallback dialogs' backdrop.
+           */
+          withoutBackdrop: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
           },
           _fullText: {
             type: String,
