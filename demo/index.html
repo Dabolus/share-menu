@@ -1,82 +1,91 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  <title>share-menu demo</title>
+    <title>share-menu demo</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
-  <link rel="import" href="../../paper-input/paper-input.html">
-  <link rel="import" href="../../paper-input/paper-textarea.html">
-  <link rel="import" href="../../paper-button/paper-button.html">
-  <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
-  <link rel="import" href="../../paper-styles/color.html">
-  <link rel="import" href="../../paper-styles/typography.html">
-  <link rel="import" href="../share-menu.html">
+    <script type="module">
+      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+      import '@polymer/iron-demo-helpers/demo-snippet';
+      import '@polymer/iron-flex-layout/iron-flex-layout';
+      import '@polymer/paper-input/paper-input';
+      import '@polymer/paper-input/paper-textarea';
+      import '@polymer/paper-button/paper-button';
+      import '@polymer/paper-toggle-button/paper-toggle-button';
+      import '@polymer/paper-styles/color';
+      import '@polymer/paper-styles/typography';
+    </script>
 
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      .toggleWrapper {
-        @apply --layout-horizontal;
-        margin-top: 12px;
-      }
-      .toggleWrapper > .label {
-        @apply --paper-font-subhead;
-      }
-      .toggleWrapper > .spacer {
-        @apply --layout-flex;
-      }
-      .toggleWrapper > paper-toggle-button {
-        cursor: pointer;
-      }
-      #buttonWrapper {
-        @apply --layout-horizontal;
-        @apply --layout-end-justified;
-        margin-top: 12px;
-      }
-      #buttonWrapper > paper-button {
-        @apply --paper-font-button;
-        background-color: var(--paper-indigo-500);
-        color: var(--dark-theme-text-color);
-      }
-    </style>
-  </custom-style>
-</head>
-<body>
-<div class="vertical-section-container centered">
-  <h3>Basic share-menu demo</h3>
-  <demo-snippet>
-    <template>
-      <dom-bind>
+    <script type="module" src="../share-menu.js"></script>
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        .toggleWrapper {
+          @apply --layout-horizontal;
+          margin-top: 12px;
+        }
+
+        .toggleWrapper > .label {
+          @apply --paper-font-subhead;
+        }
+
+        .toggleWrapper > .spacer {
+          @apply --layout-flex;
+        }
+
+        .toggleWrapper > paper-toggle-button {
+          cursor: pointer;
+        }
+
+        #buttonWrapper {
+          @apply --layout-horizontal;
+          @apply --layout-end-justified;
+          margin-top: 12px;
+        }
+
+        #buttonWrapper > paper-button {
+          @apply --paper-font-button;
+          background-color: var(--paper-indigo-500);
+          color: var(--dark-theme-text-color);
+        }
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic share-menu demo</h3>
+      <demo-snippet>
         <template>
-          <paper-input label="Title" value="{{title}}"></paper-input>
-          <paper-textarea label="Text" value="{{text}}" rows="3" max-rows="3"></paper-textarea>
-          <paper-input label="URL" value="{{url}}"></paper-input>
-          <paper-input label="Via" value="{{via}}"></paper-input>
-          <div class="toggleWrapper">
-            <div class="label">Hide labels</div>
-            <div class="spacer"></div>
-            <paper-toggle-button checked="{{hideLabels}}"></paper-toggle-button>
-          </div>
-          <div class="toggleWrapper">
-            <div class="label">Hide backdrop</div>
-            <div class="spacer"></div>
-            <paper-toggle-button checked="{{hideBackdrop}}"></paper-toggle-button>
-          </div>
-          <div id="buttonWrapper">
-            <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
-          </div>
+          <dom-bind>
+            <template>
+              <paper-input label="Title" value="{{title}}"></paper-input>
+              <paper-textarea label="Text" value="{{text}}" rows="3" max-rows="3"></paper-textarea>
+              <paper-input label="URL" value="{{url}}"></paper-input>
+              <paper-input label="Via" value="{{via}}"></paper-input>
+              <div class="toggleWrapper">
+                <div class="label">Hide labels</div>
+                <div class="spacer"></div>
+                <paper-toggle-button checked="{{hideLabels}}"></paper-toggle-button>
+              </div>
+              <div class="toggleWrapper">
+                <div class="label">Hide backdrop</div>
+                <div class="spacer"></div>
+                <paper-toggle-button checked="{{hideBackdrop}}"></paper-toggle-button>
+              </div>
+              <div id="buttonWrapper">
+                <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
+              </div>
 
-          <share-menu id="shareMenu" title="[[title]]" text="[[text]]" url="[[url]]" via="[[via]]" hide-labels="[[hideLabels]]" without-backdrop="[[hideBackdrop]]" is-image="auto"></share-menu>
+              <share-menu id="shareMenu" title="[[title]]" text="[[text]]" url="[[url]]" via="[[via]]"
+                          hide-labels="[[hideLabels]]" without-backdrop="[[hideBackdrop]]" is-image="auto"></share-menu>
+            </template>
+          </dom-bind>
         </template>
-      </dom-bind>
-    </template>
-  </demo-snippet>
-</div>
-</body>
+      </demo-snippet>
+    </div>
+  </body>
 </html>
