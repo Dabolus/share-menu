@@ -1,4 +1,6 @@
-# IntelliJ IDEA configuration
 .idea/
-# bower_components directory
 bower_components/
+node_modules/
+share-menu.js
+share-menu.js.map
+share-menu.d.ts

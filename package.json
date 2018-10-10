@@ -1,0 +1,26 @@
+{
+  "name": "share-menu",
+  "version": "3.0.0",
+  "description": "A complete and simple to use share menu.",
+  "main": "share-menu.js",
+  "module": "share-menu.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dabolus/share-menu.git"
+  },
+  "keywords": [],
+  "author": "Giorgio Garasto <giorgio@garasto.it>",
+  "license": "MIT",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/Dabolus/share-menu/issues"
+  },
+  "homepage": "https://github.com/Dabolus/share-menu#readme"
+}
