@@ -3,8 +3,8 @@ export class ShareMenu extends HTMLElement {
   public title: string;
   public url: string;
   private _template: HTMLTemplateElement;
-  private _root: ShadowRoot;
   private _previousFocus: HTMLElement;
+  private _dialogTitleRef: HTMLHeadingElement;
 
   private get _isSecureContext() {
     return window.isSecureContext ||
@@ -14,16 +14,27 @@ export class ShareMenu extends HTMLElement {
       window.location.hostname === '[::1]';
   }
 
-  get opened(): boolean {
+  public get opened(): boolean {
     return this.hasAttribute('opened');
   }
 
-  set opened(val: boolean) {
+  public set opened(val: boolean) {
     // Reflect the value of the open property as an HTML attribute.
     if (val) {
       this.setAttribute('opened', '');
     } else {
       this.removeAttribute('opened');
+    }
+  }
+
+  get dialogTitle(): string {
+    return this.getAttribute('dialog-title');
+  }
+
+  set dialogTitle(val: string) {
+    this.setAttribute('dialog-title', val);
+    if (this._dialogTitleRef) {
+      this._dialogTitleRef.textContent = val;
     }
   }
 
@@ -44,6 +55,7 @@ export class ShareMenu extends HTMLElement {
       }
       return window.location.href;
     })();
+    this.dialogTitle = 'Share';
 
     this._template = document.createElement('template');
     this._template.innerHTML = `
@@ -97,12 +109,15 @@ export class ShareMenu extends HTMLElement {
         }
       </style>
       <div class="backdrop" tabindex="-1"></div>
-      <div class="modal" role="dialog" aria-labelledby="">
-        <span>ciao</span>
+      <div class="modal" role="dialog" aria-labelledby="title">
+        <div class="heading">
+          <h2 id="title">${this.dialogTitle}</h2>
+        </div>
       </div>
     `;
-    this._root = this.attachShadow({ mode: 'open' });
-    this._root.appendChild(this._template.content.cloneNode(true));
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.appendChild(this._template.content.cloneNode(true));
+    this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
   }
 
   public share() {
