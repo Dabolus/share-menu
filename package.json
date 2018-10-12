@@ -9,7 +9,9 @@
     "watch": "tsc -w",
     "serve": "polymer serve --npm -p 8082",
     "browser-sync": "browser-sync start --proxy 'localhost:8082' --port 8080 --ui-port 8081 --files 'demo' 'share-menu.js'",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "tslint -p .",
+    "format": "tslint -p . --fix"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.2",
