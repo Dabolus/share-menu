@@ -2,5 +2,6 @@
 bower_components/
 node_modules/
 share-menu.js
-share-menu.js.map
 share-menu.d.ts
+social-icons.js
+social-icons.d.ts
