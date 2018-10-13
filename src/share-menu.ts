@@ -337,7 +337,7 @@ export class ShareMenu extends HTMLElement {
           transition: .3s opacity cubic-bezier(0, 0, .2, 1);
         }
         #dialog {
-          margin: 0 auto;
+          margin: 100vh auto 0 auto;
           background: #fff;
           width: 100%;
           max-width: 640px;
@@ -426,14 +426,21 @@ export class ShareMenu extends HTMLElement {
 
   private _showFallbackShare() {
     this._previousFocus = document.activeElement as HTMLElement;
-    this._dialogRef.style.marginTop =
-      `${Math.max(window.innerHeight / 2, window.innerHeight - this._dialogRef.offsetHeight)}px`;
+    this.scrollTop = Math.max(window.innerHeight / 2, window.innerHeight - this._dialogRef.offsetHeight);
     this.opened = true;
     this._backdropRef.addEventListener('click', this._close.bind(this));
+    this.addEventListener('scroll', this._handleScroll.bind(this));
+  }
+
+  private _handleScroll() {
+    if (this.scrollTop < 80) {
+      this._close();
+    }
   }
 
   private _close() {
     this._backdropRef.removeEventListener('click', this._close);
+    this.removeEventListener('scroll', this._handleScroll);
     this.opened = false;
     this.scroll({
       behavior: 'smooth',
