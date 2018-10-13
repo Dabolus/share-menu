@@ -84,8 +84,7 @@ export class ShareMenu extends HTMLElement {
         const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
         socialButton.addEventListener('click', () => {
-          // TODO: use a better approach
-          (this as { [key: string]: any })[`_${social}Click`]();
+          this._supportedSocials[social].action();
           this._close();
         });
         const socialIcon: HTMLDivElement = document.createElement('div');
@@ -121,162 +120,315 @@ export class ShareMenu extends HTMLElement {
   private readonly _dialogRef: HTMLDivElement;
   private readonly _dialogTitleRef: HTMLHeadingElement;
   private readonly _socialsContainerRef: HTMLDivElement;
-  /* tslint:disable:object-literal-sort-keys */
-  private readonly _supportedSocials: { [key: string]: { color: string; title: string; } } = {
+  /* tslint:disable:object-literal-sort-keys max-line-length */
+  private readonly _supportedSocials: { [key: string]: { color: string; title: string; action: () => void; } } = {
     clipboard: {
       color: '#777',
       title: 'Copy to clipboard',
+      action: () => {
+        if (navigator.clipboard && this._isSecureContext) {
+          navigator.clipboard.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`);
+        }
+      },
     },
     facebook: {
       color: '#3b5998',
       title: 'Facebook',
+      action: () => {
+        if (window.FB) {
+          window.FB.ui({
+            href: this.url,
+            method: 'share',
+            mobile_iframe: true,
+            quote: this.text,
+          });
+        } else {
+          this._openWindow(`https://www.facebook.com/sharer.php?u=${encodeURIComponent(this.url)}&description=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}`);
+        }
+      },
     },
     twitter: {
       color: '#1da1f2',
       title: 'Twitter',
+      action: () => {
+        this._openWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(this.url)}&via=${encodeURIComponent(this.via)}`);
+      },
     },
     whatsapp: {
       color: '#25d366',
       title: 'WhatsApp',
+      action: () => {
+        window.open(`whatsapp://send?text=*${encodeURIComponent(this.title)}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      },
     },
     telegram: {
       color: '#0088cc',
       title: 'Telegram',
+      action: () => {
+        this._openWindow(`https://t.me/share/url?url=${encodeURIComponent(this.url)}&text=**${encodeURIComponent(this.title)}**%0A${encodeURIComponent(this.text)}`);
+      },
     },
     linkedin: {
       color: '#0077b5',
       title: 'LinkedIn',
+      action: () => {
+        this._openWindow(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&summary=${encodeURIComponent(this.text)}&source=${encodeURIComponent(this.via)}`);
+      },
     },
     gplus: {
       color: '#dd4b39',
       title: 'Google+',
+      action: () => {
+        this._openWindow(`https://plus.google.com/share?url=${encodeURIComponent(this.url)}`);
+      },
     },
     pinterest: {
       color: '#bd081c',
       title: 'Pinterest',
+      action: () => {
+        // Kinda hacky
+        const button = document.createElement('button');
+        button.onclick = () => {
+          const script = document.createElement('script');
+          script.src = `https://assets.pinterest.com/js/pinmarklet.js?r=${Math.random() * 99999999}`;
+          document.body.appendChild(script);
+        };
+        button.style.display = 'none';
+        const img = document.createElement('img');
+        img.src = this.url;
+        img.alt = this.text;
+        img.title = this.title;
+        img.style.width = '400px';
+        img.style.height = 'auto';
+        button.appendChild(img);
+        document.body.appendChild(button);
+        button.click();
+      },
     },
     tumblr: {
       color: '#35465c',
       title: 'Tumblr',
+      action: () => {
+        this._openWindow(`https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&caption=${encodeURIComponent(this.text)}`);
+      },
     },
     reddit: {
       color: '#ff4500',
       title: 'Reddit',
+      action: () => {
+        if (this.text) {
+          this._openWindow(`https://reddit.com/submit?text=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        } else {
+          this._openWindow(`https://reddit.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        }
+      },
     },
     vk: {
       color: '#45668e',
       title: 'VK',
+      action: () => {
+        this._openWindow(`https://vk.com/share.php?url=${encodeURIComponent(this.url)}`);
+      },
     },
     skype: {
       color: '#00aff0',
       title: 'Skype',
+      action: () => {
+        this._openWindow(`https://web.skype.com/share?url=${encodeURIComponent(this.url)}`);
+      },
     },
     viber: {
       color: '#59267c',
       title: 'Viber',
+      action: () => {
+        window.open(`viber://forward?text=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      },
     },
     line: {
       color: '#00c300',
       title: 'Line',
+      action: () => {
+        this._openWindow(`https://lineit.line.me/share/ui?url=${encodeURIComponent(this.url)}`);
+      },
     },
     qzone: {
       color: '#ffce00',
       title: 'Qzone',
+      action: () => {
+        this._openWindow(`https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(this.url)}`);
+      },
     },
     wordpress: {
       color: '#0087be',
       title: 'WordPress',
+      action: () => {
+        const img = this._urlIsImage ? `&i=${encodeURIComponent(this.url)}` : '';
+        this._openWindow(`https://wordpress.com/press-this.php?u=${encodeURIComponent(window.location.href)}&t=${encodeURIComponent(this.title)}&s=${encodeURIComponent(this.text)}${img}`);
+      },
     },
     blogger: {
       color: '#f57d00',
       title: 'Blogger',
+      action: () => {
+        this._openWindow(`https://www.blogger.com/blog-this.g?u=${encodeURIComponent(this.url)}&n=${encodeURIComponent(this.title)}&t=${encodeURIComponent(this.text)}`);
+      },
     },
     flipboard: {
       color: '#e12828',
       title: 'Flipboard',
+      action: () => {
+        this._openWindow(`https://share.flipboard.com/bookmarklet/popout?v=2&title=${encodeURIComponent(this.title)}&url=${encodeURIComponent(this.url)}`);
+      },
     },
     evernote: {
       color: '#2dbe60',
       title: 'Evernote',
+      action: () => {
+        this._openWindow(`https://www.evernote.com/clip.action?url=${encodeURIComponent(this.url)}`);
+      },
     },
     myspace: {
       color: '#000',
       title: 'Myspace',
+      action: () => {
+        this._openWindow(`https://myspace.com/post?u=${encodeURIComponent(this.url)}&t=${encodeURIComponent(this.title)}&c=${encodeURIComponent(this.text)}`);
+      },
     },
     pocket: {
       color: '#ef4056',
       title: 'Pocket',
+      action: () => {
+        this._openWindow(`https://getpocket.com/save?url=${encodeURIComponent(this.url)}`);
+      },
     },
     livejournal: {
       color: '#004359',
       title: 'LiveJournal',
+      action: () => {
+        this._openWindow(`http://www.livejournal.com/update.bml?subject=${encodeURIComponent(this.title)}&event=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`);
+      },
     },
     instapaper: {
       color: '#000',
       title: 'Instapaper',
+      action: () => {
+        this._openWindow(`https://www.instapaper.com/edit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&description=${encodeURIComponent(this.text)}`);
+      },
     },
     baidu: {
       color: '#2529d8',
       title: 'Baidu',
+      action: () => {
+        this._openWindow(`http://cang.baidu.com/do/add?it=${encodeURIComponent(this.title)}&iu=${encodeURIComponent(this.url)}`);
+      },
     },
     okru: {
       color: '#ee8208',
       title: 'OK.ru',
+      action: () => {
+        this._openWindow(`https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+      },
     },
     xing: {
       color: '#026466',
       title: 'XING',
+      action: () => {
+        this._openWindow(`https://www.xing.com/app/user?op=share&url=${encodeURIComponent(this.url)}`);
+      },
     },
     delicious: {
       color: '#3399ff',
       title: 'Delicious',
+      action: () => {
+        this._openWindow(`https://del.icio.us/save?v=5&provider=${encodeURIComponent(this.via)}&noui&jump=close&url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+      },
     },
     buffer: {
       color: '#323b43',
       title: 'Buffer',
+      action: () => {
+        this._openWindow(`https://buffer.com/add?text=${encodeURIComponent(this.title)}&url=${encodeURIComponent(this.url)}`);
+      },
     },
     digg: {
       color: '#005be2',
       title: 'Digg',
+      action: () => {
+        this._openWindow(`https://digg.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+      },
     },
     douban: {
       color: '#007610',
       title: 'Douban',
+      action: () => {
+        this._openWindow(`https://www.douban.com/recommend/?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+      },
     },
     stumbleupon: {
       color: '#eb4924',
       title: 'StumbleUpon',
+      action: () => {
+        this._openWindow(`https://www.stumbleupon.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+      },
     },
     renren: {
       color: '#005baa',
       title: 'Renren',
+      action: () => {
+        this._openWindow(`http://share.renren.com/share/buttonshare.do?link=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}`);
+      },
     },
     weibo: {
       color: '#df2029',
       title: 'Weibo',
+      action: () => {
+        this._openWindow(`http://service.weibo.com/share/share.php?url=${encodeURIComponent(this.url)}&appkey=&title=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}&pic=&ralateUid=`);
+      },
     },
     print: {
       color: '#425563',
       title: 'Print',
+      action: () => {
+        this._openWindow(this.url).print();
+      },
     },
     translate: {
       color: '#4285f4',
       title: 'Translate',
-    },
-    yahoo: {
-      color: '#410093',
-      title: 'Yahoo!',
-    },
-    sms: {
-      color: '#43695b',
-      title: 'SMS',
+      action: () => {
+        const userLang = navigator.language.substring(0, 2);
+        this._openWindow(`https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${encodeURIComponent(this.url)}`);
+      },
     },
     email: {
       color: '#ffa930',
       title: 'Email',
+      action: () => {
+        window.open(`mailto:?subject=${encodeURIComponent(this.title)}&body=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      },
+    },
+    sms: {
+      color: '#43695b',
+      title: 'SMS',
+      action: () => {
+        let separator = '?';
+        // iOS uses two different separators, so we have to check the iOS version and use the proper one
+        if (/iP(hone|od|ad)/.test(navigator.platform)) {
+          const v = (navigator.appVersion).match(/OS (\d+)/);
+          separator = parseInt(v[1], 10) < 8 ? ';' : '&';
+        }
+        window.open(`sms:${separator}body=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+      },
+    },
+    yahoo: {
+      color: '#410093',
+      title: 'Yahoo!',
+      action: () => {
+        this._openWindow(`https://compose.mail.yahoo.com/?body=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A%${encodeURIComponent(this.url)}`);
+      },
     },
   };
-  /* tslint:enable:object-literal-sort-keys */
+  /* tslint:enable:object-literal-sort-keys max-line-length */
   private _socials: string[] = Object.keys(this._supportedSocials);
 
   constructor() {
@@ -427,7 +579,16 @@ export class ShareMenu extends HTMLElement {
     this.socials = Object.keys(this._supportedSocials);
   }
 
-  public share() {
+  public share(props = {
+    text: this.text,
+    title: this.title,
+    url: this.url,
+    via: this.via,
+  }) {
+    this.text = props.text;
+    this.title = props.title;
+    this.url = props.url;
+    this.via = props.via;
     if (navigator.share && this._isSecureContext) {
       return navigator.share({
         text: this.text,
@@ -501,203 +662,6 @@ export class ShareMenu extends HTMLElement {
         break;
     }
   }
-
-  /* tslint:disable:max-line-length */
-  private _clipboardClick() {
-    if (navigator.clipboard && this._isSecureContext) {
-      navigator.clipboard.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`);
-    }
-  }
-
-  private _baiduClick() {
-    this._openWindow(`http://cang.baidu.com/do/add?it=${encodeURIComponent(this.title)}&iu=${encodeURIComponent(this.url)}`);
-  }
-
-  private _bloggerClick() {
-    this._openWindow(`https://www.blogger.com/blog-this.g?u=${encodeURIComponent(this.url)}&n=${encodeURIComponent(this.title)}&t=${encodeURIComponent(this.text)}`);
-  }
-
-  private _bufferClick() {
-    this._openWindow(`https://buffer.com/add?text=${encodeURIComponent(this.title)}&url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _deliciousClick() {
-    this._openWindow(`https://del.icio.us/save?v=5&provider=${encodeURIComponent(this.via)}&noui&jump=close&url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
-  }
-
-  private _diggClick() {
-    this._openWindow(`https://digg.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
-  }
-
-  private _doubanClick() {
-    this._openWindow(`https://www.douban.com/recommend/?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
-  }
-
-  private _emailClick() {
-    window.open(`mailto:?subject=${encodeURIComponent(this.title)}&body=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
-  }
-
-  private _evernoteClick() {
-    this._openWindow(`https://www.evernote.com/clip.action?url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _facebookClick() {
-    if (window.FB) {
-      window.FB.ui({
-        href: this.url,
-        method: 'share',
-        mobile_iframe: true,
-        quote: this.text,
-      });
-    } else {
-      this._openWindow(`https://www.facebook.com/sharer.php?u=${encodeURIComponent(this.url)}&description=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}`);
-    }
-  }
-
-  private _flipboardClick() {
-    this._openWindow(`https://share.flipboard.com/bookmarklet/popout?v=2&title=${encodeURIComponent(this.title)}&url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _gplusClick() {
-    this._openWindow(`https://plus.google.com/share?url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _instapaperClick() {
-    this._openWindow(`https://www.instapaper.com/edit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&description=${encodeURIComponent(this.text)}`);
-  }
-
-  private _lineClick() {
-    this._openWindow(`https://lineit.line.me/share/ui?url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _linkedinClick() {
-    this._openWindow(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&summary=${encodeURIComponent(this.text)}&source=${encodeURIComponent(this.via)}`);
-  }
-
-  private _livejournalClick() {
-    this._openWindow(`http://www.livejournal.com/update.bml?subject=${encodeURIComponent(this.title)}&event=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`);
-  }
-
-  private _myspaceClick() {
-    this._openWindow(`https://myspace.com/post?u=${encodeURIComponent(this.url)}&t=${encodeURIComponent(this.title)}&c=${encodeURIComponent(this.text)}`);
-  }
-
-  private _okruClick() {
-    this._openWindow(`https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
-  }
-
-  private _pinterestClick() {
-    // Kinda hacky
-    const button = document.createElement('button');
-    button.onclick = () => {
-      const script = document.createElement('script');
-      script.src = `https://assets.pinterest.com/js/pinmarklet.js?r=${Math.random() * 99999999}`;
-      document.body.appendChild(script);
-    };
-    button.style.display = 'none';
-    const img = document.createElement('img');
-    img.src = this.url;
-    img.alt = this.text;
-    img.title = this.title;
-    img.style.width = '400px';
-    img.style.height = 'auto';
-    button.appendChild(img);
-    document.body.appendChild(button);
-    button.click();
-  }
-
-  private _pocketClick() {
-    this._openWindow(`https://getpocket.com/save?url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _printClick() {
-    this._openWindow(this.url).print();
-  }
-
-  private _qzoneClick() {
-    this._openWindow(`https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _redditClick() {
-    if (this.text) {
-      this._openWindow(`https://reddit.com/submit?text=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
-    }
-    else {
-      this._openWindow(`https://reddit.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
-    }
-  }
-
-  private _renrenClick() {
-    this._openWindow(`http://share.renren.com/share/buttonshare.do?link=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}`);
-  }
-
-  private _skypeClick() {
-    this._openWindow(`https://web.skype.com/share?url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _smsClick() {
-    let separator = '?';
-    // iOS uses two different separators, so we have to check the iOS version and use the proper one
-    if (/iP(hone|od|ad)/.test(navigator.platform)) {
-      const v = (navigator.appVersion).match(/OS (\d+)/);
-      separator = parseInt(v[1], 10) < 8 ? ';' : '&';
-    }
-    window.open(`sms:${separator}body=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
-  }
-
-  private _stumbleuponClick() {
-    this._openWindow(`https://www.stumbleupon.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
-  }
-
-  private _telegramClick() {
-    this._openWindow(`https://t.me/share/url?url=${encodeURIComponent(this.url)}&text=**${encodeURIComponent(this.title)}**%0A${encodeURIComponent(this.text)}`);
-  }
-
-  private _translateClick() {
-    const userLang = navigator.language.substring(0, 2);
-    this._openWindow(`https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${encodeURIComponent(this.url)}`);
-  }
-
-  private _tumblrClick() {
-    this._openWindow(`https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&caption=${encodeURIComponent(this.text)}`);
-  }
-
-  private _twitterClick() {
-    this._openWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(this.url)}&via=${encodeURIComponent(this.via)}`);
-    // Alternative method
-    // window.open(`twitter://post?text=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}+${encodeURIComponent(this.url)}+via+%40${encodeURIComponent(this.via)}`, '_self');
-  }
-
-  private _viberClick() {
-    window.open(`viber://forward?text=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
-  }
-
-  private _vkClick() {
-    this._openWindow(`https://vk.com/share.php?url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _weiboClick() {
-    this._openWindow(`http://service.weibo.com/share/share.php?url=${encodeURIComponent(this.url)}&appkey=&title=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}&pic=&ralateUid=`);
-  }
-
-  private _whatsappClick() {
-    window.open(`whatsapp://send?text=*${encodeURIComponent(this.title)}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
-  }
-
-  private _wordpressClick() {
-    const img = this._urlIsImage ? `&i=${encodeURIComponent(this.url)}` : '';
-    this._openWindow(`https://wordpress.com/press-this.php?u=${encodeURIComponent(window.location.href)}&t=${encodeURIComponent(this.title)}&s=${encodeURIComponent(this.text)}${img}`);
-  }
-
-  private _xingClick() {
-    this._openWindow(`https://www.xing.com/app/user?op=share&url=${encodeURIComponent(this.url)}`);
-  }
-
-  private _yahooClick() {
-    this._openWindow(`https://compose.mail.yahoo.com/?body=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A%${encodeURIComponent(this.url)}`);
-  }
-
-  /* tslint:enable:max-line-length */
 }
 
 window.customElements.define('share-menu', ShareMenu);
