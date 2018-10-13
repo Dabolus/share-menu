@@ -23,12 +23,6 @@ declare var navigator: INavigatorWithShare;
 
 // We need to do this because of window.FB (Facebook JS API)
 interface IFB {
-  init: (options: {
-    appId: string;
-    autoLogAppEvents: boolean;
-    xfbml: boolean;
-    version: string;
-  }) => void;
   ui: (options: {
     href?: string;
     method?: string;
@@ -38,7 +32,6 @@ interface IFB {
 }
 
 interface IWindowWithFBAPI extends Window {
-  fbAsyncInit?: () => void;
   FB?: IFB;
 }
 
