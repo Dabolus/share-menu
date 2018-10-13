@@ -302,12 +302,11 @@ export class ShareMenu extends HTMLElement {
           left: 0;
           width: 100%;
           height: 100%;
+          max-height: 100%;
           z-index: -1;
           will-change: z-index;
           transition: .3s z-index step-end;
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
+          overflow-y: auto;
         }
         :host([opened]) {
           z-index: 100;
@@ -317,7 +316,7 @@ export class ShareMenu extends HTMLElement {
           box-sizing: border-box;
         }
         #backdrop {
-          position: absolute;
+          position: fixed;
           top: 0;
           left: 0;
           width: 100%;
@@ -327,28 +326,30 @@ export class ShareMenu extends HTMLElement {
           will-change: opacity;
           transition: .3s opacity cubic-bezier(.4, 0, 1, 1);
           cursor: pointer;
+          z-index: -1;
         }
         :host([opened]) #backdrop {
           opacity: .6;
           transition: .3s opacity cubic-bezier(0, 0, .2, 1);
         }
         #dialog {
-          z-index: 10;
+          margin: 100vh auto 0 auto;
           background: #fff;
           width: 100%;
           max-width: 640px;
-          will-change: transform;
-          transform: translateY(100%);
-          transition: .3s transform cubic-bezier(.4, 0, 1, 1);
+          will-change: margin-top;
+          transition: .3s margin-top cubic-bezier(.4, 0, 1, 1);
         }
         :host([opened]) #dialog {
-          transition: .3s transform cubic-bezier(0, 0, .2, 1);
+          margin-top: 50vh;
+          transition: .3s margin-top cubic-bezier(0, 0, .2, 1);
         }
         #title {
           color: rgba(0, 0, 0, .6);
           font-weight: 400;
           font-size: 14px;
-          margin: 12px;
+          margin: 0;
+          padding: 12px;
         }
         #socials-container {
           display: flex;
@@ -366,6 +367,7 @@ export class ShareMenu extends HTMLElement {
           cursor: pointer;
           border: none;
           outline: none;
+          background: #fff;
         }
         .social .icon {
           width: 32px;
@@ -418,9 +420,6 @@ export class ShareMenu extends HTMLElement {
   }
 
   private _showFallbackShare() {
-    const { innerHeight: windowHeight } = window;
-    const { offsetHeight: dialogHeight } = this._dialogRef;
-    this._dialogRef.style.transform = `translateY(${-Math.min((windowHeight / 2) - dialogHeight, 0)}px)`;
     this._previousFocus = document.activeElement as HTMLElement;
     this.opened = true;
     this._backdropRef.addEventListener('click', this._close.bind(this));
@@ -429,11 +428,15 @@ export class ShareMenu extends HTMLElement {
   private _close() {
     this._backdropRef.removeEventListener('click', this._close);
     this.opened = false;
+    this._dialogRef.scroll({
+      behavior: 'smooth',
+      left: 0,
+      top: window.innerHeight,
+    });
     if (!this._previousFocus) {
       this._previousFocus.focus();
       this._previousFocus = null;
     }
-    this._dialogRef.style.transform = 'translateY(100%)';
   }
 
   /* tslint:disable:max-line-length */
