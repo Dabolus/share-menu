@@ -79,7 +79,7 @@ export class ShareMenu extends HTMLElement {
     this._socials = val;
     if (this._socialsContainerRef) {
       this._socialsContainerRef.innerHTML = '';
-      val.forEach((social) => {
+      val.forEach((social, index) => {
         const { color, title } = this._supportedSocials[social];
         const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
@@ -98,6 +98,12 @@ export class ShareMenu extends HTMLElement {
         socialLabel.textContent = title;
         socialButton.appendChild(socialLabel);
         this._socialsContainerRef.appendChild(socialButton);
+        if (index === 0) {
+          this._firstFocusableElRef = socialButton;
+        }
+        if (index === val.length - 1) {
+          this._lastFocusableElRef = socialButton;
+        }
       });
     }
   }
@@ -109,6 +115,8 @@ export class ShareMenu extends HTMLElement {
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
   private _urlIsImage = false;
+  private _firstFocusableElRef: HTMLElement;
+  private _lastFocusableElRef: HTMLElement;
   private readonly _backdropRef: HTMLDivElement;
   private readonly _dialogRef: HTMLDivElement;
   private readonly _dialogTitleRef: HTMLHeadingElement;
@@ -304,6 +312,7 @@ export class ShareMenu extends HTMLElement {
           will-change: z-index;
           transition: .3s z-index step-end;
           overflow-y: auto;
+          display: none;
         }
         :host([opened]) {
           z-index: 9999;
@@ -366,12 +375,34 @@ export class ShareMenu extends HTMLElement {
           border: none;
           outline: none;
           background: #fff;
+          will-change: transform;
+          transition: .3s transform;
+        }
+        .social:hover {
+          transform: scale(1.05);
         }
         .social .icon {
-          width: 32px;
-          height: 32px;
-          margin: 8px;
-          flex: 0 0 32px;
+          position: relative;
+          width: 48px;
+          height: 48px;
+          padding: 8px;
+        }
+        .social .icon::before {
+          content: '';
+          z-index: -1;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: rgba(0, 0, 0, .12);
+          will-change: transform;
+          transition: .3s transform;
+          transform: scale(0);
+        }
+        .social:active .icon::before, .social:focus .icon::before {
+          transform: scale(1);
         }
         .social .label {
           color: rgba(0, 0, 0, .87);
@@ -419,16 +450,13 @@ export class ShareMenu extends HTMLElement {
 
   private _showFallbackShare() {
     this._previousFocus = document.activeElement as HTMLElement;
+    this.style.display = 'block';
+    this._firstFocusableElRef.focus();
     this.scrollTop = Math.max(window.innerHeight / 2, window.innerHeight - this._dialogRef.offsetHeight);
     this.opened = true;
     this._backdropRef.addEventListener('click', this._close.bind(this));
     this.addEventListener('scroll', this._handleScroll.bind(this));
-  }
-
-  private _handleScroll() {
-    if (this.scrollTop < 80) {
-      this._close();
-    }
+    this.addEventListener('keydown', this._handleKeyDown.bind(this));
   }
 
   private _close() {
@@ -439,9 +467,38 @@ export class ShareMenu extends HTMLElement {
       behavior: 'smooth',
       top: 0,
     });
-    if (!this._previousFocus) {
+    if (this._previousFocus) {
       this._previousFocus.focus();
       this._previousFocus = null;
+    }
+    setTimeout(() => this.style.display = 'none', 300);
+  }
+
+  private _handleScroll() {
+    if (this.scrollTop < 80) {
+      this._close();
+    }
+  }
+
+  private _handleKeyDown(e: KeyboardEvent) {
+    switch (e.key) {
+      case 'Escape':
+        this._close();
+        break;
+      case 'Tab':
+        if (this.socials.length < 2) {
+          e.preventDefault();
+          break;
+        }
+        const activeEl = this.shadowRoot.activeElement || document.activeElement;
+        if (e.shiftKey && activeEl === this._firstFocusableElRef) {
+          e.preventDefault();
+          this._lastFocusableElRef.focus();
+        } else if (!e.shiftKey && activeEl === this._lastFocusableElRef) {
+          e.preventDefault();
+          this._firstFocusableElRef.focus();
+        }
+        break;
     }
   }
 
