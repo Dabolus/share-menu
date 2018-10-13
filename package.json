@@ -4,6 +4,7 @@
   "description": "A complete and simple to use share menu.",
   "main": "share-menu.js",
   "module": "share-menu.js",
+  "types": "share-menu.d.ts",
   "scripts": {
     "start": "run-p watch serve browser-sync",
     "watch": "tsc -w",
