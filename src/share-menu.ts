@@ -38,15 +38,6 @@ interface IWindowWithFBAPI extends Window {
 declare var window: IWindowWithFBAPI;
 
 export class ShareMenu extends HTMLElement {
-
-  private get _isSecureContext() {
-    return window.isSecureContext ||
-      window.location.protocol === 'https:' ||
-      window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.hostname === '[::1]';
-  }
-
   public get opened(): boolean {
     return this.hasAttribute('opened');
   }
@@ -126,8 +117,8 @@ export class ShareMenu extends HTMLElement {
       color: '#777',
       title: 'Copy to clipboard',
       action: () => {
-        if (navigator.clipboard && this._isSecureContext) {
-          navigator.clipboard.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`);
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`).catch(alert);
         }
       },
     },
@@ -589,7 +580,7 @@ export class ShareMenu extends HTMLElement {
     this.title = props.title;
     this.url = props.url;
     this.via = props.via;
-    if (navigator.share && this._isSecureContext) {
+    if (navigator.share) {
       return navigator.share({
         text: this.text,
         title: this.title,
