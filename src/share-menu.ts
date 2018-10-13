@@ -313,7 +313,7 @@ export class ShareMenu extends HTMLElement {
           overflow-y: auto;
         }
         :host([opened]) {
-          z-index: 100;
+          z-index: 9999;
           transition: .3s z-index step-start;
         }
         * {
