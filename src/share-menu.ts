@@ -21,6 +21,29 @@ interface INavigatorWithShare extends Navigator {
 
 declare var navigator: INavigatorWithShare;
 
+// We need to do this because of window.FB (Facebook JS API)
+interface IFB {
+  init: (options: {
+    appId: string;
+    autoLogAppEvents: boolean;
+    xfbml: boolean;
+    version: string;
+  }) => void;
+  ui: (options: {
+    href?: string;
+    method?: string;
+    mobile_iframe?: boolean;
+    quote?: string;
+  }) => void;
+}
+
+interface IWindowWithFBAPI extends Window {
+  fbAsyncInit?: () => void;
+  FB?: IFB;
+}
+
+declare var window: IWindowWithFBAPI;
+
 export class ShareMenu extends HTMLElement {
 
   private get _isSecureContext() {
@@ -85,8 +108,10 @@ export class ShareMenu extends HTMLElement {
   public text: string;
   public title: string;
   public url: string;
+  public via: string;
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
+  private _urlIsImage = false;
   private readonly _dialogRef: HTMLDivElement;
   private readonly _dialogTitleRef: HTMLHeadingElement;
   private readonly _socialsContainerRef: HTMLDivElement;
@@ -445,8 +470,8 @@ export class ShareMenu extends HTMLElement {
   }
 
   private _facebookClick() {
-    if (FB) {
-      FB.ui({
+    if (window.FB) {
+      window.FB.ui({
         href: this.url,
         method: 'share',
         mobile_iframe: true,
@@ -557,7 +582,7 @@ export class ShareMenu extends HTMLElement {
   }
 
   private _translateClick() {
-    const userLang = navigator.language.substr(0, 2);
+    const userLang = navigator.language.substring(0, 2);
     this._openWindow(`https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${encodeURIComponent(this.url)}`);
   }
 
