@@ -435,10 +435,9 @@ export class ShareMenu extends HTMLElement {
   private _close() {
     this._backdropRef.removeEventListener('click', this._close);
     this.opened = false;
-    this._dialogRef.scroll({
+    this.scroll({
       behavior: 'smooth',
-      left: 0,
-      top: window.innerHeight,
+      top: 0,
     });
     if (!this._previousFocus) {
       this._previousFocus.focus();
