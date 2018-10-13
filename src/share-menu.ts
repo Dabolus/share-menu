@@ -337,16 +337,17 @@ export class ShareMenu extends HTMLElement {
           transition: .3s opacity cubic-bezier(0, 0, .2, 1);
         }
         #dialog {
-          margin: 100vh auto 0 auto;
+          margin: 0 auto;
           background: #fff;
           width: 100%;
           max-width: 640px;
-          will-change: margin-top;
-          transition: .3s margin-top cubic-bezier(.4, 0, 1, 1);
+          will-change: transform;
+          transform: translateY(100vh);
+          transition: .3s transform cubic-bezier(.4, 0, 1, 1);
         }
         :host([opened]) #dialog {
-          margin-top: 50vh;
-          transition: .3s margin-top cubic-bezier(0, 0, .2, 1);
+          transform: translateY(0);
+          transition: .3s transform cubic-bezier(0, 0, .2, 1);
         }
         #title {
           color: rgba(0, 0, 0, .6);
@@ -425,6 +426,8 @@ export class ShareMenu extends HTMLElement {
 
   private _showFallbackShare() {
     this._previousFocus = document.activeElement as HTMLElement;
+    this._dialogRef.style.marginTop =
+      `${Math.max(window.innerHeight / 2, window.innerHeight - this._dialogRef.offsetHeight)}px`;
     this.opened = true;
     this._backdropRef.addEventListener('click', this._close.bind(this));
   }
