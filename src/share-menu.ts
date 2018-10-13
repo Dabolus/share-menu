@@ -90,7 +90,11 @@ export class ShareMenu extends HTMLElement {
         const { color, title } = this._supportedSocials[social];
         const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
-        socialButton.addEventListener('click', (this as any)[`_${social}Click`].bind(this));
+        socialButton.addEventListener('click', () => {
+          // TODO: use a better approach
+          (this as { [key: string]: any })[`_${social}Click`]();
+          this._close();
+        });
         const socialIcon: HTMLDivElement = document.createElement('div');
         socialIcon.className = 'icon';
         socialIcon.innerHTML = (socialIcons as { [key: string]: string })[social];
