@@ -112,6 +112,7 @@ export class ShareMenu extends HTMLElement {
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
   private _urlIsImage = false;
+  private readonly _backdropRef: HTMLDivElement;
   private readonly _dialogRef: HTMLDivElement;
   private readonly _dialogTitleRef: HTMLHeadingElement;
   private readonly _socialsContainerRef: HTMLDivElement;
@@ -315,7 +316,7 @@ export class ShareMenu extends HTMLElement {
         * {
           box-sizing: border-box;
         }
-        .backdrop {
+        #backdrop {
           position: absolute;
           top: 0;
           left: 0;
@@ -327,7 +328,7 @@ export class ShareMenu extends HTMLElement {
           transition: .3s opacity cubic-bezier(.4, 0, 1, 1);
           cursor: pointer;
         }
-        :host([opened]) .backdrop {
+        :host([opened]) #backdrop {
           opacity: .6;
           transition: .3s opacity cubic-bezier(0, 0, .2, 1);
         }
@@ -379,7 +380,7 @@ export class ShareMenu extends HTMLElement {
           text-align: center;
         }
       </style>
-      <div class="backdrop" tabindex="-1"></div>
+      <div id="backdrop" tabindex="-1"></div>
       <div id="dialog" role="dialog" aria-labelledby="title">
         <h2 id="title"></h2>
         <div id="socials-container"></div>
@@ -387,6 +388,7 @@ export class ShareMenu extends HTMLElement {
     `;
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(this._template.content.cloneNode(true));
+    this._backdropRef = this.shadowRoot.querySelector<HTMLDivElement>('#backdrop');
     this._dialogRef = this.shadowRoot.querySelector<HTMLDivElement>('#dialog');
     this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
     this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
@@ -420,14 +422,18 @@ export class ShareMenu extends HTMLElement {
     const { offsetHeight: dialogHeight } = this._dialogRef;
     this._dialogRef.style.transform = `translateY(${-Math.min((windowHeight / 2) - dialogHeight, 0)}px)`;
     this._previousFocus = document.activeElement as HTMLElement;
-    requestAnimationFrame(() => this.opened = true);
+    this.opened = true;
+    this._backdropRef.addEventListener('click', this._close.bind(this));
   }
 
   private _close() {
+    this._backdropRef.removeEventListener('click', this._close);
+    this.opened = false;
     if (!this._previousFocus) {
       this._previousFocus.focus();
       this._previousFocus = null;
     }
+    this._dialogRef.style.transform = 'translateY(100%)';
   }
 
   /* tslint:disable:max-line-length */
