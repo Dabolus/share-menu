@@ -37,13 +37,81 @@ interface IWindowWithFBAPI extends Window {
 
 declare var window: IWindowWithFBAPI;
 
+/**
+ * `share-menu` is a complete and simple to use share menu that uses
+ * [Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) when possible,
+ * with a fallback to a nice share menu that tries to emulate the experience of the native one.
+ *
+ * -----------------------------------------------------------------------------------------------------------------
+ *
+ * Here you can see the list of the supported socials, as well as the limitations that each one gives:
+ *
+ * - Baidu - _URL and title only_
+ * - Blogger
+ * - Buffer - _URL and title only_
+ * - Copy to clipboard
+ * - Delicious - _URL and title only_
+ * - Digg - _URL and title only_
+ * - Douban - _URL and title only_
+ * - Email
+ * - Evernote - _URL only_
+ * - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
+ * - FlipBoard - _URL and title only_
+ * - Google+ - _URL only_
+ * - Instapaper
+ * - Line - _URL only_
+ * - LinkedIn
+ * - LiveJournal
+ * - Myspace
+ * - Odnoklassniki (OK.ru) - _URL and title only_
+ * - Pinterest - _Will only be visible if the URL is an image. Look for the `isImage` parameter on the API docs for more info_
+ * - Pocket - _URL only_
+ * - Print - _Only prints the page at the given URL_
+ * - QZone - _URL only_
+ * - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
+ * - RenRen - _Currently disabled because it does not seem to work
+ * - Skype - _URL only_
+ * - SMS
+ * - StumbleUpon - _URL and title only_
+ * - Telegram
+ * - Translate - _Only translates the page at the given URL_
+ * - Tumblr
+ * - Twitter
+ * - Viber
+ * - VKontakte - _URL only_
+ * - Weibo
+ * - WhatsApp
+ * - WordPress
+ * - Xing - _URL only_
+ * - Yahoo
+ *
+ * _The `via` parameter will only be used by Delicious, LinkedIn and Twitter._
+ *
+ * -----------------------------------------------------------------------------------------------------------------
+ *
+ * Example usage:
+ * ```html
+ * <share-menu title="Ohai!" text="Hello, World!" url="https://www.example.com/"></share-menu>
+ * ```
+ *
+ * -----------------------------------------------------------------------------------------------------------------
+ *
+ * _Browse the [API docs](https://www.webcomponents.org/element/Dabolus/share-menu) for a fully working example._
+ *
+ * @customElement
+ * @demo demo/index.html
+ */
 export class ShareMenu extends HTMLElement {
+  /**
+   * Whether the fallback dialog is currently opened or not.
+   *
+   * @return {boolean}
+   */
   public get opened(): boolean {
     return this.hasAttribute('opened');
   }
 
   public set opened(val: boolean) {
-    // Reflect the value of the open property as an HTML attribute.
     if (val) {
       this.setAttribute('opened', '');
     } else {
@@ -51,6 +119,12 @@ export class ShareMenu extends HTMLElement {
     }
   }
 
+  /**
+   * The title of the dialog displayed if the user browser does not support the Web Share API.
+   * Defaults to "Share with".
+   *
+   * @return {string}
+   */
   public get dialogTitle(): string {
     return this.getAttribute('dialog-title');
   }
@@ -59,6 +133,12 @@ export class ShareMenu extends HTMLElement {
     this.setAttribute('dialog-title', val);
   }
 
+  /**
+   * The list of the socials to show.
+   * Defaults to all the available socials.
+   *
+   * @return {Array<string>}
+   */
   public get socials(): string[] {
     return this._socials;
   }
@@ -101,6 +181,12 @@ export class ShareMenu extends HTMLElement {
     }
   }
 
+  /**
+   * The body of the content you want to share.
+   * Defaults to your description meta tag.
+   *
+   * @return {string}
+   */
   public get text(): string {
     return this.getAttribute('text');
   }
@@ -109,6 +195,12 @@ export class ShareMenu extends HTMLElement {
     this.setAttribute('text', val);
   }
 
+  /**
+   * The title of the content you want to share.
+   * Defaults to your page title.
+   *
+   * @return {string}
+   */
   public get title(): string {
     return this.getAttribute('title');
   }
@@ -117,6 +209,12 @@ export class ShareMenu extends HTMLElement {
     this.setAttribute('title', val);
   }
 
+  /**
+   * The URL of the content you want to share.
+   * Defaults to your canonical URL if available, otherwise to your page `window.location.href`.
+   *
+   * @return {string}
+   */
   public get url(): string {
     return this.getAttribute('url');
   }
@@ -125,6 +223,13 @@ export class ShareMenu extends HTMLElement {
     this.setAttribute('url', val);
   }
 
+  /**
+   * The provider of the content.
+   * Note that this is used only by some socials.
+   * For example, for Twitter this should be your tag or the tag of your application account.
+   *
+   * @return {string}
+   */
   public get via(): string {
     return this.getAttribute('via');
   }
