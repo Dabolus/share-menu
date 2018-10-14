@@ -51,22 +51,19 @@ export class ShareMenu extends HTMLElement {
     }
   }
 
-  get dialogTitle(): string {
+  public get dialogTitle(): string {
     return this.getAttribute('dialog-title');
   }
 
-  set dialogTitle(val: string) {
+  public set dialogTitle(val: string) {
     this.setAttribute('dialog-title', val);
-    if (this._dialogTitleRef) {
-      this._dialogTitleRef.textContent = val;
-    }
   }
 
-  get socials(): string[] {
+  public get socials(): string[] {
     return this._socials;
   }
 
-  set socials(val: string[]) {
+  public set socials(val: string[]) {
     this._socials = val;
     if (this._socialsContainerRef) {
       this._socialsContainerRef.innerHTML = '';
@@ -104,10 +101,40 @@ export class ShareMenu extends HTMLElement {
     }
   }
 
-  public text: string;
-  public title: string;
-  public url: string;
-  public via: string;
+  public get text(): string {
+    return this.getAttribute('text');
+  }
+
+  public set text(val: string) {
+    this.setAttribute('text', val);
+  }
+
+  public get title(): string {
+    return this.getAttribute('title');
+  }
+
+  public set title(val: string) {
+    this.setAttribute('title', val);
+  }
+
+  public get url(): string {
+    return this.getAttribute('url');
+  }
+
+  public set url(val: string) {
+    this.setAttribute('url', val);
+  }
+
+  public get via(): string {
+    return this.getAttribute('via');
+  }
+
+  public set via(val: string) {
+    this.setAttribute('via', val);
+  }
+
+  public static readonly observedAttributes = ['dialog-title', 'opened'];
+
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
   private _urlIsImage = false;
@@ -572,7 +599,7 @@ export class ShareMenu extends HTMLElement {
     this._dialogRef = this.shadowRoot.querySelector<HTMLDivElement>('#dialog');
     this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
     this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
-    this.dialogTitle = 'Share with';
+    this.dialogTitle = this._dialogTitleRef.textContent = 'Share with';
     this.socials = Object.keys(this._supportedSocials);
   }
 
@@ -594,6 +621,24 @@ export class ShareMenu extends HTMLElement {
       }).catch(() => this._showFallbackShare());
     }
     return this._showFallbackShare();
+  }
+
+  private attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (oldValue === newValue) {
+      return;
+    }
+    switch (name) {
+      case 'dialog-title':
+        this._dialogTitleRef.textContent = newValue;
+        break;
+      case 'opened':
+        if (newValue === null) {
+          this._close();
+        } else {
+          this.share();
+        }
+        break;
+    }
   }
 
   private _openWindow(url: string) {
