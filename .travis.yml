@@ -1,0 +1,28 @@
+language: node_js
+node_js: 8.12.0
+cache:
+  directories:
+  - node_modules
+before_install: npm i -g npm
+script: npm run build
+deploy:
+- provider: npm
+  skip_cleanup: true
+  email: giorgio@garasto.it
+  api_key:
+    secure: yELvkwO40scwVTpd4nclkaAA4y5BnKGog4Q6rVmM0dQK8UTxsCkm/CHtGMw/pR1XeV8Xc63uR5bsd0zygYiQsNe0pGSBiRzOqBt7H5zmDNuhKd+XF8bVHijc+YG6O5RLEgSIFRquwDugXg2fV9L/0f0D/sMJM0somJB+kRro7pmph3iEOMsZPC0g3aGQOtTi4dWD4TyaWI45njBgADC1UoXE73cipHhh7aKSYmwM99KzmV+7m8fjvKn5317kv3d4OnrVEYrxAbVvHYch3wHFqQ/XcTRa2pB8WPDC3xQJv27NNGqzy1NbTsaMAzvXnH1tAT/IKYuvjai8xpJdBa8PUpZ6ICUBRLwDeXOXMsKGl1dLIVSGzNt6kv4YZbOPa3Zp7OdImsX4qGrVZv91uvPnt0qEiOQavUlN04GyZVkVIGjvZLkrRiEQ6tRP36zCSGPj+qKGdsgje/8M+mPeGM0C44RfvU2LSE5rHS6XJFIr+fp6//8e/4krHyJeeru/v2F2xl3dK8N4HXE5QrpaaxDH3rxof+b2BSp9QxHCWGb1ezyrk+cpcdNI/VYVGKUvXz9WaWfhoMKcTp3C8Dnky7AJSsxvu7Q0ZDzQJ7dMIvUu3WufO9FH/u7UCOx9d0lkMiX7+Yl0f/INXW3+JYf1GNcaw4VuVrJE/mt+CIW/OADjrF8=
+  on:
+    branch: master
+    repo: Dabolus/share-menu
+    tags: true
+    tag: latest
+- provider: npm
+  skip_cleanup: true
+  email: giorgio@garasto.it
+  api_key:
+    secure: yELvkwO40scwVTpd4nclkaAA4y5BnKGog4Q6rVmM0dQK8UTxsCkm/CHtGMw/pR1XeV8Xc63uR5bsd0zygYiQsNe0pGSBiRzOqBt7H5zmDNuhKd+XF8bVHijc+YG6O5RLEgSIFRquwDugXg2fV9L/0f0D/sMJM0somJB+kRro7pmph3iEOMsZPC0g3aGQOtTi4dWD4TyaWI45njBgADC1UoXE73cipHhh7aKSYmwM99KzmV+7m8fjvKn5317kv3d4OnrVEYrxAbVvHYch3wHFqQ/XcTRa2pB8WPDC3xQJv27NNGqzy1NbTsaMAzvXnH1tAT/IKYuvjai8xpJdBa8PUpZ6ICUBRLwDeXOXMsKGl1dLIVSGzNt6kv4YZbOPa3Zp7OdImsX4qGrVZv91uvPnt0qEiOQavUlN04GyZVkVIGjvZLkrRiEQ6tRP36zCSGPj+qKGdsgje/8M+mPeGM0C44RfvU2LSE5rHS6XJFIr+fp6//8e/4krHyJeeru/v2F2xl3dK8N4HXE5QrpaaxDH3rxof+b2BSp9QxHCWGb1ezyrk+cpcdNI/VYVGKUvXz9WaWfhoMKcTp3C8Dnky7AJSsxvu7Q0ZDzQJ7dMIvUu3WufO9FH/u7UCOx9d0lkMiX7+Yl0f/INXW3+JYf1GNcaw4VuVrJE/mt+CIW/OADjrF8=
+  on:
+    branch: develop
+    repo: Dabolus/share-menu
+    tags: true
+    tag: next
