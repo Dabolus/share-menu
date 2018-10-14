@@ -618,7 +618,9 @@ export class ShareMenu extends HTMLElement {
         text: this.text,
         title: this.title,
         url: this.url,
-      }).catch(() => this._showFallbackShare());
+      })
+        .then(() => this._close())
+        .catch(() => this._showFallbackShare());
     }
     return this._showFallbackShare();
   }
