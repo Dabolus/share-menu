@@ -74,6 +74,7 @@ export class ShareMenu extends HTMLElement {
         const { color, title, action } = this._supportedSocials[social];
         const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
+        socialButton.title = title;
         socialButton.addEventListener('click', () => {
           action();
           this.dispatchEvent(new CustomEvent('social-click', {
