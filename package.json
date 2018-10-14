@@ -32,7 +32,12 @@
     "type": "git",
     "url": "git+https://github.com/Dabolus/share-menu.git"
   },
-  "keywords": [],
+  "keywords": [
+    "custom-element",
+    "web-component",
+    "share-menu",
+    "web-share-api"
+  ],
   "author": "Giorgio Garasto <giorgio@garasto.it>",
   "license": "MIT",
   "private": true,
