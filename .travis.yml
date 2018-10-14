@@ -14,7 +14,7 @@ deploy:
     secure: TYFc64TQp1kW8JvzBoMIomAl5oJnXH2zgovQaRPhV4rIdJTJ3SkytVwtGadelMyKAODFPVMj083cS8IhKatwvpwPBxG15H4GAzMi+iDawzGh1auTkMBL/1cMj6PPYXqkLmu4obcwPAmDCUFIxhIzAnD83MUluGrIxhnFEAD86xRCVnQevyEfWIf36VY0GhtCAX8fN8Bxo1kCXFh4l9Nz7zAz4yCsx5JyDlodvqEzF3X/2tZfaKRoL6b2JXwkGqv6/IT8ZFp4VQ0KXMmbBVncgh7kakbxI4RLdBJnKx1CFWv3x0mcpkMm+Lub8eMl0yY3HCThWrYlzPG/P4G8BxIxv8NKiITfFcBSDMYT0c6t5kmhlF/2xQkT61EsXTCQsYzxICKy9ctROLnxnz7s4JcW9lXL3beIIplyj/WYdmXB5Nfoi8urYjc+8k2WN1HVuMeJwdInyqTRlvsSUcR2mn0mCoBgg07JnXVtwKYrRTYSQwP+R3vyxlzre9qmksLckMm9Z92HnbXp1zhcSjvFSYUsuykGJxbCwNB8HswyHpfpH3bpYHvOMKQW3ab/ON1d7EqSbbVxmuoQT0U2DuhEbsoAGOc7XJf+YAVZ/1/cX1SVQE82yVa9yjHE4BsfRJ/1Khdd6UXQ3UPoqgJpSJpkrK7yWkExtoIIRegRQhcR0XJuiEc=
   on:
     branch: master
-    condition: $TRAVIS_BRANCH = master
+    condition: $TRAVIS_BRANCH =~ ^[0-9]+\.[0-9]+\.[0-9]+$
     repo: Dabolus/share-menu
     tags: true
     tag: latest
@@ -25,7 +25,7 @@ deploy:
     secure: TYFc64TQp1kW8JvzBoMIomAl5oJnXH2zgovQaRPhV4rIdJTJ3SkytVwtGadelMyKAODFPVMj083cS8IhKatwvpwPBxG15H4GAzMi+iDawzGh1auTkMBL/1cMj6PPYXqkLmu4obcwPAmDCUFIxhIzAnD83MUluGrIxhnFEAD86xRCVnQevyEfWIf36VY0GhtCAX8fN8Bxo1kCXFh4l9Nz7zAz4yCsx5JyDlodvqEzF3X/2tZfaKRoL6b2JXwkGqv6/IT8ZFp4VQ0KXMmbBVncgh7kakbxI4RLdBJnKx1CFWv3x0mcpkMm+Lub8eMl0yY3HCThWrYlzPG/P4G8BxIxv8NKiITfFcBSDMYT0c6t5kmhlF/2xQkT61EsXTCQsYzxICKy9ctROLnxnz7s4JcW9lXL3beIIplyj/WYdmXB5Nfoi8urYjc+8k2WN1HVuMeJwdInyqTRlvsSUcR2mn0mCoBgg07JnXVtwKYrRTYSQwP+R3vyxlzre9qmksLckMm9Z92HnbXp1zhcSjvFSYUsuykGJxbCwNB8HswyHpfpH3bpYHvOMKQW3ab/ON1d7EqSbbVxmuoQT0U2DuhEbsoAGOc7XJf+YAVZ/1/cX1SVQE82yVa9yjHE4BsfRJ/1Khdd6UXQ3UPoqgJpSJpkrK7yWkExtoIIRegRQhcR0XJuiEc=
   on:
     branch: develop
-    condition: $TRAVIS_BRANCH = develop
+    condition: $TRAVIS_BRANCH =~ ^[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$
     repo: Dabolus/share-menu
     tags: true
     tag: next
