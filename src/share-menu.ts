@@ -76,6 +76,11 @@ export class ShareMenu extends HTMLElement {
         socialButton.className = 'social';
         socialButton.addEventListener('click', () => {
           this._supportedSocials[social].action();
+          this.dispatchEvent(new CustomEvent('social-click', {
+            bubbles: true,
+            composed: true,
+            detail: { social },
+          }));
           this._close();
         });
         const socialIcon: HTMLDivElement = document.createElement('div');
@@ -586,9 +591,8 @@ export class ShareMenu extends HTMLElement {
         title: this.title,
         url: this.url,
       }).catch(() => this._showFallbackShare());
-    } else {
-      this._showFallbackShare();
     }
+    return this._showFallbackShare();
   }
 
   private _openWindow(url: string) {
@@ -601,14 +605,22 @@ export class ShareMenu extends HTMLElement {
   }
 
   private _showFallbackShare() {
-    this._previousFocus = document.activeElement as HTMLElement;
-    this.style.display = 'block';
-    this._firstFocusableElRef.focus();
-    this.scrollTop = Math.max(window.innerHeight / 2, window.innerHeight - this._dialogRef.offsetHeight);
-    this.opened = true;
-    this._backdropRef.addEventListener('click', this._close.bind(this));
-    this.addEventListener('scroll', this._handleScroll.bind(this));
-    this.addEventListener('keydown', this._handleKeyDown.bind(this));
+    return new Promise((resolve) => {
+      function socialClickListener(this: ShareMenu) {
+        this.removeEventListener('social-click', socialClickListener);
+        resolve();
+      }
+
+      this._previousFocus = document.activeElement as HTMLElement;
+      this.style.display = 'block';
+      this._firstFocusableElRef.focus();
+      this.scrollTop = Math.max(window.innerHeight / 2, window.innerHeight - this._dialogRef.offsetHeight);
+      this.opened = true;
+      this._backdropRef.addEventListener('click', this._close.bind(this));
+      this.addEventListener('scroll', this._handleScroll.bind(this));
+      this.addEventListener('keydown', this._handleKeyDown.bind(this));
+      this.addEventListener('social-click', socialClickListener.bind(this));
+    });
   }
 
   private _close() {
