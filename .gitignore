@@ -1,7 +1,5 @@
 .idea/
 bower_components/
 node_modules/
-share-menu.js
-share-menu.d.ts
-social-icons.js
-social-icons.d.ts
+share-menu.*
+social-icons.*
