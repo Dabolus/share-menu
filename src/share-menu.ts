@@ -71,11 +71,11 @@ export class ShareMenu extends HTMLElement {
     if (this._socialsContainerRef) {
       this._socialsContainerRef.innerHTML = '';
       val.forEach((social, index) => {
-        const { color, title } = this._supportedSocials[social];
+        const { color, title, action } = this._supportedSocials[social];
         const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
         socialButton.addEventListener('click', () => {
-          this._supportedSocials[social].action();
+          action();
           this.dispatchEvent(new CustomEvent('social-click', {
             bubbles: true,
             composed: true,
