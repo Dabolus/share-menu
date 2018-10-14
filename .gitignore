@@ -1,4 +1,6 @@
 .idea/
 node_modules/
-share-menu.*
-social-icons.*
+share-menu.js
+share-menu.d.ts
+social-icons.js
+social-icons.d.ts
