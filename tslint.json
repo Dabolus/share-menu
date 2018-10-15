@@ -9,7 +9,7 @@
     ],
     "max-line-length": [true, {
       "limit": 120,
-      "ignore-pattern": "^import |^export {(.*?)}|class [a-zA-Z]+ implements |//|^/\\*|^ \\*"
+      "ignore-pattern": "^import |^export {(.*?)}|class [a-zA-Z]+ implements |//|^ */\\*|^ *\\*"
     }],
     "prefer-const": true,
     "no-duplicate-variable": true,
