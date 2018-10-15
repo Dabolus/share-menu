@@ -148,6 +148,9 @@ export class ShareMenu extends HTMLElement {
     if (this._socialsContainerRef) {
       this._socialsContainerRef.innerHTML = '';
       val.forEach((social, index) => {
+        if (social === 'pinterest' && !this._urlIsImage) {
+          return;
+        }
         const { color, title, action } = this._supportedSocials[social];
         const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
@@ -220,6 +223,7 @@ export class ShareMenu extends HTMLElement {
   }
 
   public set url(val: string) {
+    console.log('url', val);
     this.setAttribute('url', val);
   }
 
@@ -238,7 +242,25 @@ export class ShareMenu extends HTMLElement {
     this.setAttribute('via', val);
   }
 
-  public static readonly observedAttributes = ['dialog-title', 'opened'];
+  /**
+   * Used to tell if the URL is an image or not.
+   * It can have three different values:
+   *
+   * - "no"|false|0  _(default)_ - the URL is not an image (or it should be considered as a normal URL even if it is an image)
+   * - "yes"|true|1 - the URL **IS** an image, so it will always be treated as such
+   * - "auto" - autodetect whether the URL is an image or not. This may cause a lot of extra network traffic, so **only use it if really necessary**.
+   *
+   * @return {string}
+   */
+  public get isImage(): string {
+    return this.getAttribute('is-image');
+  }
+
+  public set isImage(val: string) {
+    this.setAttribute('is-image', val);
+  }
+
+  public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image'];
 
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
@@ -743,6 +765,46 @@ export class ShareMenu extends HTMLElement {
           this._close();
         } else {
           this.share();
+        }
+        break;
+      case 'url':
+        if (this.isImage !== 'auto') {
+          return;
+        }
+        let img = new Image();
+        img.addEventListener('load', () => {
+          this._urlIsImage = true;
+          img = null;
+          // FIXME: super hack
+          this.socials = this.socials;
+        });
+        img.addEventListener('error', () => {
+          this._urlIsImage = false;
+          img = null;
+          // FIXME: super hack
+          this.socials = this.socials;
+        });
+        img.src = newValue;
+        break;
+      case 'is-image':
+        switch (newValue) {
+          case 'yes':
+          case 'true':
+          case '1':
+            this._urlIsImage = true;
+            // FIXME: super hack
+            this.socials = this.socials;
+            break;
+          case 'no':
+          case 'false':
+          case '0':
+            this._urlIsImage = false;
+            // FIXME: super hack
+            this.socials = this.socials;
+            break;
+          default:
+            this.isImage = 'auto';
+            break;
         }
         break;
     }
