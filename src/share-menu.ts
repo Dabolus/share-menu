@@ -584,21 +584,30 @@ export class ShareMenu extends HTMLElement {
 
   constructor() {
     super();
-    this.text = (() => {
-      const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-      if (description && description.content) {
-        return description.content;
-      }
-      return '';
-    })();
-    this.title = document.title || '';
-    this.url = (() => {
-      const canonical = document.querySelector<HTMLLinkElement>('link[rel=canonical]');
-      if (canonical && canonical.href) {
-        return canonical.href;
-      }
-      return window.location.href;
-    })();
+    if (!this.text) {
+      this.text = (() => {
+        const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+        if (description && description.content) {
+          return description.content;
+        }
+        return '';
+      })();
+    }
+    if (!this.title) {
+      this.title = document.title || '';
+    }
+    if (!this.url) {
+      this.url = (() => {
+        const canonical = document.querySelector<HTMLLinkElement>('link[rel=canonical]');
+        if (canonical && canonical.href) {
+          return canonical.href;
+        }
+        return window.location.href;
+      })();
+    }
+    if (!this.dialogTitle) {
+      this.dialogTitle = 'Share with';
+    }
 
     this._template = document.createElement('template');
     this._template.innerHTML = `
@@ -726,7 +735,7 @@ export class ShareMenu extends HTMLElement {
     this._dialogRef = this.shadowRoot.querySelector<HTMLDivElement>('#dialog');
     this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
     this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
-    this.dialogTitle = this._dialogTitleRef.textContent = 'Share with';
+    this._dialogTitleRef.textContent = this.dialogTitle;
     this.socials = Object.keys(this._supportedSocials);
   }
 
