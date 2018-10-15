@@ -223,7 +223,6 @@ export class ShareMenu extends HTMLElement {
   }
 
   public set url(val: string) {
-    console.log('url', val);
     this.setAttribute('url', val);
   }
 
