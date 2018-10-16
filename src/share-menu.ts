@@ -102,6 +102,8 @@ declare var window: IWindowWithFBAPI;
  * @demo demo/index.html
  */
 export class ShareMenu extends HTMLElement {
+  public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image', 'no-backdrop'];
+
   /**
    * Whether the fallback dialog is currently opened or not.
    *
@@ -259,7 +261,22 @@ export class ShareMenu extends HTMLElement {
     this.setAttribute('is-image', val);
   }
 
-  public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image'];
+  /**
+   * Set to true if you want to hide the fallback dialog backdrop.
+   *
+   * @return {boolean}
+   */
+  public get noBackdrop(): boolean {
+    return this.hasAttribute('no-backdrop');
+  }
+
+  public set noBackdrop(val: boolean) {
+    if (val) {
+      this.setAttribute('no-backdrop', '');
+    } else {
+      this.removeAttribute('no-backdrop');
+    }
+  }
 
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
@@ -632,6 +649,9 @@ export class ShareMenu extends HTMLElement {
         * {
           box-sizing: border-box;
         }
+        [hidden] {
+          display: none;
+        }
         #backdrop {
           position: fixed;
           top: 0;
@@ -814,6 +834,9 @@ export class ShareMenu extends HTMLElement {
             this.isImage = 'auto';
             break;
         }
+        break;
+      case 'no-backdrop':
+        this._backdropRef.hidden = newValue !== null;
         break;
     }
   }
