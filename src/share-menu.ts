@@ -656,7 +656,7 @@ export class ShareMenu extends HTMLElement {
           width: 100%;
           height: 100%;
           opacity: 0;
-          background: #000;
+          background: var(--backdrop-color, #000);
           will-change: opacity;
           transition: .3s opacity cubic-bezier(.4, 0, 1, 1);
           cursor: pointer;
@@ -671,7 +671,7 @@ export class ShareMenu extends HTMLElement {
         }
         #dialog {
           margin: 100vh auto 0 auto;
-          background: #fff;
+          background: var(--background-color, #fff);
           width: 100%;
           max-width: 640px;
           will-change: transform;
@@ -683,7 +683,7 @@ export class ShareMenu extends HTMLElement {
           transition: .3s transform cubic-bezier(0, 0, .2, 1);
         }
         #title {
-          color: rgba(0, 0, 0, .6);
+          color: var(--title-color, rgba(0, 0, 0, .6));
           font-weight: 400;
           font-size: 14px;
           margin: 0;
@@ -705,7 +705,7 @@ export class ShareMenu extends HTMLElement {
           cursor: pointer;
           border: none;
           outline: none;
-          background: #fff;
+          background: var(--background-color, #fff);
           will-change: transform;
           transition: .3s transform;
         }
@@ -727,7 +727,8 @@ export class ShareMenu extends HTMLElement {
           width: 100%;
           height: 100%;
           border-radius: 50%;
-          background: rgba(0, 0, 0, .12);
+          background: var(--ripple-color, #000);
+          opacity: .12;
           will-change: transform;
           transition: .3s transform;
           transform: scale(0);
@@ -736,7 +737,7 @@ export class ShareMenu extends HTMLElement {
           transform: scale(1);
         }
         .social .label {
-          color: rgba(0, 0, 0, .87);
+          color: var(--labels-color, rgba(0, 0, 0, .87));
           font-weight: 400;
           font-size: 12px;
           text-align: center;
