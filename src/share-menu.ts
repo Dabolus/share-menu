@@ -162,7 +162,7 @@ export class ShareMenu extends HTMLElement {
           this.dispatchEvent(new CustomEvent('social-click', {
             bubbles: true,
             composed: true,
-            detail: { social },
+            detail: { social, origin: 'fallback' },
           }));
           this._close();
         });
@@ -782,7 +782,15 @@ export class ShareMenu extends HTMLElement {
         title: this.title,
         url: this.url,
       })
-        .then(() => this._close())
+        .then(() => {
+          this._close();
+          this.dispatchEvent(new CustomEvent('social-click', {
+            bubbles: true,
+            composed: true,
+            detail: { origin: 'native' },
+          }));
+
+        })
         .catch(() => this._showFallbackShare());
     }
     return this._showFallbackShare();
