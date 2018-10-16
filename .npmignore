@@ -1,0 +1,7 @@
+.idea/
+demo/
+node_modules/
+src/
+.*
+index.html
+ts*.json

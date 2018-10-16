@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "es2015",
+    "lib": ["esnext", "dom"],
+    "declaration": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "outDir": ".",
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
