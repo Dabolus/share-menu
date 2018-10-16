@@ -933,6 +933,17 @@ export class ShareMenu extends HTMLElement {
         break;
     }
   }
+
+  /**
+   * Fired when a social is clicked.
+   * The event payload contains an `origin` field that will be equal
+   * to `native` if the native share menu has been triggered, or to
+   * `fallback` if the fallback share menu has been used instead.
+   * If the fallback share menu is used, the event payload will also
+   * have a `social` field, that contains the ID of the social chosen by the user.
+   *
+   * @event social-click
+   */
 }
 
 window.customElements.define('share-menu', ShareMenu);
