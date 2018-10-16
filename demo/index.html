@@ -68,11 +68,6 @@
               <paper-input label="URL" value="{{url}}"></paper-input>
               <paper-input label="Via" value="{{via}}"></paper-input>
               <div class="toggleWrapper">
-                <div class="label">Hide labels</div>
-                <div class="spacer"></div>
-                <paper-toggle-button checked="{{hideLabels}}"></paper-toggle-button>
-              </div>
-              <div class="toggleWrapper">
                 <div class="label">Hide backdrop</div>
                 <div class="spacer"></div>
                 <paper-toggle-button checked="{{hideBackdrop}}"></paper-toggle-button>
@@ -81,8 +76,8 @@
                 <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
               </div>
 
-              <share-menu id="shareMenu" title="[[title]]" text="[[text]]" url="[[url]]" via="[[via]]"
-                          hide-labels="[[hideLabels]]" no-backdrop="[[hideBackdrop]]" is-image="auto"></share-menu>
+              <share-menu id="shareMenu" title$="[[title]]" text$="[[text]]" url$="[[url]]" via$="[[via]]"
+                          no-backdrop$="[[hideBackdrop]]" is-image$="auto"></share-menu>
             </template>
           </dom-bind>
         </template>
