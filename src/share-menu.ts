@@ -758,6 +758,14 @@ export class ShareMenu extends HTMLElement {
     this.socials = Object.keys(this._supportedSocials);
   }
 
+  /**
+   * Displays the share dialog with the `title`, `text`, `url` and `via` provided as attributes/properties.
+   * You can also override their values by passing them as a parameter to this method. This can be particularly
+   * useful if you are creating the dialog directly from JavaScript.
+   *
+   * @param {{ text: string, title: string, url: string, via: string }=} props An object containing `text`, `title`, `url` and `via`, that will override the element attributes/properties.
+   * @return {Promise<void>} A promise that resolves when the user selects a social.
+   */
   public share(props = {
     text: this.text,
     title: this.title,
@@ -780,6 +788,7 @@ export class ShareMenu extends HTMLElement {
     return this._showFallbackShare();
   }
 
+  /** @private */
   private attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue === newValue) {
       return;
@@ -841,6 +850,7 @@ export class ShareMenu extends HTMLElement {
     }
   }
 
+  /** @private */
   private _openWindow(url: string) {
     return window.open(
       url,
@@ -850,6 +860,7 @@ export class ShareMenu extends HTMLElement {
     );
   }
 
+  /** @private */
   private _showFallbackShare() {
     return new Promise((resolve) => {
       function socialClickListener(this: ShareMenu) {
@@ -869,6 +880,7 @@ export class ShareMenu extends HTMLElement {
     });
   }
 
+  /** @private */
   private _close() {
     this._backdropRef.removeEventListener('click', this._close);
     this.removeEventListener('scroll', this._handleScroll);
@@ -884,12 +896,14 @@ export class ShareMenu extends HTMLElement {
     setTimeout(() => this.style.display = 'none', 300);
   }
 
+  /** @private */
   private _handleScroll() {
     if (this.scrollTop < 80) {
       this._close();
     }
   }
 
+  /** @private */
   private _handleKeyDown(e: KeyboardEvent) {
     switch (e.key) {
       case 'Escape':
