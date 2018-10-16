@@ -649,9 +649,6 @@ export class ShareMenu extends HTMLElement {
         * {
           box-sizing: border-box;
         }
-        [hidden] {
-          display: none;
-        }
         #backdrop {
           position: fixed;
           top: 0;
@@ -668,6 +665,9 @@ export class ShareMenu extends HTMLElement {
         :host([opened]) #backdrop {
           opacity: .6;
           transition: .3s opacity cubic-bezier(0, 0, .2, 1);
+        }
+        :host([no-backdrop]) #backdrop {
+          display: none;
         }
         #dialog {
           margin: 100vh auto 0 auto;
@@ -851,9 +851,6 @@ export class ShareMenu extends HTMLElement {
             this.isImage = 'auto';
             break;
         }
-        break;
-      case 'no-backdrop':
-        this._backdropRef.hidden = newValue !== null;
         break;
     }
   }
