@@ -538,13 +538,13 @@ export class ShareMenu extends HTMLElement {
         this._openWindow(`https://www.stumbleupon.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
       },
     },
-    renren: {
+    /* renren: {
       color: '#005baa',
       title: 'Renren',
       action: () => {
         this._openWindow(`http://share.renren.com/share/buttonshare.do?link=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}`);
       },
-    },
+    }, */
     weibo: {
       color: '#df2029',
       title: 'Weibo',
