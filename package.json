@@ -12,7 +12,8 @@
     "browser-sync": "browser-sync start --proxy 'localhost:8082' --port 8080 --ui-port 8081 --files 'demo' 'share-menu.js'",
     "build": "tsc",
     "lint": "tslint -p .",
-    "format": "tslint -p . --fix"
+    "format": "tslint -p . --fix",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.2",
