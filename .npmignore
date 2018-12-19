@@ -2,6 +2,8 @@
 demo/
 node_modules/
 src/
+.rpt2_cache/
+rollup.config.ts
 .*
 index.html
 ts*.json

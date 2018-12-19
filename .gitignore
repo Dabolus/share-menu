@@ -1,6 +1,9 @@
 .idea/
 node_modules/
+.rpt2_cache/
 share-menu.js
+share-menu.iife.js
 share-menu.d.ts
 social-icons.js
+social-icons.iife.js
 social-icons.d.ts

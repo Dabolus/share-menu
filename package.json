@@ -4,13 +4,14 @@
   "description": "A complete and simple to use share menu.",
   "main": "share-menu.js",
   "module": "share-menu.js",
+  "browser": "share-menu.iife.js",
   "types": "share-menu.d.ts",
   "scripts": {
     "start": "run-p watch serve browser-sync",
-    "watch": "tsc -w",
+    "watch": "rollup -w -c rollup.config.ts",
     "serve": "polymer serve --npm -p 8082",
     "browser-sync": "browser-sync start --proxy 'localhost:8082' --port 8080 --ui-port 8081 --files 'demo' 'share-menu.js'",
-    "build": "tsc",
+    "build": "rollup -c rollup.config.ts",
     "lint": "tslint -p .",
     "format": "tslint -p . --fix",
     "prepublishOnly": "npm run build"
@@ -26,6 +27,8 @@
     "browser-sync": "^2.26.0",
     "npm-run-all": "^4.1.3",
     "polymer-cli": "^1.8.0",
+    "rollup": "^0.68.0",
+    "rollup-plugin-typescript2": "^0.18.1",
     "tslint": "^5.11.0",
     "typescript": "^3.1.2"
   },
