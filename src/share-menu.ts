@@ -102,7 +102,6 @@ declare var window: IWindowWithFBAPI;
  * @demo demo/index.html
  */
 export class ShareMenu extends HTMLElement {
-  public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image', 'no-backdrop'];
 
   /**
    * Whether the fallback dialog is currently opened or not.
@@ -277,16 +276,17 @@ export class ShareMenu extends HTMLElement {
       this.removeAttribute('no-backdrop');
     }
   }
+  public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image', 'no-backdrop'];
 
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
   private _urlIsImage = false;
   private _firstFocusableElRef: HTMLElement;
   private _lastFocusableElRef: HTMLElement;
-  private readonly _backdropRef: HTMLDivElement;
-  private readonly _dialogRef: HTMLDivElement;
-  private readonly _dialogTitleRef: HTMLHeadingElement;
-  private readonly _socialsContainerRef: HTMLDivElement;
+  private _backdropRef: HTMLDivElement;
+  private _dialogRef: HTMLDivElement;
+  private _dialogTitleRef: HTMLHeadingElement;
+  private _socialsContainerRef: HTMLDivElement;
   /* tslint:disable:object-literal-sort-keys max-line-length */
   private readonly _supportedSocials: { [key: string]: { color: string; title: string; action: () => void; } } = {
     clipboard: {
@@ -600,30 +600,6 @@ export class ShareMenu extends HTMLElement {
 
   constructor() {
     super();
-    if (!this.text) {
-      this.text = (() => {
-        const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-        if (description && description.content) {
-          return description.content;
-        }
-        return '';
-      })();
-    }
-    if (!this.title) {
-      this.title = document.title || '';
-    }
-    if (!this.url) {
-      this.url = (() => {
-        const canonical = document.querySelector<HTMLLinkElement>('link[rel=canonical]');
-        if (canonical && canonical.href) {
-          return canonical.href;
-        }
-        return window.location.href;
-      })();
-    }
-    if (!this.dialogTitle) {
-      this.dialogTitle = 'Share with';
-    }
 
     this._template = document.createElement('template');
     this._template.innerHTML = `
@@ -751,12 +727,6 @@ export class ShareMenu extends HTMLElement {
     `;
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(this._template.content.cloneNode(true));
-    this._backdropRef = this.shadowRoot.querySelector<HTMLDivElement>('#backdrop');
-    this._dialogRef = this.shadowRoot.querySelector<HTMLDivElement>('#dialog');
-    this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
-    this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
-    this._dialogTitleRef.textContent = this.dialogTitle;
-    this.socials = Object.keys(this._supportedSocials);
   }
 
   /**
@@ -797,6 +767,40 @@ export class ShareMenu extends HTMLElement {
     return this._showFallbackShare();
   }
 
+  private connectedCallback() {
+    if (!this.text) {
+      this.text = (() => {
+        const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+        if (description && description.content) {
+          return description.content;
+        }
+        return '';
+      })();
+    }
+    if (!this.title) {
+      this.title = document.title || '';
+    }
+    if (!this.url) {
+      this.url = (() => {
+        const canonical = document.querySelector<HTMLLinkElement>('link[rel=canonical]');
+        if (canonical && canonical.href) {
+          return canonical.href;
+        }
+        return window.location.href;
+      })();
+    }
+    if (!this.dialogTitle) {
+      this.dialogTitle = 'Share with';
+    }
+
+    this._backdropRef = this.shadowRoot.querySelector<HTMLDivElement>('#backdrop');
+    this._dialogRef = this.shadowRoot.querySelector<HTMLDivElement>('#dialog');
+    this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
+    this._dialogTitleRef.textContent = this.dialogTitle;
+    this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
+    this.socials = Object.keys(this._supportedSocials);
+  }
+
   /** @private */
   private attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue === newValue) {
@@ -804,7 +808,9 @@ export class ShareMenu extends HTMLElement {
     }
     switch (name) {
       case 'dialog-title':
-        this._dialogTitleRef.textContent = newValue;
+        if (this._dialogTitleRef) {
+          this._dialogTitleRef.textContent = newValue;
+        }
         break;
       case 'opened':
         if (newValue === null) {
