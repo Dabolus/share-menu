@@ -10,8 +10,8 @@
     "start": "run-p watch serve browser-sync",
     "watch": "rollup -w -c rollup.config.ts",
     "serve": "polymer serve --npm -p 8082",
-    "browser-sync": "browser-sync start --proxy 'localhost:8082' --port 8080 --ui-port 8081 --files 'demo' 'share-menu.js'",
-    "build": "rollup -c rollup.config.ts",
+    "browser-sync": "browser-sync start --proxy 'localhost:8082' --port 8080 --ui-port 8081 --files 'demo' '*.js'",
+    "build": "NODE_ENV=production rollup -c rollup.config.ts",
     "lint": "tslint -p .",
     "format": "tslint -p . --fix",
     "prepublishOnly": "npm run build"
