@@ -6,7 +6,9 @@
     "strict": true,
     "strictNullChecks": false,
     "outDir": ".",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*.ts"
