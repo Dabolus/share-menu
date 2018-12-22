@@ -9,7 +9,7 @@
   "scripts": {
     "start": "run-p watch serve browser-sync",
     "watch": "rollup -w -c rollup.config.ts",
-    "serve": "polymer serve --npm -p 8082",
+    "serve": "polyserve --npm -p 8082",
     "browser-sync": "browser-sync start --proxy 'localhost:8082' --port 8080 --ui-port 8081 --files 'demo' '*.js'",
     "build": "NODE_ENV=production rollup -c rollup.config.ts",
     "lint": "tslint -p .",
@@ -26,7 +26,7 @@
     "@webcomponents/webcomponentsjs": "^2.2.1",
     "browser-sync": "^2.26.3",
     "npm-run-all": "^4.1.5",
-    "polymer-cli": "^1.9.3",
+    "polyserve": "^0.27.14",
     "rollup": "^0.68.1",
     "rollup-plugin-minify-html-literals": "^1.1.2",
     "rollup-plugin-terser": "^3.0.0",
