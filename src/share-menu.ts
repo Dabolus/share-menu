@@ -156,6 +156,7 @@ export class ShareMenu extends HTMLElement {
         const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
         socialButton.title = title;
+        socialButton.setAttribute('part', 'social-button');
         socialButton.addEventListener('click', () => {
           action();
           this.dispatchEvent(new CustomEvent('share', {
@@ -169,10 +170,12 @@ export class ShareMenu extends HTMLElement {
         socialIcon.className = 'icon';
         socialIcon.innerHTML = (socialIcons as { [key: string]: string })[social];
         socialIcon.style.fill = color;
+        socialIcon.setAttribute('part', 'social-icon');
         socialButton.appendChild(socialIcon);
         const socialLabel: HTMLDivElement = document.createElement('div');
         socialLabel.className = 'label';
         socialLabel.textContent = title;
+        socialLabel.setAttribute('part', 'social-label');
         socialButton.appendChild(socialLabel);
         this._socialsContainerRef.appendChild(socialButton);
         if (index === 0) {
@@ -719,9 +722,9 @@ export class ShareMenu extends HTMLElement {
           text-align: center;
         }
       </style>
-      <div id="backdrop" tabindex="-1"></div>
-      <div id="dialog" role="dialog" aria-labelledby="title">
-        <h2 id="title"></h2>
+      <div id="backdrop" part="backdrop" tabindex="-1"></div>
+      <div id="dialog" part="dialog" role="dialog" aria-labelledby="title">
+        <h2 id="title" part="title"></h2>
         <div id="socials-container"></div>
       </div>
     `;
