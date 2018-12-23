@@ -754,7 +754,7 @@ export class ShareMenu extends HTMLElement {
         url: this.url,
       })
         .then(() => {
-          this._close();
+          this.opened = false;
           this.dispatchEvent(new CustomEvent('social-click', {
             bubbles: true,
             composed: true,
