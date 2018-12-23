@@ -123,12 +123,18 @@ The icons used by the component are just simple SVGs, so you can use them anywhe
 `social-icons.js` located in this package.
 
 ## Styling
-The following custom properties and mixins are available for styling:
+The following custom properties and shadow parts are available for styling:
 
-| Custom property             | Description                                           | Default              |
-| --------------------------- | ----------------------------------------------------- | -------------------- |
-| `--backdrop-color`          | The color of the backdrop                             | `#000`               |
-| `--background-color`        | The background color of the fallback dialog           | `#fff`               |
-| `--title-color`             | The color of the title of the fallback dialog         | `rgba(0, 0, 0, .6)`  |
-| `--ripple-color`            | The color of the ripple of the fallback dialog        | `#000`               |
-| `--labels-color`            | The color of the social labels of the fallback dialog | `rgba(0, 0, 0, .87)` |
+| Property             | Description                                                       | Default              |
+| -------------------- | ----------------------------------------------------------------- | -------------------- |
+| `--backdrop-color`   | The color of the backdrop                                         | `#000`               |
+| `--background-color` | The background color of the fallback dialog                       | `#fff`               |
+| `--title-color`      | The color of the title of the fallback dialog                     | `rgba(0, 0, 0, .6)`  |
+| `--ripple-color`     | The color of the ripple of the fallback dialog                    | `#000`               |
+| `--labels-color`     | The color of the social labels of the fallback dialog             | `rgba(0, 0, 0, .87)` |
+| `dialog`             | The part assigned to the fallback dialog                          | `-`                  |
+| `backdrop`           | The part assigned to the backdrop of the fallback dialog          | `-`                  |
+| `title`              | The part assigned to the title of the fallback dialog             | `-`                  |
+| `social-button`      | The part assigned to each social button of the fallback dialog    | `-`                  |
+| `social-icon`        | The part assigned to each social icon of the fallback dialog      | `-`                  |
+| `social-label`       | The part assigned to each social label of the fallback dialog     | `-`                  |
