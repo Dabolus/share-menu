@@ -158,7 +158,7 @@ export class ShareMenu extends HTMLElement {
         socialButton.title = title;
         socialButton.addEventListener('click', () => {
           action();
-          this.dispatchEvent(new CustomEvent('social-click', {
+          this.dispatchEvent(new CustomEvent('share', {
             bubbles: true,
             composed: true,
             detail: { social, origin: 'fallback' },
@@ -755,7 +755,7 @@ export class ShareMenu extends HTMLElement {
       })
         .then(() => {
           this.opened = false;
-          this.dispatchEvent(new CustomEvent('social-click', {
+          this.dispatchEvent(new CustomEvent('share', {
             bubbles: true,
             composed: true,
             detail: { origin: 'native' },
@@ -875,8 +875,8 @@ export class ShareMenu extends HTMLElement {
   /** @private */
   private _showFallbackShare() {
     return new Promise((resolve) => {
-      function socialClickListener(this: ShareMenu) {
-        this.removeEventListener('social-click', socialClickListener);
+      function shareListener(this: ShareMenu) {
+        this.removeEventListener('share', shareListener);
         resolve();
       }
 
@@ -888,7 +888,7 @@ export class ShareMenu extends HTMLElement {
       this._backdropRef.addEventListener('click', this._close.bind(this));
       this.addEventListener('scroll', this._handleScroll.bind(this));
       this.addEventListener('keydown', this._handleKeyDown.bind(this));
-      this.addEventListener('social-click', socialClickListener.bind(this));
+      this.addEventListener('share', shareListener.bind(this));
     });
   }
 
@@ -939,14 +939,14 @@ export class ShareMenu extends HTMLElement {
   }
 
   /**
-   * Fired when a social is clicked.
+   * Fired when the content is shared (i.e. when a social is clicked).
    * The event payload contains an `origin` field that will be equal
    * to `native` if the native share menu has been triggered, or to
    * `fallback` if the fallback share menu has been used instead.
    * If the fallback share menu is used, the event payload will also
    * have a `social` field, that contains the ID of the social chosen by the user.
    *
-   * @event social-click
+   * @event share
    */
 }
 
