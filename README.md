@@ -35,8 +35,8 @@ also be used if you're still on Bower  (e.g. if you're using Polymer < 3). To
 use it, just use the `unpkg` CDN:
 
 ```html
-<script src="https://unpkg.com/share-menu@3.0.1/social-icons.iife.js"></script>
-<script src="https://unpkg.com/share-menu@3.0.1/share-menu.iife.js"></script>
+<script src="https://unpkg.com/share-menu/social-icons.iife.min.js"></script>
+<script src="https://unpkg.com/share-menu/share-menu.iife.min.js"></script>
 ```
 
 ## Try it now!
