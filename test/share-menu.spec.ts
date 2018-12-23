@@ -43,4 +43,10 @@ describe('Share Menu', () => {
       expect(listener).toBeCalledTimes(1);
     });
   });
+
+  describe('Share via fallback dialog', () => {
+    it('defaults to all supported socials unless specified', () => {
+      expect(shareMenu.socials).toEqual(Object.keys(shareMenu['_supportedSocials']));
+    });
+  });
 });
