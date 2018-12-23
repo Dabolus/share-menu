@@ -15,7 +15,7 @@ experience of the native one.
 - Customizable. It offers a great material design UI by default, but it is also 
   designed to be customizable through CSS custom properties. However, keep in 
   mind that CSS mixins have been deprecated, so you won't be able to customize 
-  it a lot until [the new standard](https://drafts.csswg.org/css-shadow-parts) 
+  it a lot until [the new standard](https://www.w3.org/TR/css-shadow-parts-1) 
   makes its way into the browsers.
 - Compatible with any major browser. The Web Share API is still quite young, but 
   the fallback dialog works on any browser supporting Custom Elements (directly 
