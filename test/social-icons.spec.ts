@@ -3,8 +3,10 @@ import '@skatejs/ssr/register';
 import * as socialIcons from '../src/social-icons';
 
 describe('Social Icons', () => {
-  it('contains SVGs that are less than 5kb each', () => {
-    Object.values(socialIcons).forEach((icon: string) =>
-      expect(icon.length).toBeLessThanOrEqual(5120));
-  });
+  Object.entries(socialIcons).map(([key, value]: [string, string]) =>
+    describe(`${key} icon`, () => {
+      it('should weigh less than 5kb', () => {
+        expect(value.length).toBeLessThanOrEqual(5120);
+      });
+    }));
 });
