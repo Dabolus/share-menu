@@ -12,5 +12,11 @@ describe('Social Icons', () => {
       it('has a view box of 256x256', () => {
         expect(value).toContain('viewBox="0 0 256 256"');
       });
+
+      it('does not have fixed width and height', () => {
+        const openingTag = value.substring(0, value.indexOf('>'));
+        expect(openingTag).not.toContain('width');
+        expect(openingTag).not.toContain('height');
+      });
     }));
 });
