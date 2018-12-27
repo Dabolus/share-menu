@@ -5,6 +5,8 @@ src/
 .rpt2_cache/
 test/
 rollup.config.ts
+jest.config.js
+yarn.lock
 .*
 index.html
 ts*.json
