@@ -1,6 +1,7 @@
 # \<share-menu\>
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/share-menu)
 [![GitHub release](https://img.shields.io/github/release/Dabolus/share-menu/all.svg)](https://github.com/Dabolus/share-menu)
+[![Build Status](https://travis-ci.org/Dabolus/share-menu.svg?branch=master)](https://travis-ci.org/Dabolus/share-menu)
 
 _[Demo and API docs](https://www.webcomponents.org/element/Dabolus/share-menu)_
 
