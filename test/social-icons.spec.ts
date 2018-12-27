@@ -5,8 +5,8 @@ import * as socialIcons from '../src/social-icons';
 describe('Social Icons', () => {
   Object.entries(socialIcons).map(([key, value]: [string, string]) =>
     describe(`${key} icon`, () => {
-      it('weighs less than 3kb', () => {
-        expect(value.length).toBeLessThanOrEqual(3072);
+      it('weighs less than 2kb', () => {
+        expect(value.length).toBeLessThanOrEqual(2048);
       });
 
       it('has a view box of 256x256', () => {
