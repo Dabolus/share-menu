@@ -771,7 +771,7 @@ export class ShareMenu extends HTMLElement {
   }
 
   private connectedCallback() {
-    if (!this.text) {
+    if (this.text === null) {
       this.text = (() => {
         const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
         if (description && description.content) {
@@ -780,10 +780,10 @@ export class ShareMenu extends HTMLElement {
         return '';
       })();
     }
-    if (!this.title) {
+    if (this.title === null) {
       this.title = document.title || '';
     }
-    if (!this.url) {
+    if (this.url === null) {
       this.url = (() => {
         const canonical = document.querySelector<HTMLLinkElement>('link[rel=canonical]');
         if (canonical && canonical.href) {
