@@ -321,7 +321,7 @@ export class ShareMenu extends HTMLElement {
       color: '#1da1f2',
       title: 'Twitter',
       action: () => {
-        this._openWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(this.url)}&via=${encodeURIComponent(this.via)}`);
+        this._openWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(this.url)}${this.via ? `&via=${encodeURIComponent(this.via)}` : ''}`);
       },
     },
     whatsapp: {
