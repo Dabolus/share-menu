@@ -1,28 +1,28 @@
 import * as socialIcons from './social-icons.js';
 
 // We need to do this because navigator.share and navigator.clipboard do not currently exist in TypeScript typings
-interface IShareOptions {
+interface ShareOptions {
   url?: string;
   text?: string;
   title?: string;
 }
 
-interface IClipboard {
+interface Clipboard {
   read: () => Promise<DataTransfer>;
   readText: () => Promise<string>;
   write: (dataTransfer: DataTransfer) => Promise<void>;
   writeText: (newClipText: string) => Promise<void>;
 }
 
-interface INavigatorWithShare extends Navigator {
-  share: (options: IShareOptions) => Promise<void>;
-  clipboard: IClipboard;
+interface NavigatorWithShare extends Navigator {
+  share: (options: ShareOptions) => Promise<void>;
+  clipboard: Clipboard;
 }
 
-declare var navigator: INavigatorWithShare;
+declare var navigator: NavigatorWithShare;
 
 // We need to do this because of window.FB (Facebook JS API)
-interface IFB {
+interface FB {
   ui: (options: {
     href?: string;
     method?: string;
@@ -31,11 +31,11 @@ interface IFB {
   }) => void;
 }
 
-interface IWindowWithFBAPI extends Window {
-  FB?: IFB;
+interface WindowWithFBAPI extends Window {
+  FB?: FB;
 }
 
-declare var window: IWindowWithFBAPI;
+declare var window: WindowWithFBAPI;
 
 /**
  * `share-menu` is a complete and simple to use share menu that uses

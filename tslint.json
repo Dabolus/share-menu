@@ -60,6 +60,7 @@
       "check-operator",
       "check-separator",
       "check-type"
-    ]
+    ],
+    "interface-name": [true, "never-prefix"]
   }
 }
