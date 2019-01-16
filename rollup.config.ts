@@ -53,7 +53,13 @@ const getConfig = (input, minify) => ({
           }
         }
       }),
-      terser(),
+      terser({
+        mangle: {
+          properties: {
+            regex: /^_/,
+          },
+        },
+      }),
     ] : [],
   ],
   // Make all dependencies external
