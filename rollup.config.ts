@@ -2,6 +2,7 @@
 import { readdirSync } from 'fs';
 import { resolve } from 'path';
 import minifyHtml from 'rollup-plugin-minify-html-literals';
+import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 
@@ -61,6 +62,11 @@ const getConfig = (input, minify) => ({
         },
       }),
     ] : [],
+    replace({
+      'include': 'src/**/*.ts',
+      'delimiters': ['', ''],
+      './social-icons': './social-icons.js',
+    }),
   ],
   // Make all dependencies external
   external: () => true,

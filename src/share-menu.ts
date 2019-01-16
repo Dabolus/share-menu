@@ -1,4 +1,4 @@
-import * as socialIcons from './social-icons.js';
+import * as socialIcons from './social-icons';
 
 // We need to do this because navigator.share and navigator.clipboard do not currently exist in TypeScript typings
 interface ShareOptions {
