@@ -28,6 +28,23 @@ const getConfig = (input, minify) => ({
     sourcemap: !prod,
   }],
   plugins: [
+    minifyHtml({
+      options: {
+        shouldMinify: (template) => template.parts[0].text.startsWith('<!-- html -->'),
+        minifyOptions: {
+          minifyCSS: true,
+          minifyJS: true,
+          collapseWhitespace: true,
+          collapseBooleanAttributes: true,
+          collapseInlineTagWhitespace: true,
+          removeOptionalTags: true,
+          removeTagWhitespace: true,
+          sortAttributes: true,
+          sortClassName: true,
+          removeRedundantAttributes: true,
+        }
+      }
+    }),
     typescript({
       tsconfigOverride: {
         compilerOptions: {
@@ -37,23 +54,6 @@ const getConfig = (input, minify) => ({
       },
     }),
     ...minify ? [
-      minifyHtml({
-        options: {
-          shouldMinify: (template) => template.parts[0].text.startsWith('<!-- html -->'),
-          minifyOptions: {
-            minifyCSS: true,
-            minifyJS: true,
-            collapseWhitespace: true,
-            collapseBooleanAttributes: true,
-            collapseInlineTagWhitespace: true,
-            removeOptionalTags: true,
-            removeTagWhitespace: true,
-            sortAttributes: true,
-            sortClassName: true,
-            removeRedundantAttributes: true,
-          }
-        }
-      }),
       terser({
         mangle: {
           properties: {
