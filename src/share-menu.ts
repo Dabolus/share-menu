@@ -280,7 +280,10 @@ export class ShareMenu extends HTMLElement {
     }
   }
   public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image', 'no-backdrop'];
+  public static stylesheet?: CSSStyleSheet;
 
+  private static readonly _supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype;
+  private readonly _styles: string;
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
   private _urlIsImage = false;
@@ -604,131 +607,153 @@ export class ShareMenu extends HTMLElement {
   constructor() {
     super();
 
+    this._styles = `/* css */
+      :host {
+        font-family: 'Roboto', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        z-index: -1;
+        will-change: z-index;
+        transition: .3s z-index step-end;
+        overflow-y: auto;
+        display: none;
+      }
+
+      :host([opened]) {
+        z-index: 9999;
+        transition: .3s z-index step-start;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      #backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        background: var(--backdrop-color, #000);
+        will-change: opacity;
+        transition: .3s opacity cubic-bezier(.4, 0, 1, 1);
+        cursor: pointer;
+        z-index: -1;
+      }
+
+      :host([opened]) #backdrop {
+        opacity: .6;
+        transition: .3s opacity cubic-bezier(0, 0, .2, 1);
+      }
+
+      :host([no-backdrop]) #backdrop {
+        display: none;
+      }
+
+      #dialog {
+        margin: 100vh auto 0 auto;
+        background: var(--background-color, #fff);
+        width: 100%;
+        max-width: 640px;
+        will-change: transform;
+        transform: translateY(100vh);
+        transition: .3s transform cubic-bezier(.4, 0, 1, 1);
+      }
+
+      :host([opened]) #dialog {
+        transform: translateY(0);
+        transition: .3s transform cubic-bezier(0, 0, .2, 1);
+      }
+
+      #title {
+        color: var(--title-color, rgba(0, 0, 0, .6));
+        font-weight: 400;
+        font-size: 14px;
+        margin: 0;
+        padding: 12px;
+      }
+
+      #socials-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .social {
+        width: 72px;
+        height: 100px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        background: var(--background-color, #fff);
+        will-change: transform;
+        transition: .3s transform;
+      }
+
+      .social:hover {
+        transform: scale(1.05);
+      }
+
+      .social .icon {
+        position: relative;
+        width: 48px;
+        height: 48px;
+        padding: 8px;
+      }
+
+      .social .icon::before {
+        content: '';
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--ripple-color, #000);
+        opacity: .12;
+        will-change: transform;
+        transition: .3s transform;
+        transform: scale(0);
+      }
+
+      .social:active .icon::before, .social:focus .icon::before {
+        transform: scale(1);
+      }
+
+      .social .label {
+        color: var(--labels-color, rgba(0, 0, 0, .87));
+        font-weight: 400;
+        font-size: 12px;
+        text-align: center;
+      }
+    `;
+
     this._template = document.createElement('template');
-    this._template.innerHTML = `
-      <style>
-        :host {
-          font-family: 'Roboto', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          max-height: 100%;
-          z-index: -1;
-          will-change: z-index;
-          transition: .3s z-index step-end;
-          overflow-y: auto;
-          display: none;
-        }
-        :host([opened]) {
-          z-index: 9999;
-          transition: .3s z-index step-start;
-        }
-        * {
-          box-sizing: border-box;
-        }
-        #backdrop {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0;
-          background: var(--backdrop-color, #000);
-          will-change: opacity;
-          transition: .3s opacity cubic-bezier(.4, 0, 1, 1);
-          cursor: pointer;
-          z-index: -1;
-        }
-        :host([opened]) #backdrop {
-          opacity: .6;
-          transition: .3s opacity cubic-bezier(0, 0, .2, 1);
-        }
-        :host([no-backdrop]) #backdrop {
-          display: none;
-        }
-        #dialog {
-          margin: 100vh auto 0 auto;
-          background: var(--background-color, #fff);
-          width: 100%;
-          max-width: 640px;
-          will-change: transform;
-          transform: translateY(100vh);
-          transition: .3s transform cubic-bezier(.4, 0, 1, 1);
-        }
-        :host([opened]) #dialog {
-          transform: translateY(0);
-          transition: .3s transform cubic-bezier(0, 0, .2, 1);
-        }
-        #title {
-          color: var(--title-color, rgba(0, 0, 0, .6));
-          font-weight: 400;
-          font-size: 14px;
-          margin: 0;
-          padding: 12px;
-        }
-        #socials-container {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-        .social {
-          width: 72px;
-          height: 100px;
-          padding: 12px;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: center;
-          cursor: pointer;
-          border: none;
-          outline: none;
-          background: var(--background-color, #fff);
-          will-change: transform;
-          transition: .3s transform;
-        }
-        .social:hover {
-          transform: scale(1.05);
-        }
-        .social .icon {
-          position: relative;
-          width: 48px;
-          height: 48px;
-          padding: 8px;
-        }
-        .social .icon::before {
-          content: '';
-          z-index: -1;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          background: var(--ripple-color, #000);
-          opacity: .12;
-          will-change: transform;
-          transition: .3s transform;
-          transform: scale(0);
-        }
-        .social:active .icon::before, .social:focus .icon::before {
-          transform: scale(1);
-        }
-        .social .label {
-          color: var(--labels-color, rgba(0, 0, 0, .87));
-          font-weight: 400;
-          font-size: 12px;
-          text-align: center;
-        }
-      </style>
+    this._template.innerHTML = `<!-- html -->
+      ${ShareMenu._supportsAdoptingStyleSheets ? '' : `<style>${this._styles}</style>`}
       <div id="backdrop" part="backdrop" tabindex="-1"></div>
       <div id="dialog" part="dialog" role="dialog" aria-labelledby="title">
         <h2 id="title" part="title"></h2>
         <div id="socials-container"></div>
       </div>
     `;
+
     this.attachShadow({ mode: 'open' });
+    if (ShareMenu._supportsAdoptingStyleSheets) {
+      ShareMenu.stylesheet = new CSSStyleSheet();
+      (this.shadowRoot as any).adoptedStyleSheets = [ShareMenu.stylesheet];
+    }
     this.shadowRoot.appendChild(this._template.content.cloneNode(true));
   }
 
@@ -771,6 +796,9 @@ export class ShareMenu extends HTMLElement {
   }
 
   private connectedCallback() {
+    if (ShareMenu._supportsAdoptingStyleSheets && ShareMenu.stylesheet &&  ShareMenu.stylesheet.cssRules.length === 0) {
+      (ShareMenu.stylesheet as any).replace(this._styles);
+    }
     if (this.text === null) {
       this.text = (() => {
         const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
