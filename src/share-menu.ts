@@ -37,6 +37,15 @@ interface WindowWithFBAPI extends Window {
 
 declare var window: WindowWithFBAPI;
 
+interface ShadowRootWithAdoptedStylesheets extends ShadowRoot {
+  adoptedStyleSheets: CSSStyleSheet[];
+}
+
+interface CSSStyleSheetWithReplace extends CSSStyleSheet {
+  replace: (text: string) => Promise<CSSStyleSheet>;
+  replaceSync: (text: string) => void;
+}
+
 /**
  * `share-menu` is a complete and simple to use share menu that uses
  * [Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) when possible,
@@ -280,7 +289,7 @@ export class ShareMenu extends HTMLElement {
     }
   }
   public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image', 'no-backdrop'];
-  public static stylesheet?: CSSStyleSheet;
+  public static stylesheet?: CSSStyleSheetWithReplace;
 
   private static readonly _supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype;
   private readonly _styles: string;
@@ -751,8 +760,8 @@ export class ShareMenu extends HTMLElement {
 
     this.attachShadow({ mode: 'open' });
     if (ShareMenu._supportsAdoptingStyleSheets) {
-      ShareMenu.stylesheet = new CSSStyleSheet();
-      (this.shadowRoot as any).adoptedStyleSheets = [ShareMenu.stylesheet];
+      ShareMenu.stylesheet = new CSSStyleSheet() as CSSStyleSheetWithReplace;
+      (this.shadowRoot as ShadowRootWithAdoptedStylesheets).adoptedStyleSheets = [ShareMenu.stylesheet];
     }
     this.shadowRoot.appendChild(this._template.content.cloneNode(true));
   }
@@ -797,7 +806,7 @@ export class ShareMenu extends HTMLElement {
 
   private connectedCallback() {
     if (ShareMenu._supportsAdoptingStyleSheets && ShareMenu.stylesheet &&  ShareMenu.stylesheet.cssRules.length === 0) {
-      (ShareMenu.stylesheet as any).replace(this._styles);
+      ShareMenu.stylesheet.replace(this._styles);
     }
     if (this.text === null) {
       this.text = (() => {
