@@ -65,7 +65,7 @@ const getConfig = (input, minify) => ({
     replace({
       'include': 'src/**/*.ts',
       'delimiters': ['', ''],
-      './social-icons': './social-icons.js',
+      './social-icons': `./social-icons${minify ? '.min' : ''}.js`,
     }),
   ],
   // Make all dependencies external
