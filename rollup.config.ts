@@ -38,7 +38,7 @@ const getConfig = (input, minify) => ({
     ...minify ? [
       minifyHtml({
         options: {
-          shouldMinify: (template) => /\s*<[a-z](?:[^`\\]|\\.)*>\s*/gm.test(template.parts[0].text),
+          shouldMinify: (template) => template.parts[0].text.startsWith('<!-- html -->'),
           minifyOptions: {
             minifyCSS: true,
             minifyJS: true,
