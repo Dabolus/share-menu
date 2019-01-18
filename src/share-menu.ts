@@ -994,6 +994,14 @@ export class ShareMenu extends HTMLElement {
    *
    * @event share
    */
+
+  /**
+   * Fired when there is an error while sharing.
+   * The reason of the error can be found in the `message` field of
+   * the event payload.
+   *
+   * @event error
+   */
 }
 
 window.customElements.define('share-menu', ShareMenu);
