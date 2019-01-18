@@ -308,9 +308,16 @@ export class ShareMenu extends HTMLElement {
       color: '#777',
       title: 'Copy to clipboard',
       action: () => {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`).catch(alert);
+        const errorEvent = new CustomEvent('error', {
+          bubbles: true,
+          composed: true,
+          detail: { message: 'Unable to copy to clipboard' },
+        });
+        if (!navigator.clipboard) {
+          return this.dispatchEvent(errorEvent);
         }
+        navigator.clipboard.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
+          .catch(() => this.dispatchEvent(errorEvent));
       },
     },
     facebook: {
@@ -797,7 +804,6 @@ export class ShareMenu extends HTMLElement {
             composed: true,
             detail: { origin: 'native' },
           }));
-
         })
         .catch(() => this._showFallbackShare());
     }
