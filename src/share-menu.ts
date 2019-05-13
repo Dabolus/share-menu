@@ -7,16 +7,8 @@ interface ShareOptions {
   title?: string;
 }
 
-interface Clipboard {
-  read: () => Promise<DataTransfer>;
-  readText: () => Promise<string>;
-  write: (dataTransfer: DataTransfer) => Promise<void>;
-  writeText: (newClipText: string) => Promise<void>;
-}
-
 interface NavigatorWithShare extends Navigator {
   share: (options: ShareOptions) => Promise<void>;
-  clipboard: Clipboard;
 }
 
 declare var navigator: NavigatorWithShare;
