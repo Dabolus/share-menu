@@ -31,8 +31,15 @@ const getConfig = (input, minify) => ({
     minifyHtml({
       options: {
         shouldMinify: (template) => template.parts[0].text.startsWith('<!-- html -->'),
+        shouldMinifyCSS: (template) => template.parts[0].text.startsWith('/* css */'),
         minifyOptions: {
-          minifyCSS: true,
+          minifyCSS: {
+            level: {
+              2: {
+                all: true,
+              },
+            },
+          },
           minifyJS: true,
           collapseWhitespace: true,
           collapseBooleanAttributes: true,
