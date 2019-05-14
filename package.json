@@ -1,6 +1,6 @@
 {
   "name": "share-menu",
-  "version": "4.0.0-rc.3",
+  "version": "4.0.0-rc.4",
   "description": "A complete and simple to use share menu.",
   "main": "share-menu.js",
   "module": "share-menu.js",
