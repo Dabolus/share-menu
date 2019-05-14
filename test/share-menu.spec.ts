@@ -3,25 +3,17 @@ import '@skatejs/ssr/register';
 import { ShareMenu } from '../src/share-menu';
 
 // We need to do this because navigator.share and navigator.clipboard do not currently exist in TypeScript typings
-interface IShareOptions {
+interface ShareOptions {
   url?: string;
   text?: string;
   title?: string;
 }
 
-interface IClipboard {
-  read: () => Promise<DataTransfer>;
-  readText: () => Promise<string>;
-  write: (dataTransfer: DataTransfer) => Promise<void>;
-  writeText: (newClipText: string) => Promise<void>;
+interface NavigatorWithShare extends Navigator {
+  share: (options: ShareOptions) => Promise<void>;
 }
 
-interface INavigatorWithShare extends Navigator {
-  share: (options: IShareOptions) => Promise<void>;
-  clipboard: IClipboard;
-}
-
-declare var navigator: INavigatorWithShare;
+declare var navigator: NavigatorWithShare;
 
 describe('Share Menu', () => {
   const shareMenu = new ShareMenu();
