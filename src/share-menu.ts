@@ -997,3 +997,9 @@ export class ShareMenu extends HTMLElement {
 }
 
 window.customElements.define('share-menu', ShareMenu);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'share-menu': ShareMenu;
+  }
+}
