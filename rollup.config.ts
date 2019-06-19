@@ -1,4 +1,3 @@
-// tslint:disable:object-literal-sort-keys
 import { readdirSync } from 'fs';
 import { resolve } from 'path';
 import minifyHtml from 'rollup-plugin-minify-html-literals';
@@ -9,29 +8,34 @@ import typescript from 'rollup-plugin-typescript2';
 const prod = process.env.NODE_ENV === 'production';
 
 const inputs = readdirSync('src')
-  .filter((file) => !file.endsWith('.d.ts'))
-  .map((file) => file.slice(0, -3));
+  .filter(file => !file.endsWith('.d.ts'))
+  .map(file => file.slice(0, -3));
 
 const getConfig = (input, minify) => ({
   input: `src/${input}.ts`,
-  output: [{
-    file: `${input}${minify ? '.min' : ''}.js`,
-    format: 'es',
-    sourcemap: !prod,
-  }, {
-    file: `${input}.iife${minify ? '.min' : ''}.js`,
-    format: 'iife',
-    name: `dabolus.${input.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
-    globals: {
-      [resolve(__dirname, `src/social-icons.js`)]: 'dabolus.socialIcons',
+  output: [
+    {
+      file: `${input}${minify ? '.min' : ''}.js`,
+      format: 'es',
+      sourcemap: !prod,
     },
-    sourcemap: !prod,
-  }],
+    {
+      file: `${input}.iife${minify ? '.min' : ''}.js`,
+      format: 'iife',
+      name: `dabolus.${input.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
+      globals: {
+        [resolve(__dirname, `src/social-icons.js`)]: 'dabolus.socialIcons',
+      },
+      sourcemap: !prod,
+    },
+  ],
   plugins: [
     minifyHtml({
       options: {
-        shouldMinify: (template) => template.parts[0].text.startsWith('<!-- html -->'),
-        shouldMinifyCSS: (template) => template.parts[0].text.startsWith('/* css */'),
+        shouldMinify: template =>
+          template.parts[0].text.startsWith('<!-- html -->'),
+        shouldMinifyCSS: template =>
+          template.parts[0].text.startsWith('/* css */'),
         minifyOptions: {
           minifyCSS: {
             level: {
@@ -49,8 +53,8 @@ const getConfig = (input, minify) => ({
           sortAttributes: true,
           sortClassName: true,
           removeRedundantAttributes: true,
-        }
-      }
+        },
+      },
     }),
     typescript({
       tsconfigOverride: {
@@ -60,18 +64,20 @@ const getConfig = (input, minify) => ({
         },
       },
     }),
-    ...minify ? [
-      terser({
-        mangle: {
-          properties: {
-            regex: /^_/,
-          },
-        },
-      }),
-    ] : [],
+    ...(minify
+      ? [
+          terser({
+            mangle: {
+              properties: {
+                regex: /^_/,
+              },
+            },
+          }),
+        ]
+      : []),
     replace({
-      'include': 'src/**/*.ts',
-      'delimiters': ['', ''],
+      include: 'src/**/*.ts',
+      delimiters: ['', ''],
       './social-icons': `./social-icons${minify ? '.min' : ''}.js`,
     }),
   ],
@@ -79,5 +85,11 @@ const getConfig = (input, minify) => ({
   external: () => true,
 });
 
-export default inputs.reduce((configs, input) =>
-  [...configs, getConfig(input, false), ...prod ? [getConfig(input, true)] : []], []);
+export default inputs.reduce(
+  (configs, input) => [
+    ...configs,
+    getConfig(input, false),
+    ...(prod ? [getConfig(input, true)] : []),
+  ],
+  [],
+);

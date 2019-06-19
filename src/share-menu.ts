@@ -103,7 +103,6 @@ interface CSSStyleSheetWithReplace extends CSSStyleSheet {
  * @demo demo/index.html
  */
 export class ShareMenu extends HTMLElement {
-
   /**
    * Whether the fallback dialog is currently opened or not.
    *
@@ -154,22 +153,28 @@ export class ShareMenu extends HTMLElement {
           return;
         }
         const { color, title, action } = this._supportedSocials[social];
-        const socialButton: HTMLButtonElement = document.createElement('button');
+        const socialButton: HTMLButtonElement = document.createElement(
+          'button',
+        );
         socialButton.className = 'social';
         socialButton.title = title;
         socialButton.setAttribute('part', 'social-button');
         socialButton.addEventListener('click', () => {
           action();
-          this.dispatchEvent(new CustomEvent('share', {
-            bubbles: true,
-            composed: true,
-            detail: { social, origin: 'fallback' },
-          }));
+          this.dispatchEvent(
+            new CustomEvent('share', {
+              bubbles: true,
+              composed: true,
+              detail: { social, origin: 'fallback' },
+            }),
+          );
           this._close();
         });
         const socialIcon: HTMLDivElement = document.createElement('div');
         socialIcon.className = 'icon';
-        socialIcon.innerHTML = (socialIcons as { [key: string]: string })[social];
+        socialIcon.innerHTML = (socialIcons as { [key: string]: string })[
+          social
+        ];
         socialIcon.style.fill = color;
         socialIcon.setAttribute('part', 'social-icon');
         socialButton.appendChild(socialIcon);
@@ -280,10 +285,17 @@ export class ShareMenu extends HTMLElement {
       this.removeAttribute('no-backdrop');
     }
   }
-  public static readonly observedAttributes = ['dialog-title', 'opened', 'url', 'is-image', 'no-backdrop'];
+  public static readonly observedAttributes = [
+    'dialog-title',
+    'opened',
+    'url',
+    'is-image',
+    'no-backdrop',
+  ];
   public static stylesheet?: CSSStyleSheetWithReplace;
 
-  private static readonly _supportsAdoptingStyleSheets = 'adoptedStyleSheets' in Document.prototype;
+  private static readonly _supportsAdoptingStyleSheets =
+    'adoptedStyleSheets' in Document.prototype;
   private readonly _styles: string;
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
@@ -294,8 +306,9 @@ export class ShareMenu extends HTMLElement {
   private _dialogRef: HTMLDivElement;
   private _dialogTitleRef: HTMLHeadingElement;
   private _socialsContainerRef: HTMLDivElement;
-  /* tslint:disable:object-literal-sort-keys max-line-length */
-  private readonly _supportedSocials: { [key: string]: { color: string; title: string; action: () => void; } } = {
+  private readonly _supportedSocials: {
+    [key: string]: { color: string; title: string; action: () => void };
+  } = {
     clipboard: {
       color: '#777',
       title: 'Copy to clipboard',
@@ -308,7 +321,8 @@ export class ShareMenu extends HTMLElement {
         if (!navigator.clipboard) {
           return this.dispatchEvent(errorEvent);
         }
-        navigator.clipboard.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
+        navigator.clipboard
+          .writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
           .catch(() => this.dispatchEvent(errorEvent));
       },
     },
@@ -320,11 +334,17 @@ export class ShareMenu extends HTMLElement {
           window.FB.ui({
             href: this.url,
             method: 'share',
-            mobile_iframe: true,
+            mobile_iframe: true, // eslint-disable-line @typescript-eslint/camelcase
             quote: this.text,
           });
         } else {
-          this._openWindow(`https://www.facebook.com/sharer.php?u=${encodeURIComponent(this.url)}&description=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}`);
+          this._openWindow(
+            `https://www.facebook.com/sharer.php?u=${encodeURIComponent(
+              this.url,
+            )}&description=${encodeURIComponent(
+              this.title,
+            )}%0A%0A${encodeURIComponent(this.text)}`,
+          );
         }
       },
     },
@@ -332,35 +352,64 @@ export class ShareMenu extends HTMLElement {
       color: '#1da1f2',
       title: 'Twitter',
       action: () => {
-        this._openWindow(`https://twitter.com/intent/tweet?text=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(this.url)}${this.via ? `&via=${encodeURIComponent(this.via)}` : ''}`);
+        this._openWindow(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            this.title,
+          )}%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(
+            this.url,
+          )}${this.via ? `&via=${encodeURIComponent(this.via)}` : ''}`,
+        );
       },
     },
     whatsapp: {
       color: '#25d366',
       title: 'WhatsApp',
       action: () => {
-        window.open(`whatsapp://send?text=*${encodeURIComponent(this.title)}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+        window.open(
+          `whatsapp://send?text=*${encodeURIComponent(
+            this.title,
+          )}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
+            this.url,
+          )}`,
+          '_self',
+        );
       },
     },
     telegram: {
       color: '#0088cc',
       title: 'Telegram',
       action: () => {
-        this._openWindow(`https://t.me/share/url?url=${encodeURIComponent(this.url)}&text=**${encodeURIComponent(this.title)}**%0A${encodeURIComponent(this.text)}`);
+        this._openWindow(
+          `https://t.me/share/url?url=${encodeURIComponent(
+            this.url,
+          )}&text=**${encodeURIComponent(this.title)}**%0A${encodeURIComponent(
+            this.text,
+          )}`,
+        );
       },
     },
     linkedin: {
       color: '#0077b5',
       title: 'LinkedIn',
       action: () => {
-        this._openWindow(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&summary=${encodeURIComponent(this.text)}&source=${encodeURIComponent(this.via)}`);
+        this._openWindow(
+          `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(
+            this.title,
+          )}&summary=${encodeURIComponent(
+            this.text,
+          )}&source=${encodeURIComponent(this.via)}`,
+        );
       },
     },
     gplus: {
       color: '#dd4b39',
       title: 'Google+',
       action: () => {
-        this._openWindow(`https://plus.google.com/share?url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://plus.google.com/share?url=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     pinterest: {
@@ -371,7 +420,8 @@ export class ShareMenu extends HTMLElement {
         const button = document.createElement('button');
         button.onclick = () => {
           const script = document.createElement('script');
-          script.src = `https://assets.pinterest.com/js/pinmarklet.js?r=${Math.random() * 99999999}`;
+          script.src = `https://assets.pinterest.com/js/pinmarklet.js?r=${Math.random() *
+            99999999}`;
           document.body.appendChild(script);
         };
         button.style.display = 'none';
@@ -390,7 +440,13 @@ export class ShareMenu extends HTMLElement {
       color: '#35465c',
       title: 'Tumblr',
       action: () => {
-        this._openWindow(`https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&caption=${encodeURIComponent(this.text)}`);
+        this._openWindow(
+          `https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(
+            this.title,
+          )}&caption=${encodeURIComponent(this.text)}`,
+        );
       },
     },
     reddit: {
@@ -398,9 +454,19 @@ export class ShareMenu extends HTMLElement {
       title: 'Reddit',
       action: () => {
         if (this.text) {
-          this._openWindow(`https://reddit.com/submit?text=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+          this._openWindow(
+            `https://reddit.com/submit?text=${encodeURIComponent(
+              this.text,
+            )}%0A%0A${encodeURIComponent(this.url)}&title=${encodeURIComponent(
+              this.title,
+            )}`,
+          );
         } else {
-          this._openWindow(`https://reddit.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+          this._openWindow(
+            `https://reddit.com/submit?url=${encodeURIComponent(
+              this.url,
+            )}&title=${encodeURIComponent(this.title)}`,
+          );
         }
       },
     },
@@ -408,148 +474,241 @@ export class ShareMenu extends HTMLElement {
       color: '#45668e',
       title: 'VK',
       action: () => {
-        this._openWindow(`https://vk.com/share.php?url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://vk.com/share.php?url=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     skype: {
       color: '#00aff0',
       title: 'Skype',
       action: () => {
-        this._openWindow(`https://web.skype.com/share?url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://web.skype.com/share?url=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     viber: {
       color: '#59267c',
       title: 'Viber',
       action: () => {
-        window.open(`viber://forward?text=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+        window.open(
+          `viber://forward?text=${encodeURIComponent(
+            this.title,
+          )}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
+            this.url,
+          )}`,
+          '_self',
+        );
       },
     },
     line: {
       color: '#00c300',
       title: 'Line',
       action: () => {
-        this._openWindow(`https://lineit.line.me/share/ui?url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://lineit.line.me/share/ui?url=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     qzone: {
       color: '#ffce00',
       title: 'Qzone',
       action: () => {
-        this._openWindow(`https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(
+            this.url,
+          )}`,
+        );
       },
     },
     wordpress: {
       color: '#0087be',
       title: 'WordPress',
       action: () => {
-        const img = this._urlIsImage ? `&i=${encodeURIComponent(this.url)}` : '';
-        this._openWindow(`https://wordpress.com/press-this.php?u=${encodeURIComponent(window.location.href)}&t=${encodeURIComponent(this.title)}&s=${encodeURIComponent(this.text)}${img}`);
+        const img = this._urlIsImage
+          ? `&i=${encodeURIComponent(this.url)}`
+          : '';
+        this._openWindow(
+          `https://wordpress.com/press-this.php?u=${encodeURIComponent(
+            window.location.href,
+          )}&t=${encodeURIComponent(this.title)}&s=${encodeURIComponent(
+            this.text,
+          )}${img}`,
+        );
       },
     },
     blogger: {
       color: '#f57d00',
       title: 'Blogger',
       action: () => {
-        this._openWindow(`https://www.blogger.com/blog-this.g?u=${encodeURIComponent(this.url)}&n=${encodeURIComponent(this.title)}&t=${encodeURIComponent(this.text)}`);
+        this._openWindow(
+          `https://www.blogger.com/blog-this.g?u=${encodeURIComponent(
+            this.url,
+          )}&n=${encodeURIComponent(this.title)}&t=${encodeURIComponent(
+            this.text,
+          )}`,
+        );
       },
     },
     flipboard: {
       color: '#e12828',
       title: 'Flipboard',
       action: () => {
-        this._openWindow(`https://share.flipboard.com/bookmarklet/popout?v=2&title=${encodeURIComponent(this.title)}&url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://share.flipboard.com/bookmarklet/popout?v=2&title=${encodeURIComponent(
+            this.title,
+          )}&url=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     evernote: {
       color: '#2dbe60',
       title: 'Evernote',
       action: () => {
-        this._openWindow(`https://www.evernote.com/clip.action?url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://www.evernote.com/clip.action?url=${encodeURIComponent(
+            this.url,
+          )}`,
+        );
       },
     },
     myspace: {
       color: '#000',
       title: 'Myspace',
       action: () => {
-        this._openWindow(`https://myspace.com/post?u=${encodeURIComponent(this.url)}&t=${encodeURIComponent(this.title)}&c=${encodeURIComponent(this.text)}`);
+        this._openWindow(
+          `https://myspace.com/post?u=${encodeURIComponent(
+            this.url,
+          )}&t=${encodeURIComponent(this.title)}&c=${encodeURIComponent(
+            this.text,
+          )}`,
+        );
       },
     },
     pocket: {
       color: '#ef4056',
       title: 'Pocket',
       action: () => {
-        this._openWindow(`https://getpocket.com/save?url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://getpocket.com/save?url=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     livejournal: {
       color: '#004359',
       title: 'LiveJournal',
       action: () => {
-        this._openWindow(`http://www.livejournal.com/update.bml?subject=${encodeURIComponent(this.title)}&event=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `http://www.livejournal.com/update.bml?subject=${encodeURIComponent(
+            this.title,
+          )}&event=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
+            this.url,
+          )}`,
+        );
       },
     },
     instapaper: {
       color: '#000',
       title: 'Instapaper',
       action: () => {
-        this._openWindow(`https://www.instapaper.com/edit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}&description=${encodeURIComponent(this.text)}`);
+        this._openWindow(
+          `https://www.instapaper.com/edit?url=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(
+            this.title,
+          )}&description=${encodeURIComponent(this.text)}`,
+        );
       },
     },
     baidu: {
       color: '#2529d8',
       title: 'Baidu',
       action: () => {
-        this._openWindow(`http://cang.baidu.com/do/add?it=${encodeURIComponent(this.title)}&iu=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `http://cang.baidu.com/do/add?it=${encodeURIComponent(
+            this.title,
+          )}&iu=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     okru: {
       color: '#ee8208',
       title: 'OK.ru',
       action: () => {
-        this._openWindow(`https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        this._openWindow(
+          `https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(this.title)}`,
+        );
       },
     },
     xing: {
       color: '#026466',
       title: 'XING',
       action: () => {
-        this._openWindow(`https://www.xing.com/app/user?op=share&url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://www.xing.com/app/user?op=share&url=${encodeURIComponent(
+            this.url,
+          )}`,
+        );
       },
     },
     delicious: {
       color: '#3399ff',
       title: 'Delicious',
       action: () => {
-        this._openWindow(`https://del.icio.us/save?v=5&provider=${encodeURIComponent(this.via)}&noui&jump=close&url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        this._openWindow(
+          `https://del.icio.us/save?v=5&provider=${encodeURIComponent(
+            this.via,
+          )}&noui&jump=close&url=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(this.title)}`,
+        );
       },
     },
     buffer: {
       color: '#323b43',
       title: 'Buffer',
       action: () => {
-        this._openWindow(`https://buffer.com/add?text=${encodeURIComponent(this.title)}&url=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://buffer.com/add?text=${encodeURIComponent(
+            this.title,
+          )}&url=${encodeURIComponent(this.url)}`,
+        );
       },
     },
     digg: {
       color: '#005be2',
       title: 'Digg',
       action: () => {
-        this._openWindow(`https://digg.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        this._openWindow(
+          `https://digg.com/submit?url=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(this.title)}`,
+        );
       },
     },
     douban: {
       color: '#007610',
       title: 'Douban',
       action: () => {
-        this._openWindow(`https://www.douban.com/recommend/?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        this._openWindow(
+          `https://www.douban.com/recommend/?url=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(this.title)}`,
+        );
       },
     },
     stumbleupon: {
       color: '#eb4924',
       title: 'StumbleUpon',
       action: () => {
-        this._openWindow(`https://www.stumbleupon.com/submit?url=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}`);
+        this._openWindow(
+          `https://www.stumbleupon.com/submit?url=${encodeURIComponent(
+            this.url,
+          )}&title=${encodeURIComponent(this.title)}`,
+        );
       },
     },
     /* renren: {
@@ -563,7 +722,13 @@ export class ShareMenu extends HTMLElement {
       color: '#df2029',
       title: 'Weibo',
       action: () => {
-        this._openWindow(`http://service.weibo.com/share/share.php?url=${encodeURIComponent(this.url)}&appkey=&title=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}&pic=&ralateUid=`);
+        this._openWindow(
+          `http://service.weibo.com/share/share.php?url=${encodeURIComponent(
+            this.url,
+          )}&appkey=&title=${encodeURIComponent(
+            this.title,
+          )}%0A%0A${encodeURIComponent(this.text)}&pic=&ralateUid=`,
+        );
       },
     },
     print: {
@@ -578,14 +743,25 @@ export class ShareMenu extends HTMLElement {
       title: 'Translate',
       action: () => {
         const userLang = navigator.language.substring(0, 2);
-        this._openWindow(`https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${encodeURIComponent(
+            this.url,
+          )}`,
+        );
       },
     },
     email: {
       color: '#ffa930',
       title: 'Email',
       action: () => {
-        window.open(`mailto:?subject=${encodeURIComponent(this.title)}&body=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+        window.open(
+          `mailto:?subject=${encodeURIComponent(
+            this.title,
+          )}&body=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
+            this.url,
+          )}`,
+          '_self',
+        );
       },
     },
     sms: {
@@ -595,24 +771,36 @@ export class ShareMenu extends HTMLElement {
         let separator = '?';
         // iOS uses two different separators, so we have to check the iOS version and use the proper one
         if (/iP(hone|od|ad)/.test(navigator.platform)) {
-          const v = (navigator.appVersion).match(/OS (\d+)/);
+          const v = navigator.appVersion.match(/OS (\d+)/);
           separator = parseInt(v[1], 10) < 8 ? ';' : '&';
         }
-        window.open(`sms:${separator}body=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, '_self');
+        window.open(
+          `sms:${separator}body=${encodeURIComponent(
+            this.title,
+          )}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
+            this.url,
+          )}`,
+          '_self',
+        );
       },
     },
     yahoo: {
       color: '#410093',
       title: 'Yahoo!',
       action: () => {
-        this._openWindow(`https://compose.mail.yahoo.com/?body=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}%0A%0A%${encodeURIComponent(this.url)}`);
+        this._openWindow(
+          `https://compose.mail.yahoo.com/?body=${encodeURIComponent(
+            this.title,
+          )}%0A%0A${encodeURIComponent(this.text)}%0A%0A%${encodeURIComponent(
+            this.url,
+          )}`,
+        );
       },
     },
   };
-  /* tslint:enable:object-literal-sort-keys max-line-length */
   private _socials: string[] = Object.keys(this._supportedSocials);
 
-  constructor() {
+  public constructor() {
     super();
 
     this._styles = `/* css */
@@ -749,7 +937,11 @@ export class ShareMenu extends HTMLElement {
 
     this._template = document.createElement('template');
     this._template.innerHTML = `<!-- html -->
-      ${ShareMenu._supportsAdoptingStyleSheets ? '' : `<style>${this._styles}</style>`}
+      ${
+        ShareMenu._supportsAdoptingStyleSheets
+          ? ''
+          : `<style>${this._styles}</style>`
+      }
       <div id="backdrop" part="backdrop" tabindex="-1"></div>
       <div id="dialog" part="dialog" role="dialog" aria-labelledby="title">
         <h2 id="title" part="title"></h2>
@@ -760,7 +952,10 @@ export class ShareMenu extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     if (ShareMenu._supportsAdoptingStyleSheets) {
       ShareMenu.stylesheet = new CSSStyleSheet() as CSSStyleSheetWithReplace;
-      (this.shadowRoot as ShadowRootWithAdoptedStylesheets).adoptedStyleSheets = [ShareMenu.stylesheet];
+      (this
+        .shadowRoot as ShadowRootWithAdoptedStylesheets).adoptedStyleSheets = [
+        ShareMenu.stylesheet,
+      ];
     }
     this.shadowRoot.appendChild(this._template.content.cloneNode(true));
   }
@@ -773,29 +968,34 @@ export class ShareMenu extends HTMLElement {
    * @param {{ text: string, title: string, url: string, via: string }=} props An object containing `text`, `title`, `url` and `via`, that will override the element attributes/properties.
    * @return {Promise<void>} A promise that resolves when the user selects a social.
    */
-  public share(props = {
-    text: this.text,
-    title: this.title,
-    url: this.url,
-    via: this.via,
-  }) {
+  public share(
+    props = {
+      text: this.text,
+      title: this.title,
+      url: this.url,
+      via: this.via,
+    },
+  ) {
     this.text = props.text;
     this.title = props.title;
     this.url = props.url;
     this.via = props.via;
     if (navigator.share) {
-      return navigator.share({
-        text: this.text,
-        title: this.title,
-        url: this.url,
-      })
+      return navigator
+        .share({
+          text: this.text,
+          title: this.title,
+          url: this.url,
+        })
         .then(() => {
           this.opened = false;
-          this.dispatchEvent(new CustomEvent('share', {
-            bubbles: true,
-            composed: true,
-            detail: { origin: 'native' },
-          }));
+          this.dispatchEvent(
+            new CustomEvent('share', {
+              bubbles: true,
+              composed: true,
+              detail: { origin: 'native' },
+            }),
+          );
         })
         .catch(() => this._showFallbackShare());
     }
@@ -803,12 +1003,18 @@ export class ShareMenu extends HTMLElement {
   }
 
   private connectedCallback() {
-    if (ShareMenu._supportsAdoptingStyleSheets && ShareMenu.stylesheet &&  ShareMenu.stylesheet.cssRules.length === 0) {
+    if (
+      ShareMenu._supportsAdoptingStyleSheets &&
+      ShareMenu.stylesheet &&
+      ShareMenu.stylesheet.cssRules.length === 0
+    ) {
       ShareMenu.stylesheet.replace(this._styles);
     }
     if (this.text === null) {
       this.text = (() => {
-        const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+        const description = document.querySelector<HTMLMetaElement>(
+          'meta[name="description"]',
+        );
         if (description && description.content) {
           return description.content;
         }
@@ -820,7 +1026,9 @@ export class ShareMenu extends HTMLElement {
     }
     if (this.url === null) {
       this.url = (() => {
-        const canonical = document.querySelector<HTMLLinkElement>('link[rel=canonical]');
+        const canonical = document.querySelector<HTMLLinkElement>(
+          'link[rel=canonical]',
+        );
         if (canonical && canonical.href) {
           return canonical.href;
         }
@@ -831,16 +1039,26 @@ export class ShareMenu extends HTMLElement {
       this.dialogTitle = 'Share with';
     }
 
-    this._backdropRef = this.shadowRoot.querySelector<HTMLDivElement>('#backdrop');
+    this._backdropRef = this.shadowRoot.querySelector<HTMLDivElement>(
+      '#backdrop',
+    );
     this._dialogRef = this.shadowRoot.querySelector<HTMLDivElement>('#dialog');
-    this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
+    this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>(
+      '#title',
+    );
     this._dialogTitleRef.textContent = this.dialogTitle;
-    this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
+    this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>(
+      '#socials-container',
+    );
     this.socials = Object.keys(this._supportedSocials);
   }
 
   /** @private */
-  private attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  private attributeChangedCallback(
+    name: string,
+    oldValue: string,
+    newValue: string,
+  ) {
     if (oldValue === newValue) {
       return;
     }
@@ -905,14 +1123,16 @@ export class ShareMenu extends HTMLElement {
     return window.open(
       url,
       '_blank',
-      `width=${screen.width / 2},height=${screen.height / 2},left=${screen.width / 4},top=${screen.height / 4},menubar=0,status=0,titlebar=0,toolbar=0`, // tslint:disable-line:max-line-length
+      `width=${screen.width / 2},height=${screen.height /
+        2},left=${screen.width / 4},top=${screen.height /
+        4},menubar=0,status=0,titlebar=0,toolbar=0`,
       false,
     );
   }
 
   /** @private */
   private _showFallbackShare() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       function shareListener(this: ShareMenu) {
         this.removeEventListener('share', shareListener);
         resolve();
@@ -921,7 +1141,10 @@ export class ShareMenu extends HTMLElement {
       this._previousFocus = document.activeElement as HTMLElement;
       this.style.display = 'block';
       this._firstFocusableElRef.focus();
-      this.scrollTop = Math.max(window.innerHeight / 2, window.innerHeight - this._dialogRef.offsetHeight);
+      this.scrollTop = Math.max(
+        window.innerHeight / 2,
+        window.innerHeight - this._dialogRef.offsetHeight,
+      );
       this.opened = true;
       this._backdropRef.addEventListener('click', this._close.bind(this));
       this.addEventListener('scroll', this._handleScroll.bind(this));
@@ -943,7 +1166,7 @@ export class ShareMenu extends HTMLElement {
       this._previousFocus.focus();
       this._previousFocus = null;
     }
-    setTimeout(() => this.style.display = 'none', 300);
+    setTimeout(() => (this.style.display = 'none'), 300);
   }
 
   /** @private */
@@ -964,7 +1187,8 @@ export class ShareMenu extends HTMLElement {
           e.preventDefault();
           break;
         }
-        const activeEl = this.shadowRoot.activeElement || document.activeElement;
+        const activeEl =
+          this.shadowRoot.activeElement || document.activeElement;
         if (e.shiftKey && activeEl === this._firstFocusableElRef) {
           e.preventDefault();
           this._lastFocusableElRef.focus();

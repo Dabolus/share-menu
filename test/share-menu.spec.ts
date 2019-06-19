@@ -1,4 +1,3 @@
-// tslint:disable:no-string-literal
 import '@skatejs/ssr/register';
 import { ShareMenu } from '../src/share-menu';
 
@@ -20,7 +19,7 @@ describe('Share Menu', () => {
 
   describe('Native share via Web Share API', () => {
     // undom does not provide navigator.share by default, so we have to mock it in this way
-    beforeAll(() => navigator.share = () => Promise.resolve());
+    beforeAll(() => (navigator.share = () => Promise.resolve()));
     afterAll(() => delete navigator.share);
 
     it('uses the Web Share API if available', async () => {
@@ -38,7 +37,9 @@ describe('Share Menu', () => {
 
   describe('Share via fallback dialog', () => {
     it('defaults to all supported socials unless specified', () => {
-      expect(shareMenu.socials).toEqual(Object.keys(shareMenu['_supportedSocials']));
+      expect(shareMenu.socials).toEqual(
+        Object.keys(shareMenu['_supportedSocials']),
+      );
     });
   });
 });

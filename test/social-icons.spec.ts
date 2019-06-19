@@ -1,4 +1,3 @@
-// tslint:disable:no-string-literal
 import '@skatejs/ssr/register';
 import * as socialIcons from '../src/social-icons';
 
@@ -18,5 +17,6 @@ describe('Social Icons', () => {
         expect(openingTag).not.toContain('width');
         expect(openingTag).not.toContain('height');
       });
-    }));
+    }),
+  );
 });

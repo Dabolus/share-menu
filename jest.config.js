@@ -4,14 +4,10 @@ module.exports = {
   transform: {
     '.+\\.[tj]s$': 'ts-jest',
   },
-  transformIgnorePatterns: [
-    '/node_modules/',
-  ],
+  transformIgnorePatterns: ['/node_modules/'],
   moduleNameMapper: {
     '(.+)\\.js$': '$1',
   },
   moduleFileExtensions: ['ts', 'js'],
-  testMatch: [
-    '<rootDir>/test/**/*.spec.ts',
-  ],
+  testMatch: ['<rootDir>/test/**/*.spec.ts'],
 };
