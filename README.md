@@ -4,7 +4,7 @@
 [![Build status](https://travis-ci.org/Dabolus/share-menu.svg?branch=master)](https://travis-ci.org/Dabolus/share-menu)
 [![Minified + gzipped size](https://img.shields.io/bundlephobia/minzip/share-menu.svg)](https://bundlephobia.com/result?p=share-menu)
 
-_[Demo and API docs](https://www.webcomponents.org/element/Dabolus/share-menu)_
+_[Demo and API docs](https://www.webcomponents.org/element/share-menu)_
 
 A complete and simple to use share menu that uses 
 [Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) 
