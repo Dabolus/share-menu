@@ -17,7 +17,7 @@ const getConfig = (input, minify) => ({
     {
       file: `${input}.js`,
       format: 'es',
-      sourcemap: !prod,
+      sourcemap: prod ? false : 'inline',
     },
     {
       file: `${input}.iife.js`,
@@ -26,7 +26,7 @@ const getConfig = (input, minify) => ({
       globals: {
         [resolve(__dirname, `src/social-icons.js`)]: 'dabolus.socialIcons',
       },
-      sourcemap: !prod,
+      sourcemap: prod ? false : 'inline',
     },
   ],
   plugins: [
