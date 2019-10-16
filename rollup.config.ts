@@ -30,32 +30,36 @@ const getConfig = (input, minify) => ({
     },
   ],
   plugins: [
-    minifyHtml({
-      options: {
-        shouldMinify: template =>
-          template.parts[0].text.startsWith('<!-- html -->'),
-        shouldMinifyCSS: template =>
-          template.parts[0].text.startsWith('/* css */'),
-        minifyOptions: {
-          minifyCSS: {
-            level: {
-              2: {
-                all: true,
+    ...(minify
+      ? [
+          minifyHtml({
+            options: {
+              shouldMinify: template =>
+                template.parts[0].text.startsWith('<!-- html -->'),
+              shouldMinifyCSS: template =>
+                template.parts[0].text.startsWith('/* css */'),
+              minifyOptions: {
+                minifyCSS: {
+                  level: {
+                    2: {
+                      all: true,
+                    },
+                  },
+                },
+                minifyJS: true,
+                collapseWhitespace: true,
+                collapseBooleanAttributes: true,
+                collapseInlineTagWhitespace: true,
+                removeOptionalTags: true,
+                removeTagWhitespace: true,
+                sortAttributes: true,
+                sortClassName: true,
+                removeRedundantAttributes: true,
               },
             },
-          },
-          minifyJS: true,
-          collapseWhitespace: true,
-          collapseBooleanAttributes: true,
-          collapseInlineTagWhitespace: true,
-          removeOptionalTags: true,
-          removeTagWhitespace: true,
-          sortAttributes: true,
-          sortClassName: true,
-          removeRedundantAttributes: true,
-        },
-      },
-    }),
+          }),
+        ]
+      : []),
     typescript({
       tsconfigOverride: {
         compilerOptions: {
