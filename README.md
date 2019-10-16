@@ -37,18 +37,18 @@ also be used if you're still on Bower  (e.g. if you're using Polymer < 3). To
 use it, just use the `unpkg` CDN:
 
 ```html
-<script src="https://unpkg.com/share-menu/social-icons.iife.min.js"></script>
-<script src="https://unpkg.com/share-menu/share-menu.iife.min.js"></script>
+<script src="https://unpkg.com/share-menu/social-icons.iife.js"></script>
+<script src="https://unpkg.com/share-menu/share-menu.iife.js"></script>
 ```
 
 ## Try it now!
 Try copy-pasting this code on your browser's console in any website:
 ```js
-var a=document.createElement("script");a.type="module";a.textContent="import'https://unpkg.com/share-menu/share-menu.min.js';var a=document.createElement('share-menu');document.body.appendChild(a),a.share()";document.head.appendChild(a);
+var a=document.createElement("script");a.type="module";a.textContent="import'https://unpkg.com/share-menu/share-menu.js';var a=document.createElement('share-menu');document.body.appendChild(a),a.share()";document.head.appendChild(a);
 ```
 ...or the IIFE version
 ```js
-var a=document.createElement("script");a.src="https://unpkg.com/share-menu/share-menu.iife.min.js";a.onload=()=>{var c=document.createElement("share-menu");document.body.appendChild(c);c.share()};var b=document.createElement("script");b.src="https://unpkg.com/share-menu/social-icons.iife.min.js";b.onload=()=>document.head.appendChild(a);document.head.appendChild(b);
+var a=document.createElement("script");a.src="https://unpkg.com/share-menu/share-menu.iife.js";a.onload=()=>{var c=document.createElement("share-menu");document.body.appendChild(c);c.share()};var b=document.createElement("script");b.src="https://unpkg.com/share-menu/social-icons.iife.js";b.onload=()=>document.head.appendChild(a);document.head.appendChild(b);
 ```
 _**Note:** these scripts will not work if the website implements a strict CSP 
 (Content Security Policy). For example, these scripts won't work on GitHub._
