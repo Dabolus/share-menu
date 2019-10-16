@@ -60,5 +60,17 @@
   "bugs": {
     "url": "https://github.com/Dabolus/share-menu/issues"
   },
-  "homepage": "https://github.com/Dabolus/share-menu#readme"
+  "homepage": "https://github.com/Dabolus/share-menu#readme",
+  "files": [
+    "LICENSE",
+    "demo",
+    "share-menu.iife.js",
+    "share-menu.js",
+    "social-icons.iife.js",
+    "social-icons.js",
+    "package.json",
+    "README.md",
+    "share-menu.d.ts",
+    "social-icons.d.ts"
+  ]
 }
