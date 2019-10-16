@@ -339,11 +339,11 @@ export class ShareMenu extends HTMLElement {
           });
         } else {
           this._openWindow(
-            `https://www.facebook.com/sharer.php?u=${encodeURIComponent(
+            `https://www.facebook.com/sharer.php?u=${this._encode(
               this.url,
-            )}&description=${encodeURIComponent(
-              this.title,
-            )}%0A%0A${encodeURIComponent(this.text)}`,
+            )}&description=${this._encode(this.title)}%0A%0A${this._encode(
+              this.text,
+            )}`,
           );
         }
       },
@@ -353,11 +353,11 @@ export class ShareMenu extends HTMLElement {
       title: 'Twitter',
       action: () => {
         this._openWindow(
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          `https://twitter.com/intent/tweet?text=${this._encode(
             this.title,
-          )}%0A${encodeURIComponent(this.text)}&url=${encodeURIComponent(
-            this.url,
-          )}${this.via ? `&via=${encodeURIComponent(this.via)}` : ''}`,
+          )}%0A${this._encode(this.text)}&url=${this._encode(this.url)}${
+            this.via ? `&via=${this._encode(this.via)}` : ''
+          }`,
         );
       },
     },
@@ -366,11 +366,9 @@ export class ShareMenu extends HTMLElement {
       title: 'WhatsApp',
       action: () => {
         window.open(
-          `whatsapp://send?text=*${encodeURIComponent(
+          `whatsapp://send?text=*${this._encode(
             this.title,
-          )}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
-            this.url,
-          )}`,
+          )}*%0A%0A${this._encode(this.text)}%0A%0A${this._encode(this.url)}`,
           '_self',
         );
       },
@@ -380,11 +378,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Telegram',
       action: () => {
         this._openWindow(
-          `https://t.me/share/url?url=${encodeURIComponent(
+          `https://t.me/share/url?url=${this._encode(
             this.url,
-          )}&text=**${encodeURIComponent(this.title)}**%0A${encodeURIComponent(
-            this.text,
-          )}`,
+          )}&text=**${this._encode(this.title)}**%0A${this._encode(this.text)}`,
         );
       },
     },
@@ -393,13 +389,11 @@ export class ShareMenu extends HTMLElement {
       title: 'LinkedIn',
       action: () => {
         this._openWindow(
-          `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+          `https://www.linkedin.com/shareArticle?mini=true&url=${this._encode(
             this.url,
-          )}&title=${encodeURIComponent(
-            this.title,
-          )}&summary=${encodeURIComponent(
+          )}&title=${this._encode(this.title)}&summary=${this._encode(
             this.text,
-          )}&source=${encodeURIComponent(this.via)}`,
+          )}&source=${this._encode(this.via)}`,
         );
       },
     },
@@ -408,7 +402,7 @@ export class ShareMenu extends HTMLElement {
       title: 'Google+',
       action: () => {
         this._openWindow(
-          `https://plus.google.com/share?url=${encodeURIComponent(this.url)}`,
+          `https://plus.google.com/share?url=${this._encode(this.url)}`,
         );
       },
     },
@@ -441,11 +435,11 @@ export class ShareMenu extends HTMLElement {
       title: 'Tumblr',
       action: () => {
         this._openWindow(
-          `https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encodeURIComponent(
+          `https://www.tumblr.com/widgets/share/tool?canonicalUrl=${this._encode(
             this.url,
-          )}&title=${encodeURIComponent(
-            this.title,
-          )}&caption=${encodeURIComponent(this.text)}`,
+          )}&title=${this._encode(this.title)}&caption=${this._encode(
+            this.text,
+          )}`,
         );
       },
     },
@@ -455,17 +449,17 @@ export class ShareMenu extends HTMLElement {
       action: () => {
         if (this.text) {
           this._openWindow(
-            `https://reddit.com/submit?text=${encodeURIComponent(
+            `https://reddit.com/submit?text=${this._encode(
               this.text,
-            )}%0A%0A${encodeURIComponent(this.url)}&title=${encodeURIComponent(
+            )}%0A%0A${this._encode(this.url)}&title=${this._encode(
               this.title,
             )}`,
           );
         } else {
           this._openWindow(
-            `https://reddit.com/submit?url=${encodeURIComponent(
+            `https://reddit.com/submit?url=${this._encode(
               this.url,
-            )}&title=${encodeURIComponent(this.title)}`,
+            )}&title=${this._encode(this.title)}`,
           );
         }
       },
@@ -475,7 +469,7 @@ export class ShareMenu extends HTMLElement {
       title: 'VK',
       action: () => {
         this._openWindow(
-          `https://vk.com/share.php?url=${encodeURIComponent(this.url)}`,
+          `https://vk.com/share.php?url=${this._encode(this.url)}`,
         );
       },
     },
@@ -484,7 +478,7 @@ export class ShareMenu extends HTMLElement {
       title: 'Skype',
       action: () => {
         this._openWindow(
-          `https://web.skype.com/share?url=${encodeURIComponent(this.url)}`,
+          `https://web.skype.com/share?url=${this._encode(this.url)}`,
         );
       },
     },
@@ -493,11 +487,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Viber',
       action: () => {
         window.open(
-          `viber://forward?text=${encodeURIComponent(
-            this.title,
-          )}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
-            this.url,
-          )}`,
+          `viber://forward?text=${this._encode(this.title)}%0A%0A${this._encode(
+            this.text,
+          )}%0A%0A${this._encode(this.url)}`,
           '_self',
         );
       },
@@ -507,7 +499,7 @@ export class ShareMenu extends HTMLElement {
       title: 'Line',
       action: () => {
         this._openWindow(
-          `https://lineit.line.me/share/ui?url=${encodeURIComponent(this.url)}`,
+          `https://lineit.line.me/share/ui?url=${this._encode(this.url)}`,
         );
       },
     },
@@ -516,7 +508,7 @@ export class ShareMenu extends HTMLElement {
       title: 'Qzone',
       action: () => {
         this._openWindow(
-          `https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${encodeURIComponent(
+          `https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${this._encode(
             this.url,
           )}`,
         );
@@ -526,15 +518,11 @@ export class ShareMenu extends HTMLElement {
       color: '#0087be',
       title: 'WordPress',
       action: () => {
-        const img = this._urlIsImage
-          ? `&i=${encodeURIComponent(this.url)}`
-          : '';
+        const img = this._urlIsImage ? `&i=${this._encode(this.url)}` : '';
         this._openWindow(
-          `https://wordpress.com/press-this.php?u=${encodeURIComponent(
+          `https://wordpress.com/press-this.php?u=${this._encode(
             window.location.href,
-          )}&t=${encodeURIComponent(this.title)}&s=${encodeURIComponent(
-            this.text,
-          )}${img}`,
+          )}&t=${this._encode(this.title)}&s=${this._encode(this.text)}${img}`,
         );
       },
     },
@@ -543,11 +531,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Blogger',
       action: () => {
         this._openWindow(
-          `https://www.blogger.com/blog-this.g?u=${encodeURIComponent(
+          `https://www.blogger.com/blog-this.g?u=${this._encode(
             this.url,
-          )}&n=${encodeURIComponent(this.title)}&t=${encodeURIComponent(
-            this.text,
-          )}`,
+          )}&n=${this._encode(this.title)}&t=${this._encode(this.text)}`,
         );
       },
     },
@@ -556,9 +542,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Flipboard',
       action: () => {
         this._openWindow(
-          `https://share.flipboard.com/bookmarklet/popout?v=2&title=${encodeURIComponent(
+          `https://share.flipboard.com/bookmarklet/popout?v=2&title=${this._encode(
             this.title,
-          )}&url=${encodeURIComponent(this.url)}`,
+          )}&url=${this._encode(this.url)}`,
         );
       },
     },
@@ -567,9 +553,7 @@ export class ShareMenu extends HTMLElement {
       title: 'Evernote',
       action: () => {
         this._openWindow(
-          `https://www.evernote.com/clip.action?url=${encodeURIComponent(
-            this.url,
-          )}`,
+          `https://www.evernote.com/clip.action?url=${this._encode(this.url)}`,
         );
       },
     },
@@ -578,11 +562,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Myspace',
       action: () => {
         this._openWindow(
-          `https://myspace.com/post?u=${encodeURIComponent(
+          `https://myspace.com/post?u=${this._encode(
             this.url,
-          )}&t=${encodeURIComponent(this.title)}&c=${encodeURIComponent(
-            this.text,
-          )}`,
+          )}&t=${this._encode(this.title)}&c=${this._encode(this.text)}`,
         );
       },
     },
@@ -591,7 +573,7 @@ export class ShareMenu extends HTMLElement {
       title: 'Pocket',
       action: () => {
         this._openWindow(
-          `https://getpocket.com/save?url=${encodeURIComponent(this.url)}`,
+          `https://getpocket.com/save?url=${this._encode(this.url)}`,
         );
       },
     },
@@ -600,11 +582,9 @@ export class ShareMenu extends HTMLElement {
       title: 'LiveJournal',
       action: () => {
         this._openWindow(
-          `http://www.livejournal.com/update.bml?subject=${encodeURIComponent(
+          `http://www.livejournal.com/update.bml?subject=${this._encode(
             this.title,
-          )}&event=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
-            this.url,
-          )}`,
+          )}&event=${this._encode(this.text)}%0A%0A${this._encode(this.url)}`,
         );
       },
     },
@@ -613,11 +593,11 @@ export class ShareMenu extends HTMLElement {
       title: 'Instapaper',
       action: () => {
         this._openWindow(
-          `https://www.instapaper.com/edit?url=${encodeURIComponent(
+          `https://www.instapaper.com/edit?url=${this._encode(
             this.url,
-          )}&title=${encodeURIComponent(
-            this.title,
-          )}&description=${encodeURIComponent(this.text)}`,
+          )}&title=${this._encode(this.title)}&description=${this._encode(
+            this.text,
+          )}`,
         );
       },
     },
@@ -626,9 +606,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Baidu',
       action: () => {
         this._openWindow(
-          `http://cang.baidu.com/do/add?it=${encodeURIComponent(
+          `http://cang.baidu.com/do/add?it=${this._encode(
             this.title,
-          )}&iu=${encodeURIComponent(this.url)}`,
+          )}&iu=${this._encode(this.url)}`,
         );
       },
     },
@@ -637,9 +617,9 @@ export class ShareMenu extends HTMLElement {
       title: 'OK.ru',
       action: () => {
         this._openWindow(
-          `https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${encodeURIComponent(
+          `https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${this._encode(
             this.url,
-          )}&title=${encodeURIComponent(this.title)}`,
+          )}&title=${this._encode(this.title)}`,
         );
       },
     },
@@ -648,7 +628,7 @@ export class ShareMenu extends HTMLElement {
       title: 'XING',
       action: () => {
         this._openWindow(
-          `https://www.xing.com/app/user?op=share&url=${encodeURIComponent(
+          `https://www.xing.com/app/user?op=share&url=${this._encode(
             this.url,
           )}`,
         );
@@ -659,11 +639,11 @@ export class ShareMenu extends HTMLElement {
       title: 'Delicious',
       action: () => {
         this._openWindow(
-          `https://del.icio.us/save?v=5&provider=${encodeURIComponent(
+          `https://del.icio.us/save?v=5&provider=${this._encode(
             this.via,
-          )}&noui&jump=close&url=${encodeURIComponent(
-            this.url,
-          )}&title=${encodeURIComponent(this.title)}`,
+          )}&noui&jump=close&url=${this._encode(this.url)}&title=${this._encode(
+            this.title,
+          )}`,
         );
       },
     },
@@ -672,9 +652,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Buffer',
       action: () => {
         this._openWindow(
-          `https://buffer.com/add?text=${encodeURIComponent(
+          `https://buffer.com/add?text=${this._encode(
             this.title,
-          )}&url=${encodeURIComponent(this.url)}`,
+          )}&url=${this._encode(this.url)}`,
         );
       },
     },
@@ -683,9 +663,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Digg',
       action: () => {
         this._openWindow(
-          `https://digg.com/submit?url=${encodeURIComponent(
+          `https://digg.com/submit?url=${this._encode(
             this.url,
-          )}&title=${encodeURIComponent(this.title)}`,
+          )}&title=${this._encode(this.title)}`,
         );
       },
     },
@@ -694,9 +674,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Douban',
       action: () => {
         this._openWindow(
-          `https://www.douban.com/recommend/?url=${encodeURIComponent(
+          `https://www.douban.com/recommend/?url=${this._encode(
             this.url,
-          )}&title=${encodeURIComponent(this.title)}`,
+          )}&title=${this._encode(this.title)}`,
         );
       },
     },
@@ -705,9 +685,9 @@ export class ShareMenu extends HTMLElement {
       title: 'StumbleUpon',
       action: () => {
         this._openWindow(
-          `https://www.stumbleupon.com/submit?url=${encodeURIComponent(
+          `https://www.stumbleupon.com/submit?url=${this._encode(
             this.url,
-          )}&title=${encodeURIComponent(this.title)}`,
+          )}&title=${this._encode(this.title)}`,
         );
       },
     },
@@ -715,7 +695,7 @@ export class ShareMenu extends HTMLElement {
       color: '#005baa',
       title: 'Renren',
       action: () => {
-        this._openWindow(`http://share.renren.com/share/buttonshare.do?link=${encodeURIComponent(this.url)}&title=${encodeURIComponent(this.title)}%0A${encodeURIComponent(this.text)}`);
+        this._openWindow(`http://share.renren.com/share/buttonshare.do?link=${this._encode(this.url)}&title=${this._encode(this.title)}%0A${this._encode(this.text)}`);
       },
     }, */
     weibo: {
@@ -723,11 +703,11 @@ export class ShareMenu extends HTMLElement {
       title: 'Weibo',
       action: () => {
         this._openWindow(
-          `http://service.weibo.com/share/share.php?url=${encodeURIComponent(
+          `http://service.weibo.com/share/share.php?url=${this._encode(
             this.url,
-          )}&appkey=&title=${encodeURIComponent(
-            this.title,
-          )}%0A%0A${encodeURIComponent(this.text)}&pic=&ralateUid=`,
+          )}&appkey=&title=${this._encode(this.title)}%0A%0A${this._encode(
+            this.text,
+          )}&pic=&ralateUid=`,
         );
       },
     },
@@ -744,7 +724,7 @@ export class ShareMenu extends HTMLElement {
       action: () => {
         const userLang = navigator.language.substring(0, 2);
         this._openWindow(
-          `https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${encodeURIComponent(
+          `https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${this._encode(
             this.url,
           )}`,
         );
@@ -755,11 +735,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Email',
       action: () => {
         window.open(
-          `mailto:?subject=${encodeURIComponent(
-            this.title,
-          )}&body=${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
-            this.url,
-          )}`,
+          `mailto:?subject=${this._encode(this.title)}&body=${this._encode(
+            this.text,
+          )}%0A%0A${this._encode(this.url)}`,
           '_self',
         );
       },
@@ -775,11 +753,9 @@ export class ShareMenu extends HTMLElement {
           separator = parseInt(v[1], 10) < 8 ? ';' : '&';
         }
         window.open(
-          `sms:${separator}body=${encodeURIComponent(
-            this.title,
-          )}%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(
-            this.url,
-          )}`,
+          `sms:${separator}body=${this._encode(this.title)}%0A%0A${this._encode(
+            this.text,
+          )}%0A%0A${this._encode(this.url)}`,
           '_self',
         );
       },
@@ -789,11 +765,9 @@ export class ShareMenu extends HTMLElement {
       title: 'Yahoo!',
       action: () => {
         this._openWindow(
-          `https://compose.mail.yahoo.com/?body=${encodeURIComponent(
+          `https://compose.mail.yahoo.com/?body=${this._encode(
             this.title,
-          )}%0A%0A${encodeURIComponent(this.text)}%0A%0A%${encodeURIComponent(
-            this.url,
-          )}`,
+          )}%0A%0A${this._encode(this.text)}%0A%0A%${this._encode(this.url)}`,
         );
       },
     },
@@ -1128,6 +1102,11 @@ export class ShareMenu extends HTMLElement {
         4},menubar=0,status=0,titlebar=0,toolbar=0`,
       false,
     );
+  }
+
+  /** @private */
+  private _encode(data: string | number | boolean) {
+    return encodeURIComponent(data);
   }
 
   /** @private */
