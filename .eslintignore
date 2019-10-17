@@ -1,6 +1,7 @@
 .idea/
 node_modules/
 .rpt2_cache/
+demo/
 /share-menu.*
 /social-icons.*
 *.log
