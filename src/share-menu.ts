@@ -11,7 +11,7 @@ interface NavigatorWithShare extends Navigator {
   share: (options: ShareOptions) => Promise<void>;
 }
 
-declare var navigator: NavigatorWithShare;
+declare const navigator: NavigatorWithShare;
 
 // We need to do this because of window.FB (Facebook JS API)
 interface FB {
@@ -27,7 +27,7 @@ interface WindowWithFBAPI extends Window {
   FB?: FB;
 }
 
-declare var window: WindowWithFBAPI;
+declare const window: WindowWithFBAPI;
 
 interface ShadowRootWithAdoptedStylesheets extends ShadowRoot {
   adoptedStyleSheets: CSSStyleSheet[];

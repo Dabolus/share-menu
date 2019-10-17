@@ -12,7 +12,7 @@ interface NavigatorWithShare extends Navigator {
   share: (options: ShareOptions) => Promise<void>;
 }
 
-declare var navigator: NavigatorWithShare;
+declare const navigator: NavigatorWithShare;
 
 describe('Share Menu', () => {
   const shareMenu = new ShareMenu();
