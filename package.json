@@ -13,8 +13,8 @@
     "browser-sync": "browser-sync start --proxy 'localhost:8082' --port 8080 --ui-port 8081 --files 'demo' '*.js'",
     "build": "NODE_ENV=production rollup -c rollup.config.ts",
     "test": "jest",
-    "lint": "eslint --ext .ts '**/*.{js,ts}'",
-    "format": "eslint --ext .ts '**/*.{js,ts}' --fix",
+    "lint": "eslint --ext .ts '{src,test}/**/*.{js,ts}'",
+    "format": "eslint --ext .ts '{src,test}/**/*.{js,ts}' --fix",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
