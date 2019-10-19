@@ -4,3 +4,4 @@ node_modules/
 /share-menu.*
 /social-icons.*
 *.log
+coverage/
