@@ -20,7 +20,7 @@
     {
       "files": ["test/**/*.spec.ts"],
       "env": {
-        "jest": true
+        "mocha": true
       }
     }
   ],

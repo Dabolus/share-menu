@@ -5,3 +5,4 @@ demo/
 /share-menu.*
 /social-icons.*
 *.log
+coverage/

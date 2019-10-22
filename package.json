@@ -11,20 +11,22 @@
     "watch": "rollup -w -c rollup.config.ts",
     "serve": "es-dev-server --node-resolve --open --port 8080 --watch --app-index 'demo/index.html'",
     "build": "NODE_ENV=production rollup -c rollup.config.ts",
-    "test": "jest",
     "lint": "eslint --ext .ts '{src,test}/**/*.{js,ts}'",
     "format": "eslint --ext .ts '{src,test}/**/*.{js,ts}' --fix",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "karma start --coverage",
+    "test:watch": "karma start --auto-watch=true --single-run=false"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.6.0",
+    "@open-wc/testing": "^2.0.0",
+    "@open-wc/testing-karma": "^3.0.0",
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/iron-flex-layout": "^3.0.1",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-input": "^3.0.2",
     "@polymer/paper-styles": "^3.0.1",
     "@polymer/paper-toggle-button": "^3.0.1",
-    "@skatejs/ssr": "^0.19.11",
-    "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^2.4.0",
     "@typescript-eslint/parser": "^2.4.0",
     "@webcomponents/webcomponentsjs": "^2.3.0",
@@ -32,7 +34,7 @@
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
-    "jest": "^24.9.0",
+    "lit-html": "^1.1.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
     "rollup": "^1.24.0",
@@ -40,8 +42,9 @@
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^5.1.2",
     "rollup-plugin-typescript2": "^0.24.3",
-    "ts-jest": "^24.1.0",
-    "typescript": "^3.6.4"
+    "sinon": "^7.5.0",
+    "typescript": "^3.6.4",
+    "webpack-merge": "^4.1.5"
   },
   "repository": {
     "type": "git",
