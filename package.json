@@ -15,12 +15,7 @@
     "format": "eslint --ext .ts '{src,test}/**/*.{js,ts}' --fix",
     "prepublishOnly": "npm run build",
     "test": "karma start --coverage",
-    "test:watch": "karma start --auto-watch=true --single-run=false",
-    "test:update-snapshots": "karma start --update-snapshots",
-    "test:prune-snapshots": "karma start --prune-snapshots",
-    "test:compatibility": "karma start --compatibility all --coverage",
-    "test:compatibility:watch": "karma start --compatibility all --auto-watch=true --single-run=false",
-    "test:bs": "karma start karma.bs.config.js --compatibility all --coverage"
+    "test:watch": "karma start --auto-watch=true --single-run=false"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.6.0",
