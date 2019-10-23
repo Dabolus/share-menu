@@ -972,6 +972,7 @@ export class ShareMenu extends HTMLElement {
     return this._showFallbackShare();
   }
 
+  /** @private */
   private connectedCallback() {
     if (
       ShareMenu._supportsAdoptingStyleSheets &&
