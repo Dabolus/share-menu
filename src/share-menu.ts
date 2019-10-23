@@ -365,11 +365,10 @@ export class ShareMenu extends HTMLElement {
       color: '#25d366',
       title: 'WhatsApp',
       action: () => {
-        window.open(
+        this._replaceWindow(
           `whatsapp://send?text=*${this._encode(
             this.title,
           )}*%0A%0A${this._encode(this.text)}%0A%0A${this._encode(this.url)}`,
-          '_self',
         );
       },
     },
@@ -486,11 +485,10 @@ export class ShareMenu extends HTMLElement {
       color: '#59267c',
       title: 'Viber',
       action: () => {
-        window.open(
+        this._replaceWindow(
           `viber://forward?text=${this._encode(this.title)}%0A%0A${this._encode(
             this.text,
           )}%0A%0A${this._encode(this.url)}`,
-          '_self',
         );
       },
     },
@@ -734,11 +732,10 @@ export class ShareMenu extends HTMLElement {
       color: '#ffa930',
       title: 'Email',
       action: () => {
-        window.open(
+        this._replaceWindow(
           `mailto:?subject=${this._encode(this.title)}&body=${this._encode(
             this.text,
           )}%0A%0A${this._encode(this.url)}`,
-          '_self',
         );
       },
     },
@@ -752,11 +749,10 @@ export class ShareMenu extends HTMLElement {
           const v = navigator.appVersion.match(/OS (\d+)/);
           separator = parseInt(v[1], 10) < 8 ? ';' : '&';
         }
-        window.open(
+        this._replaceWindow(
           `sms:${separator}body=${this._encode(this.title)}%0A%0A${this._encode(
             this.text,
           )}%0A%0A${this._encode(this.url)}`,
-          '_self',
         );
       },
     },
@@ -1102,6 +1098,11 @@ export class ShareMenu extends HTMLElement {
         4},menubar=0,status=0,titlebar=0,toolbar=0`,
       false,
     );
+  }
+
+  /** @private */
+  private _replaceWindow(url: string) {
+    return window.open(url, '_self');
   }
 
   /** @private */
