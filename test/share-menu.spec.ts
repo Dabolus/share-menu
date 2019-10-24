@@ -32,9 +32,8 @@ describe('share menu', () => {
       const listener = fake(({ detail: { origin } }: CustomEvent) => {
         expect(origin).to.equal('native');
       });
-      shareMenu.addEventListener('share', listener);
+      shareMenu.addEventListener('share', listener, { once: true });
       await shareMenu.share();
-      shareMenu.removeEventListener('share', listener);
       expect(listener.calledOnce).to.equal(true);
     });
   });
