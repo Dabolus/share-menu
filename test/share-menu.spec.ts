@@ -23,7 +23,7 @@ describe('share menu', () => {
       <share-menu></share-menu>
     `);
 
-    it('uses the Web Share API if available', async () => {
+    it('uses the Web Share API', async () => {
       await expect(() => shareMenu.share()).not.to.throw();
       expect(fakeShare.calledOnce).to.equal(true);
     });
