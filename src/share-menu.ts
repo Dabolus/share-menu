@@ -38,6 +38,13 @@ interface CSSStyleSheetWithReplace extends CSSStyleSheet {
   replaceSync: (text: string) => void;
 }
 
+export interface ShareMenuParams {
+  text?: string;
+  title?: string;
+  url?: string;
+  via?: string;
+}
+
 /**
  * `share-menu` is a complete and simple to use share menu that uses
  * [Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) when possible,
@@ -938,18 +945,16 @@ export class ShareMenu extends HTMLElement {
    * @param {{ text: string, title: string, url: string, via: string }=} props An object containing `text`, `title`, `url` and `via`, that will override the element attributes/properties.
    * @return {Promise<void>} A promise that resolves when the user selects a social.
    */
-  public share(
-    props = {
-      text: this.text,
-      title: this.title,
-      url: this.url,
-      via: this.via,
-    },
-  ) {
-    this.text = props.text;
-    this.title = props.title;
-    this.url = props.url;
-    this.via = props.via;
+  public share({
+    text = this.text,
+    title = this.title,
+    url = this.url,
+    via = this.via,
+  }: ShareMenuParams = {}) {
+    this.text = text;
+    this.title = title;
+    this.url = url;
+    this.via = via;
     if (navigator.share) {
       return navigator
         .share({
