@@ -490,7 +490,7 @@ export class ShareMenu extends HTMLElement {
       },
     },
     viber: {
-      color: '#59267c',
+      color: '#665cac',
       title: 'Viber',
       action: () => {
         this._openWindow(
