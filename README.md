@@ -119,8 +119,14 @@ that each one gives:
 _The `via` parameter will only be used by Delicious, LinkedIn and Twitter._
 
 ## Icons
-The icons used by the component are just simple SVGs, so you can use them anywhere in your app simply by importing 
-`social-icons.js` located in this package.
+The icons used by the component are just simple SVG paths, so you can use them anywhere in your app simply by importing 
+`social-icons.js` located in this package, e.g.
+
+```js
+import { twitter } from 'share-menu/social-icons';
+
+myIconContainer.innerHTML = `<svg viewBox="0 0 256 256"><path d="${twitter}"/></svg>`;
+```
 
 ## Styling
 The following custom properties and shadow parts are available for styling:
