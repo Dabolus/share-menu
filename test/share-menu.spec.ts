@@ -17,18 +17,20 @@ interface NavigatorWithShare extends Navigator {
 describe('share menu', () => {
   describe('native share via Web Share API', async () => {
     const fakeShare = fake(async () => {});
-    (window.navigator as NavigatorWithShare).share = fakeShare;
-
     const shareMenu: ShareMenu = await fixture(html`
       <share-menu></share-menu>
     `);
 
     it('uses the Web Share API', async () => {
+      (window.navigator as NavigatorWithShare).share = fakeShare;
+
       await expect(() => shareMenu.share()).not.to.throw();
       expect(fakeShare.calledOnce).to.equal(true);
     });
 
     it("emits a 'share' event with 'native' as origin", async () => {
+      (window.navigator as NavigatorWithShare).share = fakeShare;
+
       const listener = fake(({ detail: { origin } }: CustomEvent) => {
         expect(origin).to.equal('native');
       });
@@ -38,12 +40,28 @@ describe('share menu', () => {
     });
   });
 
-  describe('share via fallback dialog', () => {
-    describe('socials', async () => {
-      const shareMenu: ShareMenu = await fixture(html`
-        <share-menu is-image="yes"></share-menu>
-      `);
+  describe('share via fallback dialog', async () => {
+    const shareMenu: ShareMenu = await fixture(html`
+      <share-menu is-image="yes"></share-menu>
+    `);
 
+    it("emits a 'share' event with 'fallback' as origin", async () => {
+      delete (window.navigator as NavigatorWithShare).share;
+
+      const listener = fake(({ detail: { origin } }: CustomEvent) => {
+        expect(origin).to.equal('fallback');
+      });
+      shareMenu.addEventListener('share', listener, { once: true });
+      const sharePromise = shareMenu.share();
+      // We need to click a social to correctly resolve the promise
+      shareMenu.shadowRoot
+        .querySelector<HTMLButtonElement>('button.social')
+        .click();
+      await sharePromise;
+      expect(listener.calledOnce).to.equal(true);
+    });
+
+    describe('socials', () => {
       it('defaults to all of them unless specified', () => {
         expect(shareMenu.socials).to.deep.equal(
           Object.keys(shareMenu['_supportedSocials']),
