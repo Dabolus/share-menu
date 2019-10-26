@@ -756,8 +756,8 @@ export class ShareMenu extends HTMLElement {
         let separator = '?';
         // iOS uses two different separators, so we have to check the iOS version and use the proper one
         if (/iP(hone|od|ad)/.test(navigator.platform)) {
-          const v = navigator.appVersion.match(/OS (\d+)/);
-          separator = parseInt(v[1], 10) < 8 ? ';' : '&';
+          const [, version] = navigator.appVersion.match(/OS (\d+)/);
+          separator = parseInt(version, 10) < 8 ? ';' : '&';
         }
         this._openWindow(
           `sms:${separator}body=${this._encode(this.title)}%0A%0A${this._encode(
