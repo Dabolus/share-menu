@@ -99,5 +99,25 @@ describe('share menu', () => {
         );
       });
     });
+
+    describe('dialog title', () => {
+      it('syncs dialogTitle property with dialog-title attribute', () => {
+        shareMenu.setAttribute('dialog-title', 'Test title');
+        expect(shareMenu.dialogTitle).to.equal('Test title');
+
+        shareMenu.dialogTitle = 'Another test title';
+        expect(shareMenu.getAttribute('dialog-title')).to.equal(
+          'Another test title',
+        );
+      });
+
+      it('updates the title in the HTML', () => {
+        shareMenu.dialogTitle = 'Test title';
+        expect(
+          shareMenu.shadowRoot.querySelector<HTMLHeadingElement>('#title')
+            .textContent,
+        ).to.equal('Test title');
+      });
+    });
   });
 });
