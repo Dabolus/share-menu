@@ -153,52 +153,7 @@ export class ShareMenu extends HTMLElement {
 
   public set socials(val: string[]) {
     this._socials = val;
-    if (this._socialsContainerRef) {
-      this._socialsContainerRef.innerHTML = '';
-      val.forEach((social, index) => {
-        if (social === 'pinterest' && !this._urlIsImage) {
-          return;
-        }
-        const { color, title, action } = this._supportedSocials[social];
-        const socialButton: HTMLButtonElement = document.createElement(
-          'button',
-        );
-        socialButton.className = 'social';
-        socialButton.title = title;
-        socialButton.setAttribute('part', 'social-button');
-        socialButton.addEventListener('click', () => {
-          action();
-          this.dispatchEvent(
-            new CustomEvent('share', {
-              bubbles: true,
-              composed: true,
-              detail: { social, origin: 'fallback' },
-            }),
-          );
-          this._close();
-        });
-        const socialIcon: HTMLDivElement = document.createElement('div');
-        socialIcon.className = 'icon';
-        socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${
-          (socialIcons as { [key: string]: string })[social]
-        }"/></svg>`;
-        socialIcon.style.fill = color;
-        socialIcon.setAttribute('part', 'social-icon');
-        socialButton.appendChild(socialIcon);
-        const socialLabel: HTMLDivElement = document.createElement('div');
-        socialLabel.className = 'label';
-        socialLabel.textContent = title;
-        socialLabel.setAttribute('part', 'social-label');
-        socialButton.appendChild(socialLabel);
-        this._socialsContainerRef.appendChild(socialButton);
-        if (index === 0) {
-          this._firstFocusableElRef = socialButton;
-        }
-        if (index === val.length - 1) {
-          this._lastFocusableElRef = socialButton;
-        }
-      });
-    }
+    this._renderSocials();
   }
 
   /**
@@ -1063,14 +1018,12 @@ export class ShareMenu extends HTMLElement {
         img.addEventListener('load', () => {
           this._urlIsImage = true;
           img = null;
-          // FIXME: super hack
-          this.socials = this.socials;
+          this._renderSocials();
         });
         img.addEventListener('error', () => {
           this._urlIsImage = false;
           img = null;
-          // FIXME: super hack
-          this.socials = this.socials;
+          this._renderSocials();
         });
         img.src = newValue;
         break;
@@ -1080,15 +1033,13 @@ export class ShareMenu extends HTMLElement {
           case 'true':
           case '1':
             this._urlIsImage = true;
-            // FIXME: super hack
-            this.socials = this.socials;
+            this._renderSocials();
             break;
           case 'no':
           case 'false':
           case '0':
             this._urlIsImage = false;
-            // FIXME: super hack
-            this.socials = this.socials;
+            this._renderSocials();
             break;
           default:
             this.isImage = 'auto';
@@ -1096,6 +1047,55 @@ export class ShareMenu extends HTMLElement {
         }
         break;
     }
+  }
+
+  /** @private */
+  private _renderSocials() {
+    if (!this._socialsContainerRef) {
+      return;
+    }
+    this._socialsContainerRef.innerHTML = '';
+    this._socials.forEach((social, index) => {
+      if (social === 'pinterest' && !this._urlIsImage) {
+        return;
+      }
+      const { color, title, action } = this._supportedSocials[social];
+      const socialButton: HTMLButtonElement = document.createElement('button');
+      socialButton.className = 'social';
+      socialButton.title = title;
+      socialButton.setAttribute('part', 'social-button');
+      socialButton.addEventListener('click', () => {
+        action();
+        this.dispatchEvent(
+          new CustomEvent('share', {
+            bubbles: true,
+            composed: true,
+            detail: { social, origin: 'fallback' },
+          }),
+        );
+        this._close();
+      });
+      const socialIcon: HTMLDivElement = document.createElement('div');
+      socialIcon.className = 'icon';
+      socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${
+        (socialIcons as { [key: string]: string })[social]
+      }"/></svg>`;
+      socialIcon.style.fill = color;
+      socialIcon.setAttribute('part', 'social-icon');
+      socialButton.appendChild(socialIcon);
+      const socialLabel: HTMLDivElement = document.createElement('div');
+      socialLabel.className = 'label';
+      socialLabel.textContent = title;
+      socialLabel.setAttribute('part', 'social-label');
+      socialButton.appendChild(socialLabel);
+      this._socialsContainerRef.appendChild(socialButton);
+      if (index === 0) {
+        this._firstFocusableElRef = socialButton;
+      }
+      if (index === this._socials.length - 1) {
+        this._lastFocusableElRef = socialButton;
+      }
+    });
   }
 
   /** @private */
