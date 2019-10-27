@@ -119,5 +119,45 @@ describe('share menu', () => {
         ).to.equal('Test title');
       });
     });
+
+    describe('text', () => {
+      it('syncs text property with text attribute', () => {
+        shareMenu.setAttribute('text', 'Test text');
+        expect(shareMenu.text).to.equal('Test text');
+
+        shareMenu.text = 'Another test text';
+        expect(shareMenu.getAttribute('text')).to.equal('Another test text');
+      });
+    });
+
+    describe('title', () => {
+      it('syncs title property with title attribute', () => {
+        shareMenu.setAttribute('title', 'Test title');
+        expect(shareMenu.title).to.equal('Test title');
+
+        shareMenu.title = 'Another test title';
+        expect(shareMenu.getAttribute('title')).to.equal('Another test title');
+      });
+    });
+
+    describe('url', () => {
+      it('syncs url property with url attribute', () => {
+        shareMenu.setAttribute('url', 'Test url');
+        expect(shareMenu.url).to.equal('Test url');
+
+        shareMenu.url = 'Another test url';
+        expect(shareMenu.getAttribute('url')).to.equal('Another test url');
+      });
+    });
+
+    describe('via', () => {
+      it('syncs via property with via attribute', () => {
+        shareMenu.setAttribute('via', 'Test via');
+        expect(shareMenu.via).to.equal('Test via');
+
+        shareMenu.via = 'Another test via';
+        expect(shareMenu.getAttribute('via')).to.equal('Another test via');
+      });
+    });
   });
 });
