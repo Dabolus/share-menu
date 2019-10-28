@@ -100,7 +100,6 @@ that each one gives:
  - Print - _Only prints the page at the given URL_
  - QZone - _URL only_
  - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._ 
- - RenRen - _Currently disabled because it does not seem to work_
  - Skype - _URL only_
  - SMS
  - StumbleUpon - _URL and title only_

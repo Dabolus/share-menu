@@ -77,7 +77,6 @@ export interface ShareMenuParams {
  * - Print - _Only prints the page at the given URL_
  * - QZone - _URL only_
  * - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
- * - RenRen - _Currently disabled because it does not seem to work
  * - Skype - _URL only_
  * - SMS
  * - StumbleUpon - _URL and title only_
@@ -653,13 +652,6 @@ export class ShareMenu extends HTMLElement {
         );
       },
     },
-    /* renren: {
-      color: '#005baa',
-      title: 'Renren',
-      action: () => {
-        this._openWindow(`http://share.renren.com/share/buttonshare.do?link=${this._encode(this.url)}&title=${this._encode(this.title)}%0A${this._encode(this.text)}`);
-      },
-    }, */
     weibo: {
       color: '#df2029',
       title: 'Weibo',
