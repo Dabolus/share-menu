@@ -100,6 +100,18 @@ describe('share menu', () => {
       });
     });
 
+    describe('opened', () => {
+      it('syncs opened property with opened attribute', () => {
+        shareMenu.setAttribute('opened', '');
+        expect(shareMenu.opened).to.equal(true);
+
+        shareMenu.opened = false;
+        expect(shareMenu.getAttribute('opened')).to.be.null;
+      });
+
+      // TODO: maybe add some specs to make sure that changing this attribute opens/closes the share menu
+    });
+
     describe('dialog title', () => {
       it('syncs dialogTitle property with dialog-title attribute', () => {
         shareMenu.setAttribute('dialog-title', 'Test title');
