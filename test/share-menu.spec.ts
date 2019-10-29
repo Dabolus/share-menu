@@ -104,7 +104,11 @@ describe('share menu', () => {
       it('syncs opened property with opened attribute', () => {
         shareMenu.setAttribute('opened', '');
         expect(shareMenu.opened).to.equal(true);
+        shareMenu.removeAttribute('opened');
+        expect(shareMenu.opened).to.equal(false);
 
+        shareMenu.opened = true;
+        expect(shareMenu.getAttribute('opened')).to.be.a.string;
         shareMenu.opened = false;
         expect(shareMenu.getAttribute('opened')).to.be.null;
       });
@@ -169,6 +173,30 @@ describe('share menu', () => {
 
         shareMenu.via = 'Another test via';
         expect(shareMenu.getAttribute('via')).to.equal('Another test via');
+      });
+    });
+
+    describe('is image', () => {
+      it('syncs isImage property with is-image attribute', () => {
+        shareMenu.setAttribute('is-image', 'no');
+        expect(shareMenu.isImage).to.equal('no');
+
+        shareMenu.isImage = 'yes';
+        expect(shareMenu.getAttribute('is-image')).to.equal('yes');
+      });
+    });
+
+    describe('no backdrop', () => {
+      it('syncs noBackdrop property with no-backdrop attribute', () => {
+        shareMenu.setAttribute('no-backdrop', '');
+        expect(shareMenu.noBackdrop).to.equal(true);
+        shareMenu.removeAttribute('no-backdrop');
+        expect(shareMenu.noBackdrop).to.equal(false);
+
+        shareMenu.noBackdrop = true;
+        expect(shareMenu.getAttribute('no-backdrop')).to.be.a.string;
+        shareMenu.noBackdrop = false;
+        expect(shareMenu.getAttribute('no-backdrop')).to.be.null;
       });
     });
   });
