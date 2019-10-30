@@ -10,9 +10,16 @@ interface ShareOptions {
   title?: string;
 }
 
-interface NavigatorWithShare extends Navigator {
+interface CustomNavigator extends Navigator {
   share: (options: ShareOptions) => Promise<void>;
+  clipboard: Clipboard;
 }
+
+interface CustomWindow extends Window {
+  navigator: CustomNavigator;
+}
+
+declare const window: CustomWindow;
 
 describe('share menu', () => {
   describe('native share via Web Share API', async () => {
@@ -22,14 +29,14 @@ describe('share menu', () => {
     `);
 
     it('uses the Web Share API', async () => {
-      (window.navigator as NavigatorWithShare).share = fakeShare;
+      window.navigator.share = fakeShare;
 
       await expect(() => shareMenu.share()).not.to.throw();
       expect(fakeShare.calledOnce).to.equal(true);
     });
 
     it("emits a 'share' event with 'native' as origin", async () => {
-      (window.navigator as NavigatorWithShare).share = fakeShare;
+      window.navigator.share = fakeShare;
 
       const listener = fake(({ detail: { origin } }: CustomEvent) => {
         expect(origin).to.equal('native');
@@ -46,7 +53,7 @@ describe('share menu', () => {
     `);
 
     it("emits a 'share' event with 'fallback' as origin", async () => {
-      delete (window.navigator as NavigatorWithShare).share;
+      delete window.navigator.share;
 
       const listener = fake(({ detail: { origin } }: CustomEvent) => {
         expect(origin).to.equal('fallback');
@@ -97,6 +104,9 @@ describe('share menu', () => {
         expect(buttons[2].title).to.equal(
           shareMenu['_supportedSocials'].telegram.title,
         );
+
+        // Restore socials
+        shareMenu.socials = Object.keys(shareMenu['_supportedSocials']);
       });
     });
 
