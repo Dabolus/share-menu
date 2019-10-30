@@ -108,6 +108,74 @@ describe('share menu', () => {
         // Restore socials
         shareMenu.socials = Object.keys(shareMenu['_supportedSocials']);
       });
+
+      describe('clipboard', () => {
+        const clipboardBackup = window.navigator.clipboard;
+        Object.defineProperty(window.navigator, 'clipboard', {
+          value: clipboardBackup,
+          configurable: true,
+          writable: true,
+        });
+
+        it('writes to clipboard', async () => {
+          const fakeClipboardWriteText = fake.resolves(undefined);
+          window.navigator.clipboard.writeText = fakeClipboardWriteText;
+
+          shareMenu.addEventListener(
+            'share',
+            () => {
+              expect(fakeClipboardWriteText.calledOnce).to.equal(true);
+            },
+            { once: true },
+          );
+          const sharePromise = shareMenu.share();
+          shareMenu.shadowRoot
+            .querySelector<HTMLButtonElement>('button.social#clipboard')
+            .click();
+          await sharePromise;
+
+          window.navigator.clipboard = clipboardBackup;
+        });
+
+        it('emits an error event if writing to clipboard fails', async () => {
+          const fakeClipboardWriteText = fake.rejects(new Error());
+          window.navigator.clipboard.writeText = fakeClipboardWriteText;
+
+          shareMenu.addEventListener(
+            'error',
+            (({ detail: { message } }: CustomEvent) => {
+              expect(message).to.equal('Unable to copy to clipboard');
+            }) as any,
+            { once: true },
+          );
+          const sharePromise = shareMenu.share();
+          shareMenu.shadowRoot
+            .querySelector<HTMLButtonElement>('button.social#clipboard')
+            .click();
+          await sharePromise;
+
+          window.navigator.clipboard = clipboardBackup;
+        });
+
+        it('emits an error event if navigator.clipboard is not supported', async () => {
+          window.navigator.clipboard = undefined;
+
+          shareMenu.addEventListener(
+            'error',
+            (({ detail: { message } }: CustomEvent) => {
+              expect(message).to.equal('Unable to copy to clipboard');
+            }) as any,
+            { once: true },
+          );
+          const sharePromise = shareMenu.share();
+          shareMenu.shadowRoot
+            .querySelector<HTMLButtonElement>('button.social#clipboard')
+            .click();
+          await sharePromise;
+
+          window.navigator.clipboard = clipboardBackup;
+        });
+      });
     });
 
     describe('opened', () => {
