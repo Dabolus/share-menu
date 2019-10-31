@@ -63,20 +63,31 @@ describe('share menu', () => {
       <share-menu is-image="yes"></share-menu>
     `);
 
+    interface ShareResult {
+      origin: 'fallback';
+      social: string;
+    }
+
+    const openSocial = (social?: string): Promise<ShareResult> =>
+      new Promise(resolve => {
+        shareMenu.addEventListener(
+          'share',
+          (({ detail }: CustomEvent) => resolve(detail)) as any,
+          { once: true },
+        );
+        shareMenu.share();
+        shareMenu.shadowRoot
+          .querySelector<HTMLButtonElement>(
+            `button.social${social ? `#${social}` : ''}`,
+          )
+          .click();
+      });
+
     it("emits a 'share' event with 'fallback' as origin", async () => {
       delete window.navigator.share;
 
-      const listener = fake(({ detail: { origin } }: CustomEvent) => {
-        expect(origin).to.equal('fallback');
-      });
-      shareMenu.addEventListener('share', listener, { once: true });
-      const sharePromise = shareMenu.share();
-      // We need to click a social to correctly resolve the promise
-      shareMenu.shadowRoot
-        .querySelector<HTMLButtonElement>('button.social')
-        .click();
-      await sharePromise;
-      expect(listener.calledOnce).to.equal(true);
+      const { origin } = await openSocial();
+      expect(origin).to.equal('fallback');
     });
 
     describe('socials', () => {
@@ -132,18 +143,8 @@ describe('share menu', () => {
           const fakeClipboardWriteText = fake.resolves(undefined);
           window.navigator.clipboard.writeText = fakeClipboardWriteText;
 
-          shareMenu.addEventListener(
-            'share',
-            () => {
-              expect(fakeClipboardWriteText.calledOnce).to.equal(true);
-            },
-            { once: true },
-          );
-          const sharePromise = shareMenu.share();
-          shareMenu.shadowRoot
-            .querySelector<HTMLButtonElement>('button.social#clipboard')
-            .click();
-          await sharePromise;
+          await openSocial('clipboard');
+          expect(fakeClipboardWriteText.calledOnce).to.equal(true);
 
           window.navigator.clipboard = clipboardBackup;
         });
@@ -195,18 +196,8 @@ describe('share menu', () => {
             ui: fakeFBUI,
           };
 
-          shareMenu.addEventListener(
-            'share',
-            () => {
-              expect(fakeFBUI.calledOnce).to.equal(true);
-            },
-            { once: true },
-          );
-          const sharePromise = shareMenu.share();
-          shareMenu.shadowRoot
-            .querySelector<HTMLButtonElement>('button.social#facebook')
-            .click();
-          await sharePromise;
+          await openSocial('facebook');
+          expect(fakeFBUI.calledOnce).to.equal(true);
 
           delete window.FB;
         });
@@ -216,18 +207,8 @@ describe('share menu', () => {
           const fakeOpenWindow = fake();
           shareMenu['_openWindow'] = fakeOpenWindow;
 
-          shareMenu.addEventListener(
-            'share',
-            () => {
-              expect(fakeOpenWindow.calledOnce).to.equal(true);
-            },
-            { once: true },
-          );
-          const sharePromise = shareMenu.share();
-          shareMenu.shadowRoot
-            .querySelector<HTMLButtonElement>('button.social#facebook')
-            .click();
-          await sharePromise;
+          await openSocial('facebook');
+          expect(fakeOpenWindow.calledOnce).to.equal(true);
 
           shareMenu['_openWindow'] = openWindowBackup;
         });
