@@ -15,8 +15,19 @@ interface CustomNavigator extends Navigator {
   clipboard: Clipboard;
 }
 
+// We need to do this because of window.FB (Facebook JS API)
+interface FB {
+  ui: (options: {
+    href?: string;
+    method?: string;
+    mobile_iframe?: boolean;
+    quote?: string;
+  }) => void;
+}
+
 interface CustomWindow extends Window {
   navigator: CustomNavigator;
+  FB?: FB;
 }
 
 declare const window: CustomWindow;
@@ -174,6 +185,51 @@ describe('share menu', () => {
           await sharePromise;
 
           window.navigator.clipboard = clipboardBackup;
+        });
+      });
+
+      describe('facebook', () => {
+        it('uses Facebook JS API if available', async () => {
+          const fakeFBUI = fake();
+          window.FB = {
+            ui: fakeFBUI,
+          };
+
+          shareMenu.addEventListener(
+            'share',
+            () => {
+              expect(fakeFBUI.calledOnce).to.equal(true);
+            },
+            { once: true },
+          );
+          const sharePromise = shareMenu.share();
+          shareMenu.shadowRoot
+            .querySelector<HTMLButtonElement>('button.social#facebook')
+            .click();
+          await sharePromise;
+
+          delete window.FB;
+        });
+
+        it('opens a window if Facebook JS API is not available', async () => {
+          const openWindowBackup = shareMenu['_openWindow'];
+          const fakeOpenWindow = fake();
+          shareMenu['_openWindow'] = fakeOpenWindow;
+
+          shareMenu.addEventListener(
+            'share',
+            () => {
+              expect(fakeOpenWindow.calledOnce).to.equal(true);
+            },
+            { once: true },
+          );
+          const sharePromise = shareMenu.share();
+          shareMenu.shadowRoot
+            .querySelector<HTMLButtonElement>('button.social#facebook')
+            .click();
+          await sharePromise;
+
+          shareMenu['_openWindow'] = openWindowBackup;
         });
       });
     });
