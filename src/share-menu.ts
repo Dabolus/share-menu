@@ -397,21 +397,15 @@ export class ShareMenu extends HTMLElement {
       color: '#ff4500',
       title: 'Reddit',
       action: () => {
-        if (this.text) {
-          this._openWindow(
-            `https://reddit.com/submit?text=${this._encode(
-              this.text,
-            )}%0A%0A${this._encode(this.url)}&title=${this._encode(
-              this.title,
-            )}`,
-          );
-        } else {
-          this._openWindow(
-            `https://reddit.com/submit?url=${this._encode(
-              this.url,
-            )}&title=${this._encode(this.title)}`,
-          );
-        }
+        const payload = this.text
+          ? `text=${this._encode(this.text)}%0A%0A${this._encode(this.url)}`
+          : `url=${this._encode(this.url)}`;
+
+        this._openWindow(
+          `https://reddit.com/submit?${payload}&title=${this._encode(
+            this.title,
+          )}`,
+        );
       },
     },
     vk: {
