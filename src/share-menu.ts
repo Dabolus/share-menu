@@ -646,7 +646,7 @@ export class ShareMenu extends HTMLElement {
       color: '#4285f4',
       title: 'Translate',
       action: () => {
-        const userLang = navigator.language.substring(0, 2);
+        const userLang = navigator.language.slice(0, 2);
         this._openWindow(
           `https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${this._encode(
             this.url,
