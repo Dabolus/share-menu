@@ -885,12 +885,14 @@ export class ShareMenu extends HTMLElement {
         })
         .then(() => {
           this.opened = false;
-          this.dispatchEvent(
-            new CustomEvent('share', {
-              bubbles: true,
-              composed: true,
-              detail: { origin: 'native' },
-            }),
+          ['share', 'close'].forEach(event =>
+            this.dispatchEvent(
+              new CustomEvent(event, {
+                bubbles: true,
+                composed: true,
+                detail: { origin: 'native' },
+              }),
+            ),
           );
         })
         .catch(() => this._showFallbackShare());
@@ -1114,7 +1116,16 @@ export class ShareMenu extends HTMLElement {
       this._previousFocus.focus();
       this._previousFocus = null;
     }
-    setTimeout(() => (this.style.display = 'none'), 300);
+    setTimeout(() => {
+      this.style.display = 'none';
+      this.dispatchEvent(
+        new CustomEvent('close', {
+          bubbles: true,
+          composed: true,
+          detail: { origin: 'fallback' },
+        }),
+      );
+    }, 300);
   }
 
   /** @private */
@@ -1157,6 +1168,16 @@ export class ShareMenu extends HTMLElement {
    * have a `social` field, that contains the ID of the social chosen by the user.
    *
    * @event share
+   */
+
+  /**
+   * Fired when the share menu closes (either because the user shared
+   * some content or closed the share menu).
+   * The event payload contains an `origin` field that will be equal
+   * to `native` if the native share menu has been triggered, or to
+   * `fallback` if the fallback share menu has been used instead.
+   *
+   * @event close
    */
 
   /**
