@@ -90,6 +90,16 @@ describe('share menu', () => {
       expect(origin).to.equal('fallback');
     });
 
+    it('gets triggered when navigator.share throws', async () => {
+      const fakeBrokenShare = fake.rejects(undefined);
+      window.navigator.share = fakeBrokenShare;
+
+      const { origin } = await openSocial();
+      expect(origin).to.equal('fallback');
+
+      delete window.navigator.share;
+    });
+
     describe('a11y', () => {
       it('generates an accessible markup', async () => {
         // For some reason we need to create a new share menu,
