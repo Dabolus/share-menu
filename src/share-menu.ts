@@ -65,7 +65,6 @@ export interface ShareMenuParams {
  * - Evernote - _URL only_
  * - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
  * - FlipBoard - _URL and title only_
- * - Google+ - _URL only_
  * - Instapaper
  * - Line - _URL only_
  * - LinkedIn
@@ -355,15 +354,6 @@ export class ShareMenu extends HTMLElement {
           )}&title=${this._encode(this.title)}&summary=${this._encode(
             this.text,
           )}&source=${this._encode(this.via)}`,
-        );
-      },
-    },
-    gplus: {
-      color: '#dd4b39',
-      title: 'Google+',
-      action: () => {
-        this._openWindow(
-          `https://plus.google.com/share?url=${this._encode(this.url)}`,
         );
       },
     },

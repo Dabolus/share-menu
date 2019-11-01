@@ -19,8 +19,6 @@ export const evernote =
 export const facebook =
   'M94 50v35H68v43h26v128h53V128h36l5-43h-41V55c0-4 6-10 12-10h29V0h-40C93 0 94 43 94 50z';
 export const flipboard = 'M0 0h83v256H0zm91 91h82v82H91zm0-91h165v83H91z';
-export const gplus =
-  'M75 117v26h42c-2 11-13 32-42 32-26 0-47-21-47-47s21-47 47-47c14 0 24 6 29 11l21-19a72 72 0 0 0-50-20 75 75 0 1 0 0 150c43 0 71-31 71-73a69 69 0 0 0-1-13zm0 0l181 22h-32v32h-21v-32h-32v-22h32V85h21v32h32v22z';
 export const instapaper =
   'M185 249q-24-2-31-7t-6-28V42q0-21 6-28t31-7V0H71v7q24 1 31 7t6 28v172q0 22-6 28t-31 7v7h114z';
 export const line =

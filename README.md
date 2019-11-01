@@ -88,7 +88,6 @@ that each one gives:
  - Evernote - _URL only_
  - Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_
  - FlipBoard - _URL and title only_
- - Google+ - _URL only_
  - Instapaper
  - Line - _URL only_
  - LinkedIn
