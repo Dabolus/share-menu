@@ -81,7 +81,6 @@ that each one gives:
  - Blogger
  - Buffer - _URL and title only_
  - Copy to clipboard
- - Delicious - _URL and title only_
  - Digg - _URL and title only_
  - Douban - _URL and title only_
  - Email
@@ -114,7 +113,7 @@ that each one gives:
  - Xing - _URL only_
  - Yahoo
 
-_The `via` parameter will only be used by Delicious, LinkedIn and Twitter._
+_The `via` parameter will only be used by LinkedIn and Twitter._
 
 ## Icons
 The icons used by the component are just simple SVG paths, so you can use them anywhere in your app simply by importing 

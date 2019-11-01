@@ -58,7 +58,6 @@ export interface ShareMenuParams {
  * - Blogger
  * - Buffer - _URL and title only_
  * - Copy to clipboard
- * - Delicious - _URL and title only_
  * - Digg - _URL and title only_
  * - Douban - _URL and title only_
  * - Email
@@ -91,7 +90,7 @@ export interface ShareMenuParams {
  * - Xing - _URL only_
  * - Yahoo
  *
- * _The `via` parameter will only be used by Delicious, LinkedIn and Twitter._
+ * _The `via` parameter will only be used by LinkedIn and Twitter._
  *
  * -----------------------------------------------------------------------------------------------------------------
  *
@@ -581,19 +580,6 @@ export class ShareMenu extends HTMLElement {
         this._openWindow(
           `https://www.xing.com/app/user?op=share&url=${this._encode(
             this.url,
-          )}`,
-        );
-      },
-    },
-    delicious: {
-      color: '#3399ff',
-      title: 'Delicious',
-      action: () => {
-        this._openWindow(
-          `https://del.icio.us/save?v=5&provider=${this._encode(
-            this.via,
-          )}&noui&jump=close&url=${this._encode(this.url)}&title=${this._encode(
-            this.title,
           )}`,
         );
       },
