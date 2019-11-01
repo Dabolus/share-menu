@@ -91,6 +91,22 @@ describe('share menu', () => {
     });
 
     describe('socials', () => {
+      const openSocialAndCheckWindow = async (
+        social: string,
+        match = new RegExp(social),
+      ) => {
+        const openWindowBackup = shareMenu['_openWindow'];
+        const fakeOpenWindow = fake((url: string) => {
+          expect(url).to.match(match);
+        });
+        shareMenu['_openWindow'] = fakeOpenWindow;
+
+        await openSocial(social);
+        expect(fakeOpenWindow.calledOnce).to.equal(true);
+
+        shareMenu['_openWindow'] = openWindowBackup;
+      };
+
       it('defaults to all of them unless specified', () => {
         expect(shareMenu.socials).to.deep.equal(
           Object.keys(shareMenu['_supportedSocials']),
@@ -202,15 +218,8 @@ describe('share menu', () => {
           delete window.FB;
         });
 
-        it('opens a window if Facebook JS API is not available', async () => {
-          const openWindowBackup = shareMenu['_openWindow'];
-          const fakeOpenWindow = fake();
-          shareMenu['_openWindow'] = fakeOpenWindow;
-
-          await openSocial('facebook');
-          expect(fakeOpenWindow.calledOnce).to.equal(true);
-
-          shareMenu['_openWindow'] = openWindowBackup;
+        it('opens a window with Facebook share screen if Facebook JS API is not available', async () => {
+          await openSocialAndCheckWindow('facebook');
         });
       });
     });
