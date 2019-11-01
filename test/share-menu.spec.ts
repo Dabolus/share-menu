@@ -100,6 +100,33 @@ describe('share menu', () => {
 
         await expect(possiblyAccessibleShareMenu).to.be.accessible();
       });
+
+      it('closes when pressing the Escape character', async () => {
+        const waitForCloseEventPromise = new Promise(resolve => {
+          shareMenu.addEventListener('close', () => resolve(true), {
+            once: true,
+          });
+        });
+
+        shareMenu.share();
+        const event = new KeyboardEvent('keydown', { key: 'Escape' });
+        shareMenu.dispatchEvent(event);
+        const result = await waitForCloseEventPromise;
+        expect(result).to.equal(true);
+      });
+
+      it('closes when clicking on the backdrop', async () => {
+        const waitForCloseEventPromise = new Promise(resolve => {
+          shareMenu.addEventListener('close', () => resolve(true), {
+            once: true,
+          });
+        });
+
+        shareMenu.share();
+        shareMenu.shadowRoot.querySelector<HTMLDivElement>('#backdrop').click();
+        const result = await waitForCloseEventPromise;
+        expect(result).to.equal(true);
+      });
     });
 
     describe('socials', () => {
