@@ -90,6 +90,18 @@ describe('share menu', () => {
       expect(origin).to.equal('fallback');
     });
 
+    describe('a11y', () => {
+      it('generates an accessible markup', async () => {
+        // For some reason we need to create a new share menu,
+        // otherwise axe will complain about "no elements in frame context"
+        const possiblyAccessibleShareMenu: ShareMenu = await fixture(html`
+          <share-menu is-image="yes"></share-menu>
+        `);
+
+        await expect(possiblyAccessibleShareMenu).to.be.accessible();
+      });
+    });
+
     describe('socials', () => {
       const openSocialAndCheckWindow = async (
         social: string,
