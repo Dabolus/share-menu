@@ -93,11 +93,11 @@ describe('share menu', () => {
     describe('socials', () => {
       const openSocialAndCheckWindow = async (
         social: string,
-        match = new RegExp(social),
+        match = social,
       ) => {
         const openWindowBackup = shareMenu['_openWindow'];
         const fakeOpenWindow = fake((url: string) => {
-          expect(url).to.match(match);
+          expect(url).to.contain(match);
         });
         shareMenu['_openWindow'] = fakeOpenWindow;
 
@@ -220,6 +220,200 @@ describe('share menu', () => {
 
         it('opens a window with Facebook share screen if Facebook JS API is not available', async () => {
           await openSocialAndCheckWindow('facebook');
+        });
+      });
+
+      describe('twitter', () => {
+        it('opens a window with Twitter share screen', async () => {
+          await openSocialAndCheckWindow('twitter');
+        });
+      });
+
+      describe('whatsapp', () => {
+        it('opens a window with WhatsApp share screen', async () => {
+          await openSocialAndCheckWindow('whatsapp');
+        });
+      });
+
+      describe('telegram', () => {
+        it('opens a window with Telegram share screen', async () => {
+          await openSocialAndCheckWindow('telegram', 't.me');
+        });
+      });
+
+      describe('linkedin', () => {
+        it('opens a window with LinkedIn share screen', async () => {
+          await openSocialAndCheckWindow('linkedin');
+        });
+      });
+
+      describe('pinterest', () => {
+        // TODO: write Pinterest specs
+      });
+
+      describe('tumblr', () => {
+        it('opens a window with Tumblr share screen', async () => {
+          await openSocialAndCheckWindow('tumblr');
+        });
+      });
+
+      describe('reddit', () => {
+        it('opens a window with Reddit share screen', async () => {
+          await openSocialAndCheckWindow('reddit');
+        });
+      });
+
+      describe('vk', () => {
+        it('opens a window with VK share screen', async () => {
+          await openSocialAndCheckWindow('vk');
+        });
+      });
+
+      describe('skype', () => {
+        it('opens a window with Skype share screen', async () => {
+          await openSocialAndCheckWindow('skype');
+        });
+      });
+
+      describe('viber', () => {
+        it('opens a window with Viber share screen', async () => {
+          await openSocialAndCheckWindow('viber');
+        });
+      });
+
+      describe('line', () => {
+        it('opens a window with Line share screen', async () => {
+          await openSocialAndCheckWindow('line');
+        });
+      });
+
+      describe('qzone', () => {
+        it('opens a window with Qzone share screen', async () => {
+          await openSocialAndCheckWindow('qzone');
+        });
+      });
+
+      describe('wordpress', () => {
+        it('opens a window with WordPress share screen', async () => {
+          await openSocialAndCheckWindow('wordpress');
+        });
+      });
+
+      describe('blogger', () => {
+        it('opens a window with Blogger share screen', async () => {
+          await openSocialAndCheckWindow('blogger');
+        });
+      });
+
+      describe('flipboard', () => {
+        it('opens a window with Flipboard share screen', async () => {
+          await openSocialAndCheckWindow('flipboard');
+        });
+      });
+
+      describe('evernote', () => {
+        it('opens a window with Evernote share screen', async () => {
+          await openSocialAndCheckWindow('evernote');
+        });
+      });
+
+      describe('myspace', () => {
+        it('opens a window with Myspace share screen', async () => {
+          await openSocialAndCheckWindow('myspace');
+        });
+      });
+
+      describe('pocket', () => {
+        it('opens a window with Pocket share screen', async () => {
+          await openSocialAndCheckWindow('pocket');
+        });
+      });
+
+      describe('livejournal', () => {
+        it('opens a window with LiveJournal share screen', async () => {
+          await openSocialAndCheckWindow('livejournal');
+        });
+      });
+
+      describe('instapaper', () => {
+        it('opens a window with Instapaper share screen', async () => {
+          await openSocialAndCheckWindow('instapaper');
+        });
+      });
+
+      describe('baidu', () => {
+        it('opens a window with Baidu share screen', async () => {
+          await openSocialAndCheckWindow('baidu');
+        });
+      });
+
+      describe('okru', () => {
+        it('opens a window with OK.ru share screen', async () => {
+          await openSocialAndCheckWindow('okru', 'ok.ru');
+        });
+      });
+
+      describe('xing', () => {
+        it('opens a window with XING share screen', async () => {
+          await openSocialAndCheckWindow('xing');
+        });
+      });
+
+      describe('buffer', () => {
+        it('opens a window with Buffer share screen', async () => {
+          await openSocialAndCheckWindow('buffer');
+        });
+      });
+
+      describe('digg', () => {
+        it('opens a window with Digg share screen', async () => {
+          await openSocialAndCheckWindow('digg');
+        });
+      });
+
+      describe('douban', () => {
+        it('opens a window with Douban share screen', async () => {
+          await openSocialAndCheckWindow('douban');
+        });
+      });
+
+      describe('stumbleupon', () => {
+        it('opens a window with StumbleUpon share screen', async () => {
+          await openSocialAndCheckWindow('stumbleupon');
+        });
+      });
+
+      describe('weibo', () => {
+        it('opens a window with Weibo share screen', async () => {
+          await openSocialAndCheckWindow('weibo');
+        });
+      });
+
+      describe('print', () => {
+        // TODO: write print specs
+      });
+
+      describe('translate', () => {
+        it('opens a window with Google Translator translation page', async () => {
+          await openSocialAndCheckWindow('translate');
+        });
+      });
+
+      describe('email', () => {
+        it('opens a mailto link', async () => {
+          await openSocialAndCheckWindow('email', 'mailto');
+        });
+      });
+
+      describe('sms', () => {
+        it('opens an sms link', async () => {
+          await openSocialAndCheckWindow('sms', 'sms');
+        });
+      });
+
+      describe('yahoo', () => {
+        it('opens a window with Yahoo! share screen', async () => {
+          await openSocialAndCheckWindow('yahoo');
         });
       });
     });
