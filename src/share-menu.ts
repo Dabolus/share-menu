@@ -108,6 +108,35 @@ export interface ShareMenuParams {
  */
 export class ShareMenu extends HTMLElement {
   /**
+   * Fired when the content is shared (i.e. when a social is clicked).
+   * The event payload contains an `origin` field that will be equal
+   * to `native` if the native share menu has been triggered, or to
+   * `fallback` if the fallback share menu has been used instead.
+   * If the fallback share menu is used, the event payload will also
+   * have a `social` field, that contains the ID of the social chosen by the user.
+   *
+   * @event share
+   */
+
+  /**
+   * Fired when the share menu closes (either because the user shared
+   * some content or closed the share menu).
+   * The event payload contains an `origin` field that will be equal
+   * to `native` if the native share menu has been triggered, or to
+   * `fallback` if the fallback share menu has been used instead.
+   *
+   * @event close
+   */
+
+  /**
+   * Fired when there is an error while sharing.
+   * The reason of the error can be found in the `message` field of
+   * the event payload.
+   *
+   * @event error
+   */
+
+  /**
    * Whether the fallback dialog is currently opened or not.
    *
    * @return {boolean}
@@ -1165,35 +1194,6 @@ export class ShareMenu extends HTMLElement {
         break;
     }
   }
-
-  /**
-   * Fired when the content is shared (i.e. when a social is clicked).
-   * The event payload contains an `origin` field that will be equal
-   * to `native` if the native share menu has been triggered, or to
-   * `fallback` if the fallback share menu has been used instead.
-   * If the fallback share menu is used, the event payload will also
-   * have a `social` field, that contains the ID of the social chosen by the user.
-   *
-   * @event share
-   */
-
-  /**
-   * Fired when the share menu closes (either because the user shared
-   * some content or closed the share menu).
-   * The event payload contains an `origin` field that will be equal
-   * to `native` if the native share menu has been triggered, or to
-   * `fallback` if the fallback share menu has been used instead.
-   *
-   * @event close
-   */
-
-  /**
-   * Fired when there is an error while sharing.
-   * The reason of the error can be found in the `message` field of
-   * the event payload.
-   *
-   * @event error
-   */
 }
 
 window.customElements.define('share-menu', ShareMenu);
