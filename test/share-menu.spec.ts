@@ -13,6 +13,8 @@ interface ShareOptions {
 interface CustomNavigator extends Navigator {
   share: (options: ShareOptions) => Promise<void>;
   clipboard: Clipboard;
+  platform: string;
+  appVersion: string;
 }
 
 // We need to do this because of window.FB (Facebook JS API)
@@ -455,8 +457,47 @@ describe('share menu', () => {
       });
 
       describe('sms', () => {
+        const platformBackup = window.navigator.platform;
+        Object.defineProperty(window.navigator, 'platform', {
+          value: platformBackup,
+          configurable: true,
+          writable: true,
+        });
+        const appVersionBackup = window.navigator.appVersion;
+        Object.defineProperty(window.navigator, 'appVersion', {
+          value: appVersionBackup,
+          configurable: true,
+          writable: true,
+        });
+
         it('opens an sms link', async () => {
           await openSocialAndCheckWindow('sms', 'sms');
+        });
+
+        it('uses ? as separator by default', async () => {
+          await openSocialAndCheckWindow('sms', '?');
+        });
+
+        it('uses ; as separator on iOS < 8', async () => {
+          window.navigator.platform = 'iPhone';
+          window.navigator.appVersion =
+            '5.0 (iPhone; CPU iPhone OS 7_0_2 like Mac OS X)';
+
+          await openSocialAndCheckWindow('sms', ';');
+
+          window.navigator.platform = platformBackup;
+          window.navigator.appVersion = appVersionBackup;
+        });
+
+        it('uses & as separator on iOS >= 8', async () => {
+          window.navigator.platform = 'iPhone';
+          window.navigator.appVersion =
+            '5.0 (iPhone; CPU iPhone OS 12_3 like Mac OS X)';
+
+          await openSocialAndCheckWindow('sms', '&');
+
+          window.navigator.platform = platformBackup;
+          window.navigator.appVersion = appVersionBackup;
         });
       });
 
