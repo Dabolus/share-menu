@@ -15,12 +15,12 @@ const getConfig = (input, minify) => ({
   input: `src/${input}.ts`,
   output: [
     {
-      file: `${input}.js`,
+      file: `${input}${minify ? '.min' : ''}.js`,
       format: 'es',
       sourcemap: prod ? false : 'inline',
     },
     {
-      file: `${input}.iife.js`,
+      file: `${input}.iife${minify ? '.min' : ''}.js`,
       format: 'iife',
       name: `dabolus.${input.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
       globals: {
@@ -82,11 +82,18 @@ const getConfig = (input, minify) => ({
     replace({
       include: 'src/**/*.ts',
       delimiters: ['', ''],
-      './social-icons': './social-icons.js',
+      './social-icons': `./social-icons${minify ? '.min' : ''}.js`,
     }),
   ],
   // Make all dependencies external
   external: () => true,
 });
 
-export default inputs.map(input => getConfig(input, prod));
+export default inputs.reduce(
+  (configs, input) => [
+    ...configs,
+    getConfig(input, false),
+    ...(prod ? [getConfig(input, true)] : []),
+  ],
+  [],
+);
