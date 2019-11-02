@@ -6,6 +6,7 @@
   "module": "share-menu.js",
   "browser": "share-menu.iife.js",
   "types": "share-menu.d.ts",
+  "type": "module",
   "scripts": {
     "start": "run-p watch serve",
     "watch": "rollup -w -c rollup.config.ts",
