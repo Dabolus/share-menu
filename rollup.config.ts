@@ -71,6 +71,7 @@ const getConfig = (input, minify) => ({
     ...(minify
       ? [
           terser({
+            ecma: 8,
             mangle: {
               properties: {
                 regex: /^_/,
