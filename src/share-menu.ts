@@ -895,7 +895,14 @@ export class ShareMenu extends HTMLElement {
             ),
           );
         })
-        .catch(() => this._showFallbackShare());
+        .catch(({ name }) => {
+          // Safari throws an AbortError if user changes its mind and decides
+          // not to share anything using the native share menu.
+          // In that case, we don't want to show our fallback share menu.
+          if (name !== 'AbortError') {
+            this._showFallbackShare();
+          }
+        });
     }
     return this._showFallbackShare();
   }
