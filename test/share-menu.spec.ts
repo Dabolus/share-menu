@@ -441,7 +441,20 @@ describe('share menu', () => {
       });
 
       describe('print', () => {
-        // TODO: write print specs
+        it('opens a new window at the given URL and prints it', async () => {
+          const openWindowBackup = shareMenu['_openWindow'];
+          const fakePrint = fake();
+          const fakeOpenWindow = () =>
+            ({
+              print: fakePrint,
+            } as any);
+          shareMenu['_openWindow'] = fakeOpenWindow;
+
+          await openSocial('print');
+          expect(fakePrint.calledOnce).to.equal(true);
+
+          shareMenu['_openWindow'] = openWindowBackup;
+        });
       });
 
       describe('translate', () => {
