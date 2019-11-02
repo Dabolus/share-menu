@@ -621,4 +621,33 @@ describe('share menu', () => {
       });
     });
   });
+
+  describe('open window helper', async () => {
+    const backupOpen = window.open;
+    const shareMenu: ShareMenu = await fixture(html`
+      <share-menu></share-menu>
+    `);
+
+    it('opens the given URL in a new window if replace param is falsy', () => {
+      const urlToOpen = 'https://example.com';
+      const fakeOpen = fake((url: string, target: string) => {
+        expect(url).to.equal(urlToOpen);
+        expect(target).to.equal('_blank');
+      });
+      window.open = fakeOpen;
+      shareMenu['_openWindow'](urlToOpen, false);
+      window.open = backupOpen;
+    });
+
+    it('opens the given URL in the same window if replace param is truthy', () => {
+      const urlToOpen = 'https://example.com';
+      const fakeOpen = fake((url: string, target: string) => {
+        expect(url).to.equal(urlToOpen);
+        expect(target).to.equal('_self');
+      });
+      window.open = fakeOpen;
+      shareMenu['_openWindow'](urlToOpen, true);
+      window.open = backupOpen;
+    });
+  });
 });
