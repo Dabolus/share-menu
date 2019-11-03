@@ -299,7 +299,13 @@ describe('share menu', () => {
       });
 
       describe('pinterest', () => {
-        // TODO: write Pinterest specs
+        it('appends Pinterest script to body', async () => {
+          expect(document.body.innerHTML).not.to.contain(
+            'assets.pinterest.com',
+          );
+          await openSocial('pinterest');
+          expect(document.body.innerHTML).to.contain('assets.pinterest.com');
+        });
       });
 
       describe('tumblr', () => {
