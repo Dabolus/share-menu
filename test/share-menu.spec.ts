@@ -321,7 +321,7 @@ describe('share menu', () => {
 
         it('shares an URL if share menu has no text', async () => {
           const textBackup = shareMenu.text;
-          delete shareMenu.text;
+          shareMenu.text = '';
           await openSocialAndCheckWindow('reddit', 'url=');
           shareMenu.text = textBackup;
         });
