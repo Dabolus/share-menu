@@ -295,7 +295,12 @@ export class ShareMenu extends HTMLElement {
   private _dialogTitleRef: HTMLHeadingElement;
   private _socialsContainerRef: HTMLDivElement;
   private readonly _supportedSocials: {
-    [key: string]: { color: string; title: string; action: () => void };
+    [key: string]: {
+      color: string;
+      title: string;
+      imageOnly?: boolean;
+      action: () => void;
+    };
   } = {
     clipboard: {
       color: '#777',
@@ -388,6 +393,7 @@ export class ShareMenu extends HTMLElement {
     pinterest: {
       color: '#bd081c',
       title: 'Pinterest',
+      imageOnly: true,
       action: () => {
         // Kinda hacky
         const button = document.createElement('button');
@@ -1056,10 +1062,12 @@ export class ShareMenu extends HTMLElement {
     }
     this._socialsContainerRef.innerHTML = '';
     this._socials.forEach((social, index) => {
-      if (social === 'pinterest' && !this._urlIsImage) {
+      const { color, title, action, imageOnly } = this._supportedSocials[
+        social
+      ];
+      if (imageOnly && !this._urlIsImage) {
         return;
       }
-      const { color, title, action } = this._supportedSocials[social];
       const socialButton: HTMLButtonElement = document.createElement('button');
       socialButton.className = 'social';
       socialButton.id = social;
