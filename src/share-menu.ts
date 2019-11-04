@@ -952,29 +952,19 @@ export class ShareMenu extends HTMLElement {
       ShareMenu.stylesheet.replace(this._styles);
     }
     if (this.text === null) {
-      this.text = (() => {
-        const description = document.querySelector<HTMLMetaElement>(
-          'meta[name="description"]',
-        );
-        if (description && description.content) {
-          return description.content;
-        }
-        return '';
-      })();
+      const description = document.querySelector<HTMLMetaElement>(
+        'meta[name="description"]',
+      );
+      this.text = (description && description.content) || '';
     }
     if (this.title === null) {
       this.title = document.title || '';
     }
     if (this.url === null) {
-      this.url = (() => {
-        const canonical = document.querySelector<HTMLLinkElement>(
-          'link[rel=canonical]',
-        );
-        if (canonical && canonical.href) {
-          return canonical.href;
-        }
-        return window.location.href;
-      })();
+      const canonical = document.querySelector<HTMLLinkElement>(
+        'link[rel=canonical]',
+      );
+      this.url = (canonical && canonical.href) || window.location.href;
     }
     if (!this.dialogTitle) {
       this.dialogTitle = 'Share with';
