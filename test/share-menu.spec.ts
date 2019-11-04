@@ -318,6 +318,20 @@ describe('share menu', () => {
         it('opens a window with Reddit share screen', async () => {
           await openSocialAndCheckWindow('reddit');
         });
+
+        it('shares an URL if share menu has no text', async () => {
+          const textBackup = shareMenu.text;
+          delete shareMenu.text;
+          await openSocialAndCheckWindow('reddit', 'url=');
+          shareMenu.text = textBackup;
+        });
+
+        it('shares a text if share menu has text', async () => {
+          const textBackup = shareMenu.text;
+          shareMenu.text = 'A text';
+          await openSocialAndCheckWindow('reddit', 'text=');
+          shareMenu.text = textBackup;
+        });
       });
 
       describe('vk', () => {
