@@ -278,6 +278,29 @@ describe('share menu', () => {
         it('opens a window with Twitter share screen', async () => {
           await openSocialAndCheckWindow('twitter');
         });
+
+        it('adds the via parameter if via is set', async () => {
+          const viaBackup = shareMenu.via;
+          shareMenu.via = 'via';
+          await openSocialAndCheckWindow('twitter', 'via=');
+          shareMenu.via = viaBackup;
+        });
+
+        it("doesn't add the via parameter if via isn't set", async () => {
+          const viaBackup = shareMenu.via;
+          shareMenu.via = '';
+
+          const openWindowBackup = shareMenu['_openWindow'];
+          const fakeOpenWindow = fake((url: string) => {
+            expect(url).not.to.contain('via=');
+          });
+          shareMenu['_openWindow'] = fakeOpenWindow;
+          await openSocial('twitter');
+          expect(fakeOpenWindow.calledOnce).to.equal(true);
+          shareMenu['_openWindow'] = openWindowBackup;
+
+          shareMenu.via = viaBackup;
+        });
       });
 
       describe('whatsapp', () => {
