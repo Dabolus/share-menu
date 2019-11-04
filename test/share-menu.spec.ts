@@ -368,6 +368,29 @@ describe('share menu', () => {
         it('opens a window with WordPress share screen', async () => {
           await openSocialAndCheckWindow('wordpress');
         });
+
+        it('shares an image if URL is an image', async () => {
+          const isImageBackup = shareMenu.isImage;
+          shareMenu.isImage = 'yes';
+          await openSocialAndCheckWindow('wordpress', 'i=');
+          shareMenu.isImage = isImageBackup;
+        });
+
+        it("doesn't share an image if URL isn't an image", async () => {
+          const isImageBackup = shareMenu.isImage;
+          shareMenu.isImage = 'no';
+
+          const openWindowBackup = shareMenu['_openWindow'];
+          const fakeOpenWindow = fake((url: string) => {
+            expect(url).not.to.contain('i=');
+          });
+          shareMenu['_openWindow'] = fakeOpenWindow;
+          await openSocial('wordpress');
+          expect(fakeOpenWindow.calledOnce).to.equal(true);
+          shareMenu['_openWindow'] = openWindowBackup;
+
+          shareMenu.isImage = isImageBackup;
+        });
       });
 
       describe('blogger', () => {
