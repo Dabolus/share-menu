@@ -604,6 +604,10 @@ describe('share menu', () => {
     });
 
     describe('is image', () => {
+      const [imageOnlySocialId] = Object.entries(
+        shareMenu['_supportedSocials'],
+      ).find(([, { imageOnly }]) => imageOnly);
+
       it('syncs isImage property with is-image attribute', () => {
         shareMenu.setAttribute('is-image', 'no');
         expect(shareMenu.isImage).to.equal('no');
@@ -611,6 +615,55 @@ describe('share menu', () => {
         shareMenu.isImage = 'yes';
         expect(shareMenu.getAttribute('is-image')).to.equal('yes');
       });
+
+      it("doesn't render image only socials if is-imsage is falsy", () => {
+        shareMenu.isImage = 'no';
+        expect(
+          shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+            `button.social#${imageOnlySocialId}`,
+          ),
+        ).to.be.null;
+      });
+
+      it('renders image only socials if is-imsage is truthy', () => {
+        shareMenu.isImage = 'yes';
+        expect(
+          shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+            `button.social#${imageOnlySocialId}`,
+          ),
+        ).not.to.be.null;
+      });
+
+      it("doesn't render image only socials if is-image is auto and the URL isn't an image", () =>
+        new Promise(resolve => {
+          shareMenu.isImage = 'auto';
+          shareMenu.url = `data:,${encodeURIComponent('Not an image')}`;
+          // We need to wait some time for the image to be loaded
+          setTimeout(() => {
+            expect(
+              shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+                `button.social#${imageOnlySocialId}`,
+              ),
+            ).to.be.null;
+            resolve();
+          }, 50);
+        }));
+
+      it('renders image only socials if is-image is auto and the URL is an image', () =>
+        new Promise(resolve => {
+          shareMenu.isImage = 'auto';
+          shareMenu.url =
+            'data:image/gif;base64,R0lGODdhAQABAIABAAAAAP///ywAAAAAAQABAAACAkQBADs';
+          // We need to wait some time for the image to be loaded
+          setTimeout(() => {
+            expect(
+              shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+                `button.social#${imageOnlySocialId}`,
+              ),
+            ).not.to.be.null;
+            resolve();
+          }, 50);
+        }));
     });
 
     describe('no backdrop', () => {
