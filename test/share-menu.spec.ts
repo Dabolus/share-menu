@@ -714,6 +714,37 @@ describe('share menu', () => {
         shareMenu.url = 'Another test url';
         expect(shareMenu.getAttribute('url')).to.equal('Another test url');
       });
+
+      it('it correctly sets the url property if initialized with the url attribute', async () => {
+        const urlShareMenu: ShareMenu = await fixture(html`
+          <share-menu url="url"></share-menu>
+        `);
+
+        expect(urlShareMenu.url).to.equal('url');
+      });
+
+      it('defaults to current URL if url attribute is not passed and canonical URL is not set', async () => {
+        const noUrlShareMenu: ShareMenu = await fixture(html`
+          <share-menu></share-menu>
+        `);
+
+        expect(noUrlShareMenu.url).to.equal(window.location.href);
+      });
+
+      it('defaults to canonical URL if it is available and url attribute is not passed', async () => {
+        const canonicalUrl = document.createElement('link');
+        canonicalUrl.rel = 'canonical';
+        canonicalUrl.href = 'https://example.com/canonical';
+        document.head.appendChild(canonicalUrl);
+
+        const noUrlShareMenu: ShareMenu = await fixture(html`
+          <share-menu></share-menu>
+        `);
+
+        expect(noUrlShareMenu.url).to.equal('https://example.com/canonical');
+
+        document.head.removeChild(canonicalUrl);
+      });
     });
 
     describe('via', () => {
