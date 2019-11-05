@@ -103,6 +103,13 @@ describe('share menu', () => {
     });
 
     describe('a11y', () => {
+      const firstSocial = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+        'button.social:first-of-type',
+      );
+      const lastSocial = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+        'button.social:last-of-type',
+      );
+
       it('generates an accessible markup', async () => {
         // For some reason we need to create a new share menu,
         // otherwise axe will complain about "no elements in frame context"
@@ -111,6 +118,36 @@ describe('share menu', () => {
         `);
 
         await expect(possiblyAccessibleShareMenu).to.be.accessible();
+      });
+
+      // FIXME: discover why focus isn't working properly in tests and re-enable these two specs
+      xit('focuses the last social when pressing Shift+Tab on the first social', async () => {
+        shareMenu.share();
+        firstSocial.focus();
+
+        const event = new KeyboardEvent('keydown', {
+          key: 'Tab',
+          shiftKey: true,
+        });
+        shareMenu.dispatchEvent(event);
+        const activeEl =
+          shareMenu.shadowRoot.activeElement || document.activeElement;
+
+        expect(activeEl).to.equal(lastSocial);
+      });
+
+      xit('focuses the first social when pressing Tab on the last social', async () => {
+        shareMenu.share();
+        lastSocial.focus();
+
+        const event = new KeyboardEvent('keydown', {
+          key: 'Tab',
+        });
+        shareMenu.dispatchEvent(event);
+        const activeEl =
+          shareMenu.shadowRoot.activeElement || document.activeElement;
+
+        expect(activeEl).to.equal(firstSocial);
       });
 
       it('closes when pressing the Escape character', async () => {
