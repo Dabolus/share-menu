@@ -688,6 +688,22 @@ describe('share menu', () => {
         shareMenu.title = 'Another test title';
         expect(shareMenu.getAttribute('title')).to.equal('Another test title');
       });
+
+      it('it correctly sets the title property if initialized with the title attribute', async () => {
+        const titleShareMenu: ShareMenu = await fixture(html`
+          <share-menu title="title"></share-menu>
+        `);
+
+        expect(titleShareMenu.title).to.equal('title');
+      });
+
+      it('defaults to current window title if title attribute is not passed', async () => {
+        const noTitleShareMenu: ShareMenu = await fixture(html`
+          <share-menu></share-menu>
+        `);
+
+        expect(noTitleShareMenu.title).to.equal(document.title);
+      });
     });
 
     describe('url', () => {
