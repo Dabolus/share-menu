@@ -927,8 +927,9 @@ export class ShareMenu extends HTMLElement {
           // not to share anything using the native share menu.
           // In that case, we don't want to show our fallback share menu.
           if (name !== 'AbortError') {
-            this._showFallbackShare();
+            return this._showFallbackShare();
           }
+          this._emitEvent('close', { origin: 'native' });
         });
     }
     return this._showFallbackShare();
