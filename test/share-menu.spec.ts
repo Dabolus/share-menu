@@ -621,6 +621,22 @@ describe('share menu', () => {
             .textContent,
         ).to.equal('Test title');
       });
+
+      it('it correctly sets the dialogTitle property if initialized with the dialog-title attribute', async () => {
+        const dialogTitleShareMenu: ShareMenu = await fixture(html`
+          <share-menu dialog-title="dialogTitle"></share-menu>
+        `);
+
+        expect(dialogTitleShareMenu.dialogTitle).to.equal('dialogTitle');
+      });
+
+      it('defaults to "Share with" if dialog-title attribute is not passed', async () => {
+        const noDialogTitleShareMenu: ShareMenu = await fixture(html`
+          <share-menu></share-menu>
+        `);
+
+        expect(noDialogTitleShareMenu.dialogTitle).to.equal('Share with');
+      });
     });
 
     describe('text', () => {
