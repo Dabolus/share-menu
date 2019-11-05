@@ -647,6 +647,37 @@ describe('share menu', () => {
         shareMenu.text = 'Another test text';
         expect(shareMenu.getAttribute('text')).to.equal('Another test text');
       });
+
+      it('it correctly sets the text property if initialized with the text attribute', async () => {
+        const descriptionShareMenu: ShareMenu = await fixture(html`
+          <share-menu text="text"></share-menu>
+        `);
+
+        expect(descriptionShareMenu.text).to.equal('text');
+      });
+
+      it('defaults to an empty string if text attribute is not passed and meta description is not set', async () => {
+        const noDescriptionShareMenu: ShareMenu = await fixture(html`
+          <share-menu></share-menu>
+        `);
+
+        expect(noDescriptionShareMenu.text).to.equal('');
+      });
+
+      it('defaults to meta description if it is available and text attribute is not passed', async () => {
+        const metaDescription = document.createElement('meta');
+        metaDescription.name = 'description';
+        metaDescription.content = 'text';
+        document.head.appendChild(metaDescription);
+
+        const noDescriptionShareMenu: ShareMenu = await fixture(html`
+          <share-menu></share-menu>
+        `);
+
+        expect(noDescriptionShareMenu.text).to.equal('text');
+
+        document.head.removeChild(metaDescription);
+      });
     });
 
     describe('title', () => {
