@@ -24,7 +24,10 @@ const getConfig = (input, minify) => ({
       format: 'iife',
       name: `dabolus.${input.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
       globals: {
-        [resolve(__dirname, `src/social-icons.js`)]: 'dabolus.socialIcons',
+        [resolve(
+          __dirname,
+          `src/social-icons${minify ? '.min' : ''}.js`,
+        )]: 'dabolus.socialIcons',
       },
       sourcemap: prod ? false : 'inline',
     },
