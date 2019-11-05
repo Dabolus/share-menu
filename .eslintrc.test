@@ -1,0 +1,7 @@
+{
+  "extends": "./.eslintrc",
+  "parserOptions": {
+    "project": "tsconfig.test.json",
+    "ecmaVersion": 2018
+  }
+}
