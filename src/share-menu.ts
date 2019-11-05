@@ -306,17 +306,15 @@ export class ShareMenu extends HTMLElement {
       color: '#777',
       title: 'Copy to clipboard',
       action: () => {
-        const errorEvent = new CustomEvent('error', {
-          bubbles: true,
-          composed: true,
-          detail: { message: 'Unable to copy to clipboard' },
-        });
+        const errorEventPayload = {
+          message: 'Unable to copy to clipboard',
+        };
         if (!navigator.clipboard) {
-          return this.dispatchEvent(errorEvent);
+          return this._emitEvent('error', errorEventPayload);
         }
         navigator.clipboard
           .writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
-          .catch(() => this.dispatchEvent(errorEvent));
+          .catch(() => this._emitEvent('error', errorEventPayload));
       },
     },
     facebook: {
@@ -921,13 +919,7 @@ export class ShareMenu extends HTMLElement {
         .then(() => {
           this.opened = false;
           ['share', 'close'].forEach(event =>
-            this.dispatchEvent(
-              new CustomEvent(event, {
-                bubbles: true,
-                composed: true,
-                detail: { origin: 'native' },
-              }),
-            ),
+            this._emitEvent(event, { origin: 'native' }),
           );
         })
         .catch(({ name }) => {
@@ -1065,13 +1057,7 @@ export class ShareMenu extends HTMLElement {
       socialButton.setAttribute('part', 'social-button');
       socialButton.addEventListener('click', () => {
         action();
-        this.dispatchEvent(
-          new CustomEvent('share', {
-            bubbles: true,
-            composed: true,
-            detail: { social, origin: 'fallback' },
-          }),
-        );
+        this._emitEvent('share', { social, origin: 'fallback' });
         this._close();
       });
       const socialIcon: HTMLDivElement = document.createElement('div');
@@ -1115,6 +1101,17 @@ export class ShareMenu extends HTMLElement {
   }
 
   /** @private */
+  private _emitEvent(type: string, detail: unknown) {
+    return this.dispatchEvent(
+      new CustomEvent(type, {
+        bubbles: true,
+        composed: true,
+        detail,
+      }),
+    );
+  }
+
+  /** @private */
   private _showFallbackShare() {
     return new Promise(resolve => {
       function shareListener(this: ShareMenu) {
@@ -1152,13 +1149,7 @@ export class ShareMenu extends HTMLElement {
     }
     setTimeout(() => {
       this.style.display = 'none';
-      this.dispatchEvent(
-        new CustomEvent('close', {
-          bubbles: true,
-          composed: true,
-          detail: { origin: 'fallback' },
-        }),
-      );
+      this._emitEvent('close', { origin: 'fallback' });
     }, 300);
   }
 
