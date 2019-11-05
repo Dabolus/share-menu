@@ -92,7 +92,7 @@ describe('share menu', () => {
       expect(origin).to.equal('fallback');
     });
 
-    it('gets triggered when navigator.share throws', async () => {
+    it('gets triggered if navigator.share throws', async () => {
       const fakeBrokenShare = fake.rejects(undefined);
       window.navigator.share = fakeBrokenShare;
 
@@ -101,6 +101,26 @@ describe('share menu', () => {
 
       delete window.navigator.share;
     });
+
+    it("doesn't get triggered if navigator.share throws an 'AbortError'", () =>
+      new Promise(resolve => {
+        const abortError = new Error();
+        abortError.name = 'AbortError';
+        const fakeBrokenShare = fake.rejects(abortError);
+        window.navigator.share = fakeBrokenShare;
+
+        shareMenu.addEventListener(
+          'close',
+          ({ detail: { origin } }: CustomEvent) => {
+            expect(origin).to.equal('native');
+            resolve();
+          },
+          { once: true },
+        );
+        shareMenu.share();
+
+        delete window.navigator.share;
+      }));
 
     describe('a11y', () => {
       const firstSocial = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
