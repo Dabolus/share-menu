@@ -22,6 +22,33 @@ experience of the native one.
   or through a polyfill). Unlike the native share menu, the fallback will also 
   work on desktop browsers and insecure contexts, so you will be able to offer 
   a much more coherent experience to your users.
+- Lightweight. If correctly minified (read the note about the bundle size below), 
+  the `share-menu` element itself weighs 13.18 KB (4.34 KB gzipped, 3.76 KB brotli), 
+  while the icons weigh 12.24 KB (5.66 KB gzipped, 4.9 KB brotli), for a total of 
+  10 KB gzipped size and 8.66 KB brotli size.
+
+#### Note about the bundle size
+The share menu repetitively uses some private helpers to avoid code duplication. 
+As a standard, these helpers always start with an underscore (_), so you can easily 
+drop the bundle size by telling your JS compiler to mangle all properties that start 
+with an underscore (to be safe, I would suggest to only apply this rule to the share 
+menu, but you might also get a smaller bundle size by applying this rule to any package, 
+since a property starting with an underscore is generally considered private). 
+For example, if you use Terser you might configure it in this way:
+```js
+{
+  mangle: {
+    properties: {
+      regex: /^_/,
+    },
+  },
+}
+```
+By simply applying this rule, the minified package goes from 14.92 KB 
+(4.5 KB gzipped, 3.93 KB brotli) to 13.18 KB (4.34 KB gzipped, 3.76 KB brotli). 
+Note that the provided minified version already applies these optimizations, so you can 
+directly import it if you want to same some bytes without having to change your compiler 
+configuration.
 
 ## Installation
 ```bash
