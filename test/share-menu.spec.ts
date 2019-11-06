@@ -180,8 +180,8 @@ describe('share menu', () => {
         shareMenu.share();
         const event = new KeyboardEvent('keydown', { key: 'Escape' });
         shareMenu.dispatchEvent(event);
-        const result = await waitForCloseEventPromise;
-        expect(result).to.equal(true);
+        await waitForCloseEventPromise;
+        expect(shareMenu.opened).to.equal(false);
       });
 
       it('closes when clicking on the backdrop', async () => {
@@ -193,8 +193,8 @@ describe('share menu', () => {
 
         shareMenu.share();
         shareMenu.shadowRoot.querySelector<HTMLDivElement>('#backdrop').click();
-        const result = await waitForCloseEventPromise;
-        expect(result).to.equal(true);
+        await waitForCloseEventPromise;
+        expect(shareMenu.opened).to.equal(false);
       });
     });
 
