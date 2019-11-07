@@ -1,7 +1,7 @@
 # \<share-menu\>
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/share-menu)
 [![GitHub release](https://img.shields.io/github/release/Dabolus/share-menu/all.svg)](https://github.com/Dabolus/share-menu)
-[![Build status](https://travis-ci.org/Dabolus/share-menu.svg?branch=master)](https://travis-ci.org/Dabolus/share-menu)
+[![Build status](https://github.com/Dabolus/share-menu/workflows/Lint%2C%20test%20and%20build/badge.svg)](https://github.com/Dabolus/share-menu/actions?query=workflow%3A%22Lint%2C+test+and+build%22)
 [![Minified + gzipped size](https://img.shields.io/bundlephobia/minzip/share-menu.svg)](https://bundlephobia.com/result?p=share-menu)
 
 _[Demo and API docs](https://www.webcomponents.org/element/share-menu)_
