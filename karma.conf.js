@@ -8,8 +8,8 @@ module.exports = config => {
         // runs all files ending with .spec in the test folder,
         // can be overwritten by passing a --grep flag. examples:
         //
-        // yarn test --grep test/foo/bar.spec.ts
-        // yarn test --grep test/bar/*
+        // npm test -- --grep test/foo/bar.spec.ts
+        // npm test -- --grep test/bar/*
         {
           pattern: config.grep ? config.grep : 'test/**/*.spec.ts',
           type: 'module',
