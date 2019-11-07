@@ -4,6 +4,7 @@ import minifyHtml from 'rollup-plugin-minify-html-literals';
 import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
+import filesize from 'rollup-plugin-filesize';
 
 const prod = process.env.NODE_ENV === 'production';
 
@@ -88,6 +89,14 @@ const getConfig = (input, minify) => ({
       delimiters: ['', ''],
       './social-icons': `./social-icons${minify ? '.min' : ''}.js`,
     }),
+    ...(prod
+      ? [
+          filesize({
+            showMinifiedSize: false,
+            showBrotliSize: true,
+          }),
+        ]
+      : []),
   ],
   // Make all dependencies external
   external: () => true,
