@@ -9,8 +9,8 @@ import filesize from 'rollup-plugin-filesize';
 const prod = process.env.NODE_ENV === 'production';
 
 const inputs = readdirSync('src')
-  .filter(file => !file.endsWith('.d.ts'))
-  .map(file => file.slice(0, -3));
+  .filter((file) => !file.endsWith('.d.ts'))
+  .map((file) => file.slice(0, -3));
 
 const getConfig = (input, minify) => ({
   input: `src/${input}.ts`,
@@ -29,8 +29,8 @@ const getConfig = (input, minify) => ({
         .reduce(
           (globals, i) => ({
             ...globals,
-        [resolve(
-          __dirname,
+            [resolve(
+              __dirname,
               `src/${i}${minify ? '.min' : ''}.js`,
             )]: `dabolus.${i.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
           }),
@@ -44,9 +44,9 @@ const getConfig = (input, minify) => ({
       ? [
           minifyHtml({
             options: {
-              shouldMinify: template =>
+              shouldMinify: (template) =>
                 template.parts[0].text.startsWith('<!-- html -->'),
-              shouldMinifyCSS: template =>
+              shouldMinifyCSS: (template) =>
                 template.parts[0].text.startsWith('/* css */'),
               minifyOptions: {
                 minifyCSS: {
