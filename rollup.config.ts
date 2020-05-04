@@ -24,12 +24,18 @@ const getConfig = (input, minify) => ({
       file: `${input}.iife${minify ? '.min' : ''}.js`,
       format: 'iife',
       name: `dabolus.${input.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
-      globals: {
+      globals: inputs
+        .filter((i) => i !== input)
+        .reduce(
+          (globals, i) => ({
+            ...globals,
         [resolve(
           __dirname,
-          `src/social-icons${minify ? '.min' : ''}.js`,
-        )]: 'dabolus.socialIcons',
-      },
+              `src/${i}${minify ? '.min' : ''}.js`,
+            )]: `dabolus.${i.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
+          }),
+          {},
+        ),
       sourcemap: prod ? false : 'inline',
     },
   ],
