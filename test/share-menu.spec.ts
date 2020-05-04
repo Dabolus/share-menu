@@ -687,12 +687,12 @@ describe('share menu', () => {
         expect(dialogTitleShareMenu.dialogTitle).to.equal('dialogTitle');
       });
 
-      it('defaults to "Share with" if dialog-title attribute is not passed', async () => {
+      it('defaults to "Share" if dialog-title attribute is not passed', async () => {
         const noDialogTitleShareMenu: ShareMenu = await fixture(html`
           <share-menu></share-menu>
         `);
 
-        expect(noDialogTitleShareMenu.dialogTitle).to.equal('Share with');
+        expect(noDialogTitleShareMenu.dialogTitle).to.equal('Share');
       });
     });
 
@@ -888,6 +888,16 @@ describe('share menu', () => {
         expect(shareMenu.getAttribute('no-backdrop')).to.be.a.string;
         shareMenu.noBackdrop = false;
         expect(shareMenu.getAttribute('no-backdrop')).to.be.null;
+      });
+    });
+
+    describe('handle', () => {
+      it('syncs handle property with handle attribute', () => {
+        shareMenu.setAttribute('handle', 'never');
+        expect(shareMenu.handle).to.equal('never');
+
+        shareMenu.handle = 'always';
+        expect(shareMenu.getAttribute('handle')).to.equal('always');
       });
     });
   });

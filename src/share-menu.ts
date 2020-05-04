@@ -243,8 +243,8 @@ export class ShareMenu extends HTMLElement {
    * Used to tell if the URL is an image or not.
    * It can have three different values:
    *
-   * - "no"|false|0  _(default)_ - the URL is not an image (or it should be considered as a normal URL even if it is an image)
-   * - "yes"|true|1 - the URL **IS** an image, so it will always be treated as such
+   * - "no"|false|0 _(default)_ - the URL is not an image (or it should be considered as a normal URL even if it is an image);
+   * - "yes"|true|1 - the URL **IS** an image, so it will always be treated as such;
    * - "auto" - autodetect whether the URL is an image or not. This may cause a lot of extra network traffic, so **only use it if really necessary**.
    *
    * @return {string}
@@ -273,12 +273,32 @@ export class ShareMenu extends HTMLElement {
       this.removeAttribute('no-backdrop');
     }
   }
+
+  /**
+   * Whether to show the handle or not.
+   * It can have three different values:
+   *
+   * - "auto" _(default)_ - only show the handle on touchscreen devices (i.e. when device pointer is coarse);
+   * - "always" - always show the handle;
+   * - "never" - never show the handle.
+   *
+   * @return {string}
+   */
+  public get handle(): string {
+    return this.getAttribute('handle');
+  }
+
+  public set handle(val: string) {
+    this.setAttribute('handle', val);
+  }
+
   public static readonly observedAttributes = [
     'dialog-title',
     'opened',
     'url',
     'is-image',
     'no-backdrop',
+    'handle',
   ];
   public static stylesheet?: CSSStyleSheetWithReplace;
 
@@ -790,6 +810,7 @@ export class ShareMenu extends HTMLElement {
         will-change: transform;
         transform: translateY(100vh);
         transition: .3s transform cubic-bezier(.4, 0, 1, 1);
+        border-radius: 16px 16px 0 0;
       }
 
       :host([opened]) #dialog {
@@ -797,12 +818,43 @@ export class ShareMenu extends HTMLElement {
         transition: .3s transform cubic-bezier(0, 0, .2, 1);
       }
 
+      #handle {
+        padding-top: 12px;
+      }
+
+      :host([handle='never']) #handle {
+        display: none;
+      }
+
+      @media (pointer: fine) {
+        :host([handle='auto']) #handle {
+          display: none;
+        }
+      }
+
+      #handle::after {
+        content: '';
+        display: block;
+        width: 24px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--handle-color, rgba(0, 0, 0, .6));
+        margin: auto;
+      }
+
+      hr {
+        margin: 0;
+        border-style: solid;
+        border-color: var(--divider-color, rgba(0, 0, 0, .12));
+      }
+
       #title {
         color: var(--title-color, rgba(0, 0, 0, .6));
-        font-weight: 400;
-        font-size: 14px;
+        font-weight: 500;
+        font-size: 18px;
         margin: 0;
         padding: 12px;
+        text-align: center;
       }
 
       #socials-container {
@@ -819,10 +871,11 @@ export class ShareMenu extends HTMLElement {
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        appearance: none;
         cursor: pointer;
         border: none;
         outline: none;
-        background: var(--background-color, #fff);
+        background: transparent;
         will-change: transform;
         transition: .3s transform;
       }
@@ -833,28 +886,33 @@ export class ShareMenu extends HTMLElement {
 
       .social .icon {
         position: relative;
-        width: 48px;
-        height: 48px;
-        padding: 8px;
+        width: 42px;
+        height: 42px;
+        padding: 12px;
+        fill: #fff;
+        border-radius: 50%;
       }
 
-      .social .icon::before {
+      .social .icon::before, .social .icon::after {
         content: '';
-        z-index: -1;
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: var(--ripple-color, #000);
-        opacity: .12;
+        background: var(--ripple-color, #fff);
+        opacity: .3;
         will-change: transform;
         transition: .3s transform;
         transform: scale(0);
       }
 
-      .social:active .icon::before, .social:focus .icon::before {
+      .social .icon::after {
+        opacity: .4;
+      }
+
+      .social:focus .icon::before, .social:active .icon::after {
         transform: scale(1);
       }
 
@@ -875,7 +933,9 @@ export class ShareMenu extends HTMLElement {
       }
       <div id="backdrop" part="backdrop" tabindex="-1"></div>
       <div id="dialog" part="dialog" role="dialog" aria-labelledby="title">
+        <div id="handle"></div>
         <h2 id="title" part="title"></h2>
+        <hr>
         <div id="socials-container"></div>
       </div>
     `;
@@ -960,7 +1020,10 @@ export class ShareMenu extends HTMLElement {
       this.url = (canonical && canonical.href) || window.location.href;
     }
     if (!this.dialogTitle) {
-      this.dialogTitle = 'Share with';
+      this.dialogTitle = 'Share';
+    }
+    if (!this.handle) {
+      this.handle = 'auto';
     }
 
     this._backdropRef = this.shadowRoot.querySelector<HTMLDivElement>(
@@ -1066,7 +1129,7 @@ export class ShareMenu extends HTMLElement {
       socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${
         (socialIcons as { [key: string]: string })[social]
       }"/></svg>`;
-      socialIcon.style.fill = color;
+      socialIcon.style.background = color;
       socialIcon.setAttribute('part', 'social-icon');
       socialButton.appendChild(socialIcon);
       const socialLabel: HTMLDivElement = document.createElement('div');
