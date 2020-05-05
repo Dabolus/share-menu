@@ -90,11 +90,6 @@ const getConfig = (input, minify) => ({
           }),
         ]
       : []),
-    replace({
-      include: 'src/**/*.ts',
-      delimiters: ['', ''],
-      './social-icons': `./social-icons${minify ? '.min' : ''}.js`,
-    }),
     ...(prod
       ? [
           filesize({

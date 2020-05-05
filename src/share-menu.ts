@@ -1,5 +1,3 @@
-import * as socialIcons from './social-icons';
-
 // We need to do this because navigator.share and navigator.clipboard do not currently exist in TypeScript typings
 interface ShareOptions {
   url?: string;
@@ -12,22 +10,6 @@ interface NavigatorWithShare extends Navigator {
 }
 
 declare const navigator: NavigatorWithShare;
-
-// We need to do this because of window.FB (Facebook JS API)
-interface FB {
-  ui: (options: {
-    href?: string;
-    method?: string;
-    mobile_iframe?: boolean;
-    quote?: string;
-  }) => void;
-}
-
-interface WindowWithFBAPI extends Window {
-  FB?: FB;
-}
-
-declare const window: WindowWithFBAPI;
 
 interface ShadowRootWithAdoptedStylesheets extends ShadowRoot {
   adoptedStyleSheets: CSSStyleSheet[];
@@ -44,6 +26,31 @@ export interface ShareMenuParams {
   url?: string;
   via?: string;
 }
+
+export interface ShareTarget extends HTMLElement {
+  readonly identifier: string;
+  readonly displayName: string;
+  readonly color: string;
+  readonly icon: string;
+  readonly imageOnly?: boolean;
+  readonly share: (shareMenu: ShareMenu) => unknown;
+}
+
+const isShareTargetNode = (node: Node): boolean =>
+  node.nodeType === Node.ELEMENT_NODE &&
+  node.nodeName.startsWith('SHARE-TARGET-');
+
+const isShareTarget = (node: Node): node is ShareTarget => {
+  const shareTarget = node as ShareTarget;
+
+  return (
+    typeof shareTarget.identifier === 'string' &&
+    typeof shareTarget.displayName === 'string' &&
+    typeof shareTarget.color === 'string' &&
+    typeof shareTarget.icon === 'string' &&
+    typeof shareTarget.share === 'function'
+  );
+};
 
 /**
  * `share-menu` is a complete and simple to use share menu that uses
@@ -165,21 +172,6 @@ export class ShareMenu extends HTMLElement {
 
   public set dialogTitle(val: string) {
     this.setAttribute('dialog-title', val);
-  }
-
-  /**
-   * The list of the socials to show.
-   * Defaults to all the available socials.
-   *
-   * @return {Array<string>}
-   */
-  public get socials(): string[] {
-    return this._socials;
-  }
-
-  public set socials(val: string[]) {
-    this._socials = val;
-    this._renderSocials();
   }
 
   /**
@@ -314,442 +306,7 @@ export class ShareMenu extends HTMLElement {
   private _dialogRef: HTMLDivElement;
   private _dialogTitleRef: HTMLHeadingElement;
   private _socialsContainerRef: HTMLDivElement;
-  private readonly _supportedSocials: {
-    [key: string]: {
-      color: string;
-      title: string;
-      imageOnly?: boolean;
-      action: () => void;
-    };
-  } = {
-    clipboard: {
-      color: '#777',
-      title: 'Copy to clipboard',
-      action: () => {
-        const errorEventPayload = {
-          message: 'Unable to copy to clipboard',
-        };
-        if (!navigator.clipboard) {
-          return this._emitEvent('error', errorEventPayload);
-        }
-        navigator.clipboard
-          .writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
-          .catch(() => this._emitEvent('error', errorEventPayload));
-      },
-    },
-    facebook: {
-      color: '#3b5998',
-      title: 'Facebook',
-      action: () => {
-        if (window.FB) {
-          window.FB.ui({
-            href: this.url,
-            method: 'share',
-            mobile_iframe: true, // eslint-disable-line @typescript-eslint/camelcase
-            quote: this.text,
-          });
-        } else {
-          this._openWindow(
-            `https://www.facebook.com/sharer.php?u=${this._encode(
-              this.url,
-            )}&description=${this._encode(this.title)}%0A%0A${this._encode(
-              this.text,
-            )}`,
-          );
-        }
-      },
-    },
-    twitter: {
-      color: '#1da1f2',
-      title: 'Twitter',
-      action: () => {
-        this._openWindow(
-          `https://twitter.com/intent/tweet?text=${this._encode(
-            this.title,
-          )}%0A${this._encode(this.text)}&url=${this._encode(this.url)}${
-            this.via ? `&via=${this._encode(this.via)}` : ''
-          }`,
-        );
-      },
-    },
-    whatsapp: {
-      color: '#25d366',
-      title: 'WhatsApp',
-      action: () => {
-        this._openWindow(
-          `whatsapp://send?text=*${this._encode(
-            this.title,
-          )}*%0A%0A${this._encode(this.text)}%0A%0A${this._encode(this.url)}`,
-          true,
-        );
-      },
-    },
-    telegram: {
-      color: '#0088cc',
-      title: 'Telegram',
-      action: () => {
-        this._openWindow(
-          `https://t.me/share/url?url=${this._encode(
-            this.url,
-          )}&text=**${this._encode(this.title)}**%0A${this._encode(this.text)}`,
-        );
-      },
-    },
-    linkedin: {
-      color: '#0077b5',
-      title: 'LinkedIn',
-      action: () => {
-        this._openWindow(
-          `https://www.linkedin.com/shareArticle?mini=true&url=${this._encode(
-            this.url,
-          )}&title=${this._encode(this.title)}&summary=${this._encode(
-            this.text,
-          )}&source=${this._encode(this.via)}`,
-        );
-      },
-    },
-    pinterest: {
-      color: '#bd081c',
-      title: 'Pinterest',
-      imageOnly: true,
-      action: () => {
-        // Kinda hacky
-        const button = document.createElement('button');
-        button.onclick = () => {
-          const script = document.createElement('script');
-          script.src = `https://assets.pinterest.com/js/pinmarklet.js?r=${Math.random() *
-            99999999}`;
-          document.body.appendChild(script);
-        };
-        button.style.display = 'none';
-        const img = document.createElement('img');
-        img.src = this.url;
-        img.alt = this.text;
-        img.title = this.title;
-        img.style.width = '400px';
-        img.style.height = 'auto';
-        button.appendChild(img);
-        document.body.appendChild(button);
-        button.click();
-      },
-    },
-    tumblr: {
-      color: '#35465c',
-      title: 'Tumblr',
-      action: () => {
-        this._openWindow(
-          `https://www.tumblr.com/widgets/share/tool?canonicalUrl=${this._encode(
-            this.url,
-          )}&title=${this._encode(this.title)}&caption=${this._encode(
-            this.text,
-          )}`,
-        );
-      },
-    },
-    reddit: {
-      color: '#ff4500',
-      title: 'Reddit',
-      action: () => {
-        const payload = this.text
-          ? `text=${this._encode(this.text)}%0A%0A${this._encode(this.url)}`
-          : `url=${this._encode(this.url)}`;
-
-        this._openWindow(
-          `https://reddit.com/submit?${payload}&title=${this._encode(
-            this.title,
-          )}`,
-        );
-      },
-    },
-    vk: {
-      color: '#45668e',
-      title: 'VK',
-      action: () => {
-        this._openWindow(
-          `https://vk.com/share.php?url=${this._encode(this.url)}`,
-        );
-      },
-    },
-    skype: {
-      color: '#00aff0',
-      title: 'Skype',
-      action: () => {
-        this._openWindow(
-          `https://web.skype.com/share?url=${this._encode(this.url)}`,
-        );
-      },
-    },
-    viber: {
-      color: '#665cac',
-      title: 'Viber',
-      action: () => {
-        this._openWindow(
-          `viber://forward?text=${this._encode(this.title)}%0A%0A${this._encode(
-            this.text,
-          )}%0A%0A${this._encode(this.url)}`,
-          true,
-        );
-      },
-    },
-    line: {
-      color: '#00c300',
-      title: 'Line',
-      action: () => {
-        this._openWindow(
-          `https://lineit.line.me/share/ui?url=${this._encode(this.url)}`,
-        );
-      },
-    },
-    qzone: {
-      color: '#ffce00',
-      title: 'Qzone',
-      action: () => {
-        this._openWindow(
-          `https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=${this._encode(
-            this.url,
-          )}`,
-        );
-      },
-    },
-    wordpress: {
-      color: '#0087be',
-      title: 'WordPress',
-      action: () => {
-        const img = this._urlIsImage ? `&i=${this._encode(this.url)}` : '';
-        this._openWindow(
-          `https://wordpress.com/press-this.php?u=${this._encode(
-            window.location.href,
-          )}&t=${this._encode(this.title)}&s=${this._encode(this.text)}${img}`,
-        );
-      },
-    },
-    blogger: {
-      color: '#f57d00',
-      title: 'Blogger',
-      action: () => {
-        this._openWindow(
-          `https://www.blogger.com/blog-this.g?u=${this._encode(
-            this.url,
-          )}&n=${this._encode(this.title)}&t=${this._encode(this.text)}`,
-        );
-      },
-    },
-    flipboard: {
-      color: '#e12828',
-      title: 'Flipboard',
-      action: () => {
-        this._openWindow(
-          `https://share.flipboard.com/bookmarklet/popout?v=2&title=${this._encode(
-            this.title,
-          )}&url=${this._encode(this.url)}`,
-        );
-      },
-    },
-    evernote: {
-      color: '#2dbe60',
-      title: 'Evernote',
-      action: () => {
-        this._openWindow(
-          `https://www.evernote.com/clip.action?url=${this._encode(this.url)}`,
-        );
-      },
-    },
-    myspace: {
-      color: '#000',
-      title: 'Myspace',
-      action: () => {
-        this._openWindow(
-          `https://myspace.com/post?u=${this._encode(
-            this.url,
-          )}&t=${this._encode(this.title)}&c=${this._encode(this.text)}`,
-        );
-      },
-    },
-    pocket: {
-      color: '#ef4056',
-      title: 'Pocket',
-      action: () => {
-        this._openWindow(
-          `https://getpocket.com/save?url=${this._encode(this.url)}`,
-        );
-      },
-    },
-    livejournal: {
-      color: '#004359',
-      title: 'LiveJournal',
-      action: () => {
-        this._openWindow(
-          `http://www.livejournal.com/update.bml?subject=${this._encode(
-            this.title,
-          )}&event=${this._encode(this.text)}%0A%0A${this._encode(this.url)}`,
-        );
-      },
-    },
-    instapaper: {
-      color: '#000',
-      title: 'Instapaper',
-      action: () => {
-        this._openWindow(
-          `https://www.instapaper.com/edit?url=${this._encode(
-            this.url,
-          )}&title=${this._encode(this.title)}&description=${this._encode(
-            this.text,
-          )}`,
-        );
-      },
-    },
-    baidu: {
-      color: '#2529d8',
-      title: 'Baidu',
-      action: () => {
-        this._openWindow(
-          `http://cang.baidu.com/do/add?it=${this._encode(
-            this.title,
-          )}&iu=${this._encode(this.url)}`,
-        );
-      },
-    },
-    okru: {
-      color: '#ee8208',
-      title: 'OK.ru',
-      action: () => {
-        this._openWindow(
-          `https://connect.ok.ru/dk?st.cmd=WidgetSharePreview&st.shareUrl=${this._encode(
-            this.url,
-          )}&title=${this._encode(this.title)}`,
-        );
-      },
-    },
-    xing: {
-      color: '#026466',
-      title: 'XING',
-      action: () => {
-        this._openWindow(
-          `https://www.xing.com/app/user?op=share&url=${this._encode(
-            this.url,
-          )}`,
-        );
-      },
-    },
-    buffer: {
-      color: '#323b43',
-      title: 'Buffer',
-      action: () => {
-        this._openWindow(
-          `https://buffer.com/add?text=${this._encode(
-            this.title,
-          )}&url=${this._encode(this.url)}`,
-        );
-      },
-    },
-    digg: {
-      color: '#005be2',
-      title: 'Digg',
-      action: () => {
-        this._openWindow(
-          `https://digg.com/submit?url=${this._encode(
-            this.url,
-          )}&title=${this._encode(this.title)}`,
-        );
-      },
-    },
-    douban: {
-      color: '#007610',
-      title: 'Douban',
-      action: () => {
-        this._openWindow(
-          `https://www.douban.com/recommend/?url=${this._encode(
-            this.url,
-          )}&title=${this._encode(this.title)}`,
-        );
-      },
-    },
-    stumbleupon: {
-      color: '#eb4924',
-      title: 'StumbleUpon',
-      action: () => {
-        this._openWindow(
-          `https://www.stumbleupon.com/submit?url=${this._encode(
-            this.url,
-          )}&title=${this._encode(this.title)}`,
-        );
-      },
-    },
-    weibo: {
-      color: '#df2029',
-      title: 'Weibo',
-      action: () => {
-        this._openWindow(
-          `http://service.weibo.com/share/share.php?url=${this._encode(
-            this.url,
-          )}&appkey=&title=${this._encode(this.title)}%0A%0A${this._encode(
-            this.text,
-          )}&pic=&ralateUid=`,
-        );
-      },
-    },
-    print: {
-      color: '#425563',
-      title: 'Print',
-      action: () => {
-        this._openWindow(this.url).print();
-      },
-    },
-    translate: {
-      color: '#4285f4',
-      title: 'Translate',
-      action: () => {
-        const userLang = navigator.language.slice(0, 2);
-        this._openWindow(
-          `https://translate.google.it/translate?hl=${userLang}&sl=auto&u=${this._encode(
-            this.url,
-          )}`,
-        );
-      },
-    },
-    email: {
-      color: '#ffa930',
-      title: 'Email',
-      action: () => {
-        this._openWindow(
-          `mailto:?subject=${this._encode(this.title)}&body=${this._encode(
-            this.text,
-          )}%0A%0A${this._encode(this.url)}`,
-          true,
-        );
-      },
-    },
-    sms: {
-      color: '#43695b',
-      title: 'SMS',
-      action: () => {
-        let separator = '?';
-        // iOS uses two different separators, so we have to check the iOS version and use the proper one
-        if (/iP(hone|od|ad)/.test(navigator.platform)) {
-          const [, version] = navigator.appVersion.match(/OS (\d+)/);
-          separator = parseInt(version, 10) < 8 ? ';' : '&';
-        }
-        this._openWindow(
-          `sms:${separator}body=${this._encode(this.title)}%0A%0A${this._encode(
-            this.text,
-          )}%0A%0A${this._encode(this.url)}`,
-          true,
-        );
-      },
-    },
-    yahoo: {
-      color: '#410093',
-      title: 'Yahoo!',
-      action: () => {
-        this._openWindow(
-          `https://compose.mail.yahoo.com/?body=${this._encode(
-            this.title,
-          )}%0A%0A${this._encode(this.text)}%0A%0A%${this._encode(this.url)}`,
-        );
-      },
-    },
-  };
-  private _socials: string[] = Object.keys(this._supportedSocials);
+  private _socials: ShareTarget[] = [];
 
   public constructor() {
     super();
@@ -922,6 +479,10 @@ export class ShareMenu extends HTMLElement {
         font-size: 12px;
         text-align: center;
       }
+
+      slot {
+        display: none;
+      }
     `;
 
     this._template = document.createElement('template');
@@ -938,6 +499,7 @@ export class ShareMenu extends HTMLElement {
         <hr>
         <div id="socials-container"></div>
       </div>
+      <slot></slot>
     `;
 
     this.attachShadow({ mode: 'open' });
@@ -978,7 +540,7 @@ export class ShareMenu extends HTMLElement {
         })
         .then(() => {
           this.opened = false;
-          ['share', 'close'].forEach(event =>
+          ['share', 'close'].forEach((event) =>
             this._emitEvent(event, { origin: 'native' }),
           );
         })
@@ -1037,7 +599,25 @@ export class ShareMenu extends HTMLElement {
     this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>(
       '#socials-container',
     );
-    this.socials = Object.keys(this._supportedSocials);
+
+    const slotRef = this.shadowRoot.querySelector<HTMLSlotElement>('slot');
+
+    slotRef.addEventListener('slotchange', async () => {
+      const shareTargets = slotRef
+        .assignedNodes({
+          flatten: true,
+        })
+        .filter(isShareTargetNode);
+
+      await Promise.all(
+        shareTargets.map((target) =>
+          customElements.whenDefined(target.nodeName.toLowerCase()),
+        ),
+      );
+
+      this._socials = shareTargets.filter(isShareTarget);
+      this._renderSocials();
+    });
   }
 
   /** @private */
@@ -1107,61 +687,61 @@ export class ShareMenu extends HTMLElement {
       return;
     }
     this._socialsContainerRef.innerHTML = '';
-    this._socials.forEach((social, index) => {
-      const { color, title, action, imageOnly } = this._supportedSocials[
-        social
-      ];
-      if (imageOnly && !this._urlIsImage) {
-        return;
-      }
-      const socialButton: HTMLButtonElement = document.createElement('button');
-      socialButton.className = 'social';
-      socialButton.id = social;
-      socialButton.title = title;
-      socialButton.setAttribute('part', 'social-button');
-      socialButton.addEventListener('click', () => {
-        action();
-        this._emitEvent('share', { social, origin: 'fallback' });
-        this._close();
-      });
-      const socialIcon: HTMLDivElement = document.createElement('div');
-      socialIcon.className = 'icon';
-      socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${
-        (socialIcons as { [key: string]: string })[social]
-      }"/></svg>`;
-      socialIcon.style.background = color;
-      socialIcon.setAttribute('part', 'social-icon');
-      socialButton.appendChild(socialIcon);
-      const socialLabel: HTMLDivElement = document.createElement('div');
-      socialLabel.className = 'label';
-      socialLabel.textContent = title;
-      socialLabel.setAttribute('part', 'social-label');
-      socialButton.appendChild(socialLabel);
-      this._socialsContainerRef.appendChild(socialButton);
-      if (index === 0) {
-        this._firstFocusableElRef = socialButton;
-      }
-      if (index === this._socials.length - 1) {
-        this._lastFocusableElRef = socialButton;
-      }
-    });
-  }
+    this._socials.forEach(
+      (
+        { identifier, color, icon, displayName, share, imageOnly = false },
+        index,
+      ) => {
+        if (imageOnly && !this._urlIsImage) {
+          return;
+        }
+        const socialButton: HTMLButtonElement = document.createElement(
+          'button',
+        );
+        socialButton.className = 'social';
+        socialButton.id = identifier;
+        socialButton.title = displayName;
+        socialButton.setAttribute('part', 'social-button');
+        socialButton.addEventListener('click', () => {
+          share(this);
+          this._emitEvent('share', { social: identifier, origin: 'fallback' });
+          this._close();
+        });
 
-  /** @private */
-  private _openWindow(url: string, replace?: boolean) {
-    return window.open(
-      url,
-      replace ? '_self' : '_blank',
-      `width=${screen.width / 2},height=${screen.height /
-        2},left=${screen.width / 4},top=${screen.height /
-        4},menubar=0,status=0,titlebar=0,toolbar=0`,
-      false,
+        const socialIcon: HTMLDivElement = document.createElement('div');
+        socialIcon.className = 'icon';
+        socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${icon}"/></svg>`;
+        socialIcon.style.background = color;
+        socialIcon.setAttribute('part', 'social-icon');
+        socialButton.appendChild(socialIcon);
+
+        const socialLabel: HTMLDivElement = document.createElement('div');
+        socialLabel.className = 'label';
+        socialLabel.textContent = displayName;
+        socialLabel.setAttribute('part', 'social-label');
+        socialButton.appendChild(socialLabel);
+        this._socialsContainerRef.appendChild(socialButton);
+
+        if (index === 0) {
+          this._firstFocusableElRef = socialButton;
+        }
+
+        if (index === this._socials.length - 1) {
+          this._lastFocusableElRef = socialButton;
+        }
+      },
     );
   }
 
-  /** @private */
-  private _encode(data: string | number | boolean) {
-    return encodeURIComponent(data);
+  public openWindow(url: string, replace?: boolean) {
+    return window.open(
+      url,
+      replace ? '_self' : '_blank',
+      `width=${screen.width / 2},height=${screen.height / 2},left=${
+        screen.width / 4
+      },top=${screen.height / 4},menubar=0,status=0,titlebar=0,toolbar=0`,
+      false,
+    );
   }
 
   /** @private */
@@ -1177,7 +757,7 @@ export class ShareMenu extends HTMLElement {
 
   /** @private */
   private _showFallbackShare() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       function shareListener(this: ShareMenu) {
         this.removeEventListener('share', shareListener);
         resolve();
@@ -1231,7 +811,7 @@ export class ShareMenu extends HTMLElement {
         this._close();
         break;
       case 'Tab':
-        if (this.socials.length < 2) {
+        if (this._socials.length < 2) {
           e.preventDefault();
           break;
         }
