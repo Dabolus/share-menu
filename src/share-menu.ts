@@ -28,7 +28,6 @@ export interface ShareMenuParams {
 }
 
 export interface ShareTarget extends HTMLElement {
-  readonly identifier: string;
   readonly displayName: string;
   readonly color: string;
   readonly icon: string;
@@ -44,7 +43,6 @@ const isShareTarget = (node: Node): node is ShareTarget => {
   const shareTarget = node as ShareTarget;
 
   return (
-    typeof shareTarget.identifier === 'string' &&
     typeof shareTarget.displayName === 'string' &&
     typeof shareTarget.color === 'string' &&
     typeof shareTarget.icon === 'string' &&
@@ -689,22 +687,23 @@ export class ShareMenu extends HTMLElement {
     this._socialsContainerRef.innerHTML = '';
     this._socials.forEach(
       (
-        { identifier, color, icon, displayName, share, imageOnly = false },
+        { nodeName, color, icon, displayName, share, imageOnly = false },
         index,
       ) => {
         if (imageOnly && !this._urlIsImage) {
           return;
         }
+        const social = nodeName.slice(0, 13).toLowerCase();
         const socialButton: HTMLButtonElement = document.createElement(
           'button',
         );
         socialButton.className = 'social';
-        socialButton.id = identifier;
+        socialButton.id = social;
         socialButton.title = displayName;
         socialButton.setAttribute('part', 'social-button');
         socialButton.addEventListener('click', () => {
           share(this);
-          this._emitEvent('share', { social: identifier, origin: 'fallback' });
+          this._emitEvent('share', { social, origin: 'fallback' });
           this._close();
         });
 
