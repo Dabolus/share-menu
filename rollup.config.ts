@@ -1,4 +1,4 @@
-import { readdirSync } from 'fs';
+import glob from 'glob';
 import { resolve } from 'path';
 import minifyHtml from 'rollup-plugin-minify-html-literals';
 import replace from '@rollup/plugin-replace';
@@ -8,9 +8,7 @@ import filesize from 'rollup-plugin-filesize';
 
 const prod = process.env.NODE_ENV === 'production';
 
-const inputs = readdirSync('src')
-  .filter((file) => !file.endsWith('.d.ts'))
-  .map((file) => file.slice(0, -3));
+const inputs = glob.sync('src/**/*.ts').map((file) => file.slice(4, -3));
 
 const getConfig = (input, minify) => ({
   input: `src/${input}.ts`,
@@ -71,6 +69,7 @@ const getConfig = (input, minify) => ({
         ]
       : []),
     typescript({
+      useTsconfigDeclarationDir: true,
       tsconfigOverride: {
         compilerOptions: {
           declaration: prod,
@@ -90,6 +89,11 @@ const getConfig = (input, minify) => ({
           }),
         ]
       : []),
+    replace({
+      include: 'src/**/*.ts',
+      delimiters: ['', ''],
+      '../share-target': `../share-target${minify ? '.min' : ''}.js`,
+    }),
     ...(prod
       ? [
           filesize({

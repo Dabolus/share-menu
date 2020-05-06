@@ -22,6 +22,7 @@
     </script>
 
     <script type="module" src="../share-menu.js"></script>
+    <script type="module" src="../targets/facebook.js"></script>
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
@@ -77,7 +78,9 @@
               </div>
 
               <share-menu id="shareMenu" title$="[[title]]" text$="[[text]]" url$="[[url]]" via$="[[via]]"
-                          no-backdrop$="[[hideBackdrop]]" is-image$="auto"></share-menu>
+                          no-backdrop$="[[hideBackdrop]]" is-image$="auto">
+                <share-target-facebook></share-target-facebook>
+              </share-menu>
             </template>
           </dom-bind>
         </template>

@@ -2,5 +2,6 @@
 node_modules/
 .rpt2_cache/
 /share-menu.*
+/targets/*
 *.log
 coverage/
