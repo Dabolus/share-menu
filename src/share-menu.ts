@@ -685,24 +685,26 @@ export class ShareMenu extends HTMLElement {
       return;
     }
     this._socialsContainerRef.innerHTML = '';
-    this._socials.forEach(
-      (
-        { nodeName, color, icon, displayName, share, imageOnly = false },
-        index,
-      ) => {
+    this._socials.forEach((shareTarget, index) => {
+      const {
+        nodeName,
+        color,
+        icon,
+        displayName,
+        imageOnly = false,
+      } = shareTarget;
+
         if (imageOnly && !this._urlIsImage) {
           return;
         }
         const social = nodeName.slice(0, 13).toLowerCase();
-        const socialButton: HTMLButtonElement = document.createElement(
-          'button',
-        );
+      const socialButton: HTMLButtonElement = document.createElement('button');
         socialButton.className = 'social';
         socialButton.id = social;
         socialButton.title = displayName;
         socialButton.setAttribute('part', 'social-button');
         socialButton.addEventListener('click', () => {
-          share(this);
+        shareTarget.share(this);
           this._emitEvent('share', { social, origin: 'fallback' });
           this._close();
         });
@@ -728,8 +730,7 @@ export class ShareMenu extends HTMLElement {
         if (index === this._socials.length - 1) {
           this._lastFocusableElRef = socialButton;
         }
-      },
-    );
+    });
   }
 
   public openWindow(url: string, replace?: boolean) {
