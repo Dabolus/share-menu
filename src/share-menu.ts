@@ -160,7 +160,7 @@ export class ShareMenu extends HTMLElement {
 
   /**
    * The title of the dialog displayed if the user browser does not support the Web Share API.
-   * Defaults to "Share with".
+   * Defaults to "Share".
    *
    * @return {string}
    */
