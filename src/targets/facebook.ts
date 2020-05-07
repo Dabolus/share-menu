@@ -28,20 +28,18 @@ export class FacebookShareTarget extends HTMLElement implements ShareTarget {
         href: shareMenu.url,
         quote: `${shareMenu.title}\n${shareMenu.text}`,
       });
+    } else if (this.appId) {
+      shareMenu.openWindow('https://www.facebook.com/dialog/share', {
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        app_id: this.appId,
+        display: 'popup',
+        href: shareMenu.url,
+        quote: `${shareMenu.title}\n${shareMenu.text}`,
+      });
     } else {
-      shareMenu.openWindow(
-        this.appId
-          ? `https://www.facebook.com/dialog/share?app_id=${
-              this.appId
-            }&display=popup&href=${encodeURIComponent(
-              shareMenu.url,
-            )}&quote=${encodeURIComponent(
-              shareMenu.title,
-            )}%0A${encodeURIComponent(shareMenu.text)}`
-          : `https://www.facebook.com/sharer.php?u=${encodeURIComponent(
-              shareMenu.url,
-            )}`,
-      );
+      shareMenu.openWindow('https://www.facebook.com/sharer.php', {
+        u: shareMenu.url,
+      });
     }
   }
 }

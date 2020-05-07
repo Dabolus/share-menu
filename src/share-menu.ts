@@ -733,9 +733,23 @@ export class ShareMenu extends HTMLElement {
     });
   }
 
-  public openWindow(url: string, replace?: boolean) {
+  public openWindow(
+    url: string,
+    query: Record<string, string | number | boolean | null | undefined>,
+    replace?: boolean,
+  ) {
+    const normalizedQuery = Object.entries(query).reduce(
+      (newQuery, [key, value]) => ({
+        ...newQuery,
+        ...(typeof value !== 'undefined' && {
+          [key]: `${value}`,
+        }),
+      }),
+      {},
+    );
+
     return window.open(
-      url,
+      `${url}?${new URLSearchParams(normalizedQuery).toString()}`,
       replace ? '_self' : '_blank',
       `width=${screen.width / 2},height=${screen.height / 2},left=${
         screen.width / 4
