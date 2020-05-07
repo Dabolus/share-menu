@@ -23,6 +23,7 @@
 
     <script type="module" src="../share-menu.js"></script>
     <script type="module" src="../targets/facebook.js"></script>
+    <script type="module" src="../targets/google-bookmarks.js"></script>
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
@@ -80,6 +81,7 @@
               <share-menu id="shareMenu" title$="[[title]]" text$="[[text]]" url$="[[url]]" via$="[[via]]"
                           no-backdrop$="[[hideBackdrop]]" is-image$="auto">
                 <share-target-facebook></share-target-facebook>
+                <share-target-google-bookmarks></share-target-google-bookmarks>
               </share-menu>
             </template>
           </dom-bind>
