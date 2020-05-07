@@ -2,7 +2,7 @@ import type { ShareMenu, ShareTarget } from '../share-menu';
 
 export class FacebookShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'Facebook';
-  public readonly color = '#3b5998';
+  public readonly color = '3b5998';
   public readonly icon =
     'M94 50v35H68v43h26v128h53V128h36l5-43h-41V55c0-4 6-10 12-10h29V0h-40C93 0 94 43 94 50z';
 

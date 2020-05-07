@@ -712,7 +712,7 @@ export class ShareMenu extends HTMLElement {
         const socialIcon: HTMLDivElement = document.createElement('div');
         socialIcon.className = 'icon';
         socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${icon}"/></svg>`;
-        socialIcon.style.background = color;
+      socialIcon.style.background = `#${color}`;
         socialIcon.setAttribute('part', 'social-icon');
         socialButton.appendChild(socialIcon);
 
