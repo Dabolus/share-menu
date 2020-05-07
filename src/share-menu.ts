@@ -24,7 +24,6 @@ export interface ShareMenuParams {
   text?: string;
   title?: string;
   url?: string;
-  via?: string;
 }
 
 export interface ShareTarget extends HTMLElement {
@@ -95,7 +94,6 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Xing - _URL only_
  * - Yahoo
  *
- * _The `via` parameter will only be used by LinkedIn and Twitter._
  *
  * -----------------------------------------------------------------------------------------------------------------
  *
@@ -215,21 +213,6 @@ export class ShareMenu extends HTMLElement {
   }
 
   /**
-   * The provider of the content.
-   * Note that this is used only by some socials.
-   * For example, for Twitter this should be your tag or the tag of your application account.
-   *
-   * @return {string}
-   */
-  public get via(): string {
-    return this.getAttribute('via');
-  }
-
-  public set via(val: string) {
-    this.setAttribute('via', val);
-  }
-
-  /**
    * Used to tell if the URL is an image or not.
    * It can have three different values:
    *
@@ -285,6 +268,8 @@ export class ShareMenu extends HTMLElement {
   public static readonly observedAttributes = [
     'dialog-title',
     'opened',
+    'text',
+    'title',
     'url',
     'is-image',
     'no-backdrop',
@@ -512,23 +497,21 @@ export class ShareMenu extends HTMLElement {
   }
 
   /**
-   * Displays the share dialog with the `title`, `text`, `url` and `via` provided as attributes/properties.
+   * Displays the share dialog with the `title`, `text`, and `url` provided as attributes/properties.
    * You can also override their values by passing them as a parameter to this method. This can be particularly
    * useful if you are creating the dialog directly from JavaScript.
    *
-   * @param {{ text: string, title: string, url: string, via: string }=} props An object containing `text`, `title`, `url` and `via`, that will override the element attributes/properties.
+   * @param {{ text: string, title: string, url: string }=} props An object containing `text`, `title`, and `url`, that will override the element attributes/properties.
    * @return {Promise<void>} A promise that resolves when the user selects a social.
    */
   public share({
     text = this.text,
     title = this.title,
     url = this.url,
-    via = this.via,
   }: ShareMenuParams = {}) {
     this.text = text;
     this.title = title;
     this.url = url;
-    this.via = via;
     if (navigator.share) {
       return navigator
         .share({
@@ -640,6 +623,10 @@ export class ShareMenu extends HTMLElement {
           this.share();
         }
         break;
+      case 'text':
+        break;
+      case 'title':
+        break;
       case 'url':
         if (this.isImage !== 'auto') {
           return;
@@ -694,42 +681,42 @@ export class ShareMenu extends HTMLElement {
         imageOnly = false,
       } = shareTarget;
 
-        if (imageOnly && !this._urlIsImage) {
-          return;
-        }
-        const social = nodeName.slice(0, 13).toLowerCase();
+      if (imageOnly && !this._urlIsImage) {
+        return;
+      }
+      const social = nodeName.slice(0, 13).toLowerCase();
       const socialButton: HTMLButtonElement = document.createElement('button');
-        socialButton.className = 'social';
-        socialButton.id = social;
-        socialButton.title = displayName;
-        socialButton.setAttribute('part', 'social-button');
-        socialButton.addEventListener('click', () => {
+      socialButton.className = 'social';
+      socialButton.id = social;
+      socialButton.title = displayName;
+      socialButton.setAttribute('part', 'social-button');
+      socialButton.addEventListener('click', () => {
         shareTarget.share(this);
-          this._emitEvent('share', { social, origin: 'fallback' });
-          this._close();
-        });
+        this._emitEvent('share', { social, origin: 'fallback' });
+        this._close();
+      });
 
-        const socialIcon: HTMLDivElement = document.createElement('div');
-        socialIcon.className = 'icon';
-        socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${icon}"/></svg>`;
+      const socialIcon: HTMLDivElement = document.createElement('div');
+      socialIcon.className = 'icon';
+      socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${icon}"/></svg>`;
       socialIcon.style.background = `#${color}`;
-        socialIcon.setAttribute('part', 'social-icon');
-        socialButton.appendChild(socialIcon);
+      socialIcon.setAttribute('part', 'social-icon');
+      socialButton.appendChild(socialIcon);
 
-        const socialLabel: HTMLDivElement = document.createElement('div');
-        socialLabel.className = 'label';
-        socialLabel.textContent = displayName;
-        socialLabel.setAttribute('part', 'social-label');
-        socialButton.appendChild(socialLabel);
-        this._socialsContainerRef.appendChild(socialButton);
+      const socialLabel: HTMLDivElement = document.createElement('div');
+      socialLabel.className = 'label';
+      socialLabel.textContent = displayName;
+      socialLabel.setAttribute('part', 'social-label');
+      socialButton.appendChild(socialLabel);
+      this._socialsContainerRef.appendChild(socialButton);
 
-        if (index === 0) {
-          this._firstFocusableElRef = socialButton;
-        }
+      if (index === 0) {
+        this._firstFocusableElRef = socialButton;
+      }
 
-        if (index === this._socials.length - 1) {
-          this._lastFocusableElRef = socialButton;
-        }
+      if (index === this._socials.length - 1) {
+        this._lastFocusableElRef = socialButton;
+      }
     });
   }
 
