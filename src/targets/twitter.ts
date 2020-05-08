@@ -40,8 +40,8 @@ export class TwitterShareTarget extends HTMLElement implements ShareTarget {
     shareMenu.openWindow('https://twitter.com/intent/tweet', {
       text: `${shareMenu.title}\n${shareMenu.text}`,
       url: shareMenu.url,
-      ...(this.via && { via: this.via }),
-      ...(this.hashtags && { hashtags: this.hashtags }),
+      via: this.via,
+      hashtags: this.hashtags,
     });
   }
 }
