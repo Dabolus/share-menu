@@ -548,19 +548,17 @@ export class ShareMenu extends HTMLElement {
       ShareMenu.stylesheet.replace(this._styles);
     }
     if (this.text === null) {
-      const description = document.querySelector<HTMLMetaElement>(
-        'meta[name="description"]',
-      );
-      this.text = (description && description.content) || '';
+      this.text =
+        document.querySelector<HTMLMetaElement>('meta[name=description]')
+          ?.content || '';
     }
     if (this.title === null) {
       this.title = document.title || '';
     }
     if (this.url === null) {
-      const canonical = document.querySelector<HTMLLinkElement>(
-        'link[rel=canonical]',
-      );
-      this.url = (canonical && canonical.href) || window.location.href;
+      this.url =
+        document.querySelector<HTMLLinkElement>('link[rel=canonical]')?.href ||
+        window.location.href;
     }
     if (!this.dialogTitle) {
       this.dialogTitle = 'Share';
@@ -728,9 +726,7 @@ export class ShareMenu extends HTMLElement {
     const normalizedQuery = Object.entries(query).reduce(
       (newQuery, [key, value]) => ({
         ...newQuery,
-        ...(typeof value !== 'undefined' && {
-          [key]: `${value}`,
-        }),
+        ...(value && { [key]: `${value}` }),
       }),
       {},
     );
