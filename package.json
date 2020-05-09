@@ -9,7 +9,7 @@
   "scripts": {
     "start": "run-p watch serve",
     "watch": "rollup -w -c rollup.config.ts",
-    "serve": "es-dev-server --node-resolve --open --port 8080 --watch --app-index 'demo/index.html'",
+    "serve": "es-dev-server --node-resolve --port 8080 --watch --app-index 'demo/index.html'",
     "build": "NODE_ENV=production rollup -c rollup.config.ts",
     "lint:src": "eslint --ext .ts 'src/**/*.{js,ts}'",
     "lint:test": "eslint --ext .ts 'test/**/*.{js,ts}' --config .eslintrc.test",
