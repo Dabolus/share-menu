@@ -682,7 +682,7 @@ export class ShareMenu extends HTMLElement {
       if (imageOnly && !this._urlIsImage) {
         return;
       }
-      const social = nodeName.slice(0, 13).toLowerCase();
+      const social = nodeName.slice(13).toLowerCase();
       const socialButton: HTMLButtonElement = document.createElement('button');
       socialButton.className = 'social';
       socialButton.id = social;
