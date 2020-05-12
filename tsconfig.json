@@ -11,7 +11,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "declarationDir": "."
+    "declarationDir": ".",
+    "sourceMap": true
   },
   "include": [
     "src/**/*.ts"

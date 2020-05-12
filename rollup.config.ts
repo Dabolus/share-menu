@@ -14,12 +14,12 @@ const getConfig = (input, minify) => ({
   input: `src/${input}.ts`,
   output: [
     {
-      file: `${input}${minify ? '.min' : ''}.js`,
+      file: `${input}.js`,
       format: 'es',
-      sourcemap: prod ? false : 'inline',
+      sourcemap: prod ? true : 'inline',
     },
     {
-      file: `${input}.iife${minify ? '.min' : ''}.js`,
+      file: `${input}.iife.js`,
       format: 'iife',
       name: `dabolus.${input.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
       globals: inputs
@@ -29,12 +29,12 @@ const getConfig = (input, minify) => ({
             ...globals,
             [resolve(
               __dirname,
-              `src/${i}${minify ? '.min' : ''}.js`,
+              `src/${i}.js`,
             )]: `dabolus.${i.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
           }),
           {},
         ),
-      sourcemap: prod ? false : 'inline',
+      sourcemap: prod ? true : 'inline',
     },
   ],
   plugins: [
@@ -73,7 +73,6 @@ const getConfig = (input, minify) => ({
       tsconfigOverride: {
         compilerOptions: {
           declaration: prod,
-          sourceMap: !prod,
         },
       },
     }),
@@ -92,7 +91,7 @@ const getConfig = (input, minify) => ({
     replace({
       include: 'src/**/*.ts',
       delimiters: ['', ''],
-      '../share-target': `../share-target${minify ? '.min' : ''}.js`,
+      '../share-target': '../share-target.js',
     }),
     ...(prod
       ? [
@@ -107,11 +106,4 @@ const getConfig = (input, minify) => ({
   external: () => true,
 });
 
-export default inputs.reduce(
-  (configs, input) => [
-    ...configs,
-    getConfig(input, false),
-    ...(prod ? [getConfig(input, true)] : []),
-  ],
-  [],
-);
+export default inputs.map((input) => getConfig(input, prod));
