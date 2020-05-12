@@ -74,18 +74,12 @@
     "LICENSE",
     "demo",
     "share-menu.d.ts",
-    "share-menu.iife.js",
-    "share-menu.iife.min.js",
     "share-menu.js",
-    "share-menu.min.js",
-    "social-icons.d.ts",
-    "social-icons.iife.js",
-    "social-icons.iife.min.js",
-    "social-icons.js",
-    "social-icons.min.js",
+    "share-menu.js.map",
+    "share-menu.iife.js",
+    "share-menu.iife.js.map",
+    "targets",
     "package.json",
-    "README.md",
-    "share-menu.d.ts",
-    "social-icons.d.ts"
+    "README.md"
   ]
 }
