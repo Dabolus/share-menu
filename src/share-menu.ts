@@ -27,7 +27,8 @@ export interface ShareMenuParams {
 }
 
 export interface ShareTarget extends HTMLElement {
-  readonly displayName: string;
+  displayName: string;
+  hint?: string;
   readonly color: string;
   readonly icon: string;
   readonly imageOnly?: boolean;
@@ -792,6 +793,7 @@ export class ShareMenu extends HTMLElement {
         color,
         icon,
         displayName,
+        hint,
         imageOnly = false,
       } = shareTarget;
 
@@ -822,6 +824,14 @@ export class ShareMenu extends HTMLElement {
       socialLabel.textContent = displayName;
       socialLabel.setAttribute('part', 'social-label');
       socialButton.appendChild(socialLabel);
+
+      if (hint) {
+        const socialHint: HTMLDivElement = document.createElement('div');
+        socialHint.className = 'hint';
+        socialHint.textContent = hint;
+        socialButton.appendChild(socialHint);
+      }
+
       this._socialsContainerRef.appendChild(socialButton);
 
       if (!navigator.clipboard && index === 0) {
