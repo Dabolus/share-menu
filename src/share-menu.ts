@@ -171,6 +171,20 @@ export class ShareMenu extends HTMLElement {
   }
 
   /**
+   * The hint to show below the copy to clipboard button.
+   * Defaults to "Copy".
+   *
+   * @return {string}
+   */
+  public get copyHint(): string {
+    return this.getAttribute('copy-hint');
+  }
+
+  public set copyHint(val: string) {
+    this.setAttribute('copy-hint', val);
+  }
+
+  /**
    * The body of the content you want to share.
    * Defaults to your description meta tag.
    *
@@ -267,6 +281,7 @@ export class ShareMenu extends HTMLElement {
 
   public static readonly observedAttributes = [
     'dialog-title',
+    'copy-hint',
     'opened',
     'text',
     'title',
@@ -288,7 +303,9 @@ export class ShareMenu extends HTMLElement {
   private _backdropRef: HTMLDivElement;
   private _dialogRef: HTMLDivElement;
   private _dialogTitleRef: HTMLHeadingElement;
+  private _copyHintRef: HTMLDivElement;
   private _socialsContainerRef: HTMLDivElement;
+  private _clipboardPreviewRef: HTMLParagraphElement;
   private _socials: ShareTarget[] = [];
 
   public constructor() {
@@ -359,7 +376,7 @@ export class ShareMenu extends HTMLElement {
       }
 
       #handle {
-        padding-top: 12px;
+        padding: 18px 0 4px;
       }
 
       :host([handle='never']) #handle {
@@ -393,19 +410,33 @@ export class ShareMenu extends HTMLElement {
         font-weight: 500;
         font-size: 18px;
         margin: 0;
-        padding: 12px;
+        padding: 18px;
         text-align: center;
+      }
+
+      #clipboard-container {
+        display: grid;
+        grid-template: 72px / 1fr 72px;
+        align-items: center;
+        padding: 24px 12px 24px 24px;
+      }
+
+      #clipboard-container > p {
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
       }
 
       #socials-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
+        padding: 12px;
       }
 
       .social {
-        width: 72px;
-        height: 100px;
         padding: 12px;
         display: flex;
         flex-direction: column;
@@ -424,16 +455,26 @@ export class ShareMenu extends HTMLElement {
         transform: scale(1.05);
       }
 
-      .social .icon {
+      .icon, .clipboard-icon {
         position: relative;
+        border-radius: 50%;
+      }
+
+      .icon {
         width: 42px;
         height: 42px;
         padding: 12px;
         fill: #fff;
-        border-radius: 50%;
       }
 
-      .social .icon::before, .social .icon::after {
+      .clipboard-icon {
+        width: 26px;
+        height: 26px;
+        padding: 2px;
+        fill: var(--hint-color, rgba(0, 0, 0, .6));
+      }
+
+      .icon::before, .icon::after, .clipboard-icon::before, .clipboard-icon::after {
         content: '';
         position: absolute;
         top: 0;
@@ -448,19 +489,36 @@ export class ShareMenu extends HTMLElement {
         transform: scale(0);
       }
 
-      .social .icon::after {
+      .icon::after, .clipboard-icon::after {
         opacity: .4;
       }
 
-      .social:focus .icon::before, .social:active .icon::after {
+      .social:focus .icon::before,
+      .social:active .icon::after,
+      .social:focus .clipboard-icon::before,
+      .social:active .clipboard-icon::after {
         transform: scale(1);
       }
 
-      .social .label {
-        color: var(--labels-color, rgba(0, 0, 0, .87));
+      .label, .hint {
+        width: 72px;
         font-weight: 400;
-        font-size: 12px;
         text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .label {
+        padding-top: 10px;
+        color: var(--labels-color, rgba(0, 0, 0, .87));
+        font-size: 14px;
+      }
+
+      .hint {
+        padding-top: 4px;
+        color: var(--hint-color, rgba(0, 0, 0, .6));
+        font-size: 12px;
       }
 
       slot {
@@ -479,6 +537,17 @@ export class ShareMenu extends HTMLElement {
       <div id="dialog" part="dialog" role="dialog" aria-labelledby="title">
         <div id="handle"></div>
         <h2 id="title" part="title"></h2>
+        <div id="clipboard-container">
+          <p id="clipboard-preview"></p>
+          <button class="social" id="clipboard">
+            <div class="clipboard-icon">
+              <svg viewBox="0 0 256 256">
+                <path d="M180 233H41V70H17v164a23 23 0 0024 22h139zm36-24a23 23 0 0023-23V23v-1a23 23 0 00-24-22H87a23 23 0 00-23 23v163a23 23 0 0023 23h128zm-1-23H87V23h128z"/>
+              </svg>
+            </div>
+            <div class="hint" id="copy-hint"></div>
+          </button>
+        </div>
         <hr>
         <div id="socials-container"></div>
       </div>
@@ -563,6 +632,9 @@ export class ShareMenu extends HTMLElement {
     if (!this.dialogTitle) {
       this.dialogTitle = 'Share';
     }
+    if (!this.copyHint) {
+      this.copyHint = 'Copy';
+    }
     if (!this.handle) {
       this.handle = 'auto';
     }
@@ -578,6 +650,43 @@ export class ShareMenu extends HTMLElement {
     this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>(
       '#socials-container',
     );
+    this._copyHintRef = this.shadowRoot.querySelector<HTMLDivElement>(
+      '#copy-hint',
+    );
+    this._copyHintRef.textContent = this.copyHint;
+
+    this._clipboardPreviewRef = this.shadowRoot.querySelector<
+      HTMLParagraphElement
+    >('#clipboard-preview');
+
+    this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
+
+    if (navigator.clipboard) {
+      const cliboardButtonRef = this.shadowRoot.querySelector<
+        HTMLButtonElement
+      >('#clipboard');
+
+      cliboardButtonRef.addEventListener('click', () => {
+        navigator.clipboard
+          .writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
+          .catch(() =>
+            this._emitEvent('error', {
+              message: 'Unable to copy to clipboard',
+            }),
+          );
+
+        this._emitEvent('share', { social: 'clipboard', origin: 'fallback' });
+        this._close();
+      });
+
+      this._firstFocusableElRef = cliboardButtonRef;
+    } else {
+      const clipboardContainerRef = this.shadowRoot.querySelector<
+        HTMLDivElement
+      >('#clipboard-container');
+
+      clipboardContainerRef.parentNode.removeChild(clipboardContainerRef);
+    }
 
     const slotRef = this.shadowRoot.querySelector<HTMLSlotElement>('slot');
 
@@ -614,6 +723,11 @@ export class ShareMenu extends HTMLElement {
           this._dialogTitleRef.textContent = newValue;
         }
         break;
+      case 'copy-hint':
+        if (this._copyHintRef) {
+          this._copyHintRef.textContent = newValue;
+        }
+        break;
       case 'opened':
         if (newValue === null) {
           this._close();
@@ -622,10 +736,12 @@ export class ShareMenu extends HTMLElement {
         }
         break;
       case 'text':
-        break;
       case 'title':
+        this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
         break;
       case 'url':
+        this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
+
         if (this.isImage !== 'auto') {
           return;
         }
@@ -708,7 +824,7 @@ export class ShareMenu extends HTMLElement {
       socialButton.appendChild(socialLabel);
       this._socialsContainerRef.appendChild(socialButton);
 
-      if (index === 0) {
+      if (!navigator.clipboard && index === 0) {
         this._firstFocusableElRef = socialButton;
       }
 
