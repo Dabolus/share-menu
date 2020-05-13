@@ -95,7 +95,6 @@ _**Note:** these scripts will not work if the website implements a strict CSP
   url="https://www.example.com/"
   via="Dabolus"
   dialog-title="Share now!"
-  is-image="auto"
   no-backdrop>
 </share-menu>
 ```

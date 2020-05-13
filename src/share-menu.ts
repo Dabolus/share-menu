@@ -31,7 +31,6 @@ export interface ShareTarget extends HTMLElement {
   hint?: string;
   readonly color: string;
   readonly icon: string;
-  readonly imageOnly?: boolean;
   readonly share: (shareMenu: ShareMenu) => unknown;
 }
 
@@ -228,24 +227,6 @@ export class ShareMenu extends HTMLElement {
   }
 
   /**
-   * Used to tell if the URL is an image or not.
-   * It can have three different values:
-   *
-   * - "no"|false|0 _(default)_ - the URL is not an image (or it should be considered as a normal URL even if it is an image);
-   * - "yes"|true|1 - the URL **IS** an image, so it will always be treated as such;
-   * - "auto" - autodetect whether the URL is an image or not. This may cause a lot of extra network traffic, so **only use it if really necessary**.
-   *
-   * @return {string}
-   */
-  public get isImage(): string {
-    return this.getAttribute('is-image');
-  }
-
-  public set isImage(val: string) {
-    this.setAttribute('is-image', val);
-  }
-
-  /**
    * Set to true if you want to hide the fallback dialog backdrop.
    *
    * @return {boolean}
@@ -287,7 +268,6 @@ export class ShareMenu extends HTMLElement {
     'text',
     'title',
     'url',
-    'is-image',
     'no-backdrop',
     'handle',
   ];
@@ -298,7 +278,6 @@ export class ShareMenu extends HTMLElement {
   private readonly _styles: string;
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
-  private _urlIsImage = false;
   private _firstFocusableElRef: HTMLElement;
   private _lastFocusableElRef: HTMLElement;
   private _backdropRef: HTMLDivElement;
@@ -738,44 +717,9 @@ export class ShareMenu extends HTMLElement {
         break;
       case 'text':
       case 'title':
-        this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
-        break;
       case 'url':
-        this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
-
-        if (this.isImage !== 'auto') {
-          return;
-        }
-        let img = new Image();
-        img.addEventListener('load', () => {
-          this._urlIsImage = true;
-          img = null;
-          this._renderSocials();
-        });
-        img.addEventListener('error', () => {
-          this._urlIsImage = false;
-          img = null;
-          this._renderSocials();
-        });
-        img.src = newValue;
-        break;
-      case 'is-image':
-        switch (newValue) {
-          case 'yes':
-          case 'true':
-          case '1':
-            this._urlIsImage = true;
-            this._renderSocials();
-            break;
-          case 'no':
-          case 'false':
-          case '0':
-            this._urlIsImage = false;
-            this._renderSocials();
-            break;
-          default:
-            this.isImage = 'auto';
-            break;
+        if (this._clipboardPreviewRef) {
+          this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
         }
         break;
     }
@@ -788,18 +732,8 @@ export class ShareMenu extends HTMLElement {
     }
     this._socialsContainerRef.innerHTML = '';
     this._socials.forEach((shareTarget, index) => {
-      const {
-        nodeName,
-        color,
-        icon,
-        displayName,
-        hint,
-        imageOnly = false,
-      } = shareTarget;
+      const { nodeName, color, icon, displayName, hint } = shareTarget;
 
-      if (imageOnly && !this._urlIsImage) {
-        return;
-      }
       const social = nodeName.slice(13).toLowerCase();
       const socialButton: HTMLButtonElement = document.createElement('button');
       socialButton.className = 'social';
