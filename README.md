@@ -12,7 +12,7 @@ when possible, with a fallback to a nice share menu that tries to emulate the
 experience of the native one.
 
 ## Features
-- Incredibly simple to use. Just set the `title`, `text`, `url` and `via` 
+- Incredibly simple to use. Just set the `title`, `text`, and `url`
   properties and call the `share()` method to make the magic happen.
 - Highly customizable. It offers a great material design UI by default, but 
   it is also designed to be as much customizable as possible through CSS custom 
@@ -93,7 +93,6 @@ _**Note:** these scripts will not work if the website implements a strict CSP
   title="Awesome!"
   text="More customized share menu"
   url="https://www.example.com/"
-  via="Dabolus"
   dialog-title="Share now!"
   no-backdrop>
 </share-menu>
@@ -138,8 +137,6 @@ that each one gives:
  - WordPress
  - Xing - _URL only_
  - Yahoo
-
-_The `via` parameter will only be used by LinkedIn and Twitter._
 
 ## Icons
 The icons used by the component are just simple SVG paths, so you can use them anywhere in your app simply by importing 

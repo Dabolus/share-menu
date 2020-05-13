@@ -83,7 +83,6 @@
               <paper-input label="Title" value="{{title}}"></paper-input>
               <paper-textarea label="Text" value="{{text}}" rows="3" max-rows="3"></paper-textarea>
               <paper-input label="URL" value="{{url}}"></paper-input>
-              <paper-input label="Via" value="{{via}}"></paper-input>
               <div class="toggleWrapper">
                 <div class="label">Hide backdrop</div>
                 <div class="spacer"></div>
@@ -93,8 +92,7 @@
                 <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
               </div>
 
-              <share-menu id="shareMenu" title$="[[title]]" text$="[[text]]" url$="[[url]]" via$="[[via]]"
-                          no-backdrop$="[[hideBackdrop]]">
+              <share-menu id="shareMenu" title$="[[title]]" text$="[[text]]" url$="[[url]]" no-backdrop$="[[hideBackdrop]]">
                 <share-target-facebook></share-target-facebook>
                 <share-target-google-bookmarks></share-target-google-bookmarks>
                 <share-target-telegram></share-target-telegram>
