@@ -7,114 +7,200 @@
     <title>share-menu demo</title>
     <meta name="description" content="share-menu demo description">
 
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.4.3/webcomponents-loader.js"></script>
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+
+    <style>
+        html, body {
+          font-family: 'Roboto', sans-serif;
+          background: #f0f0f0;
+        }
+    </style>
+
+    <script defer src="https://unpkg.com/prismjs@1.20.0"></script>
     <script type="module">
-      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-      import '@polymer/iron-demo-helpers/demo-snippet';
-      import '@polymer/iron-flex-layout/iron-flex-layout';
-      import '@polymer/paper-input/paper-input';
-      import '@polymer/paper-input/paper-textarea';
-      import '@polymer/paper-button/paper-button';
-      import '@polymer/paper-toggle-button/paper-toggle-button';
-      import '@polymer/paper-styles/color';
-      import '@polymer/paper-styles/typography';
+      import 'https://unpkg.com/@material/mwc-textfield@0.15.0?module';
+      import 'https://unpkg.com/@material/mwc-textarea@0.15.0?module';
+      import 'https://unpkg.com/@material/mwc-switch@0.15.0?module';
+      import 'https://unpkg.com/@material/mwc-button@0.15.0?module';
+
+      import '../share-menu.js';
+      import '../targets/facebook.js';
+      import '../targets/google-bookmarks.js';
+      import '../targets/telegram.js';
+      import '../targets/whatsapp.js';
+      import '../targets/reddit.js';
+      import '../targets/twitter.js';
+      import '../targets/linkedin.js';
+      import '../targets/tumblr.js';
+      import '../targets/pinterest.js';
+      import '../targets/blogger.js';
+      import '../targets/livejournal.js';
+      import '../targets/evernote.js';
+      import '../targets/addthis.js';
+      import '../targets/pocket.js';
+      import '../targets/hacker-news.js';
+      import '../targets/email.js';
+      import '../targets/sms.js';
+
+      import { LitElement, css, html } from 'https://unpkg.com/lit-element@2.3.1?module';
+
+      fetch('https://unpkg.com/prismjs@1.20.0/themes/prism.css')
+        .then(res => res.text())
+        .then(prismStyles => {
+          class ShareMenuDemo extends LitElement {
+            static get properties() {
+              return {
+                title: { type: String },
+                text: { type: String },
+                url: { type: String },
+                hideBackdrop: { type: Boolean },
+              };
+            }
+
+            static get styles() {
+              return [
+                css([prismStyles]),
+                css`
+                  .container {
+                    max-width: 600px;
+                    margin: 24px auto;
+                    padding: 24px;
+                    background: #fff;
+                    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                  }
+
+                  .container > :not(:last-child) {
+                    width: 100%;
+                    margin: 12px 0;
+                  }
+
+                  .toggle-container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  }
+
+                  .actions-container {
+                    overflow: hidden;
+                  }
+
+                  .actions-container > * {
+                    float: right;
+                  }
+
+                  pre {
+                    border-radius: 12px;
+                    border: 1px solid #f0f0f0;
+                  }
+                `,
+              ];
+            }
+
+            static get demoSnippet() {
+              return `
+                <div class="container">
+                  <h3>&lt;share-menu&gt; demo</h3>
+                  <mwc-textfield outlined id="title" label="Title" @input="\${e => this.title = e.target.value}"></mwc-textfield>
+                  <mwc-textarea outlined id="text" label="Text" @input="\${e => this.text = e.target.value}"></mwc-textarea>
+                  <mwc-textfield outlined id="url" type="url" label="URL" @input="\${e => this.url = e.target.value}"></mwc-textfield>
+                  <div class="toggle-container">
+                    <label for="backdrop">Hide backdrop</label>
+                    <mwc-switch id="backdrop" @change="\${e => this.hideBackdrop = e.target.checked}"></mwc-switch>
+                  </div>
+                  <div class="actions-container">
+                    <mwc-button raised ?disabled="\${!this.title || !this.text || !this.url}" @click="\${() => this.shareMenu.share()}">
+                      Share!
+                    </mwc-button>
+                  </div>
+                </div>
+
+                <share-menu title="\${this.title}" text="\${this.text}" url="\${this.url}" ?no-backdrop="\${this.hideBackdrop}">
+                  <share-target-facebook></share-target-facebook>
+                  <share-target-google-bookmarks></share-target-google-bookmarks>
+                  <share-target-telegram></share-target-telegram>
+                  <share-target-whatsapp></share-target-whatsapp>
+                  <share-target-reddit></share-target-reddit>
+                  <share-target-twitter></share-target-twitter>
+                  <share-target-linkedin></share-target-linkedin>
+                  <share-target-tumblr></share-target-tumblr>
+                  <share-target-pinterest></share-target-pinterest>
+                  <share-target-blogger></share-target-blogger>
+                  <share-target-livejournal></share-target-livejournal>
+                  <share-target-evernote></share-target-evernote>
+                  <share-target-addthis></share-target-addthis>
+                  <share-target-pocket></share-target-pocket>
+                  <share-target-hacker-news></share-target-hacker-news>
+                  <share-target-email></share-target-email>
+                  <share-target-sms></share-target-sms>
+                </share-menu>
+                `.replace(/ {16}/g, '');
+            }
+
+            constructor() {
+              super();
+              this.title = '';
+              this.text = '';
+              this.url = '';
+              this.hideBackdrop = false;
+            }
+
+            firstUpdated() {
+              this.shareMenu = this.shadowRoot.querySelector('share-menu');
+              Prism.highlightAllUnder(this.shadowRoot.querySelector('pre'));
+            }
+
+            render() {
+              console.log(ShareMenuDemo.demoSnippet)
+              return html`
+                <div class="container">
+                  <h3>&lt;share-menu&gt; demo</h3>
+                  <mwc-textfield outlined id="title" label="Title" @input="${e => this.title = e.target.value}"></mwc-textfield>
+                  <mwc-textarea outlined id="text" label="Text" @input="${e => this.text = e.target.value}"></mwc-textarea>
+                  <mwc-textfield outlined id="url" type="url" label="URL" @input="${e => this.url = e.target.value}"></mwc-textfield>
+                  <div class="toggle-container">
+                    <label for="backdrop">Hide backdrop</label>
+                    <mwc-switch id="backdrop" @change="${e => this.hideBackdrop = e.target.checked}"></mwc-switch>
+                  </div>
+                  <div class="actions-container">
+                    <mwc-button raised ?disabled="${!this.title || !this.text || !this.url}" @click="${() => this.shareMenu.share()}">
+                      Share!
+                    </mwc-button>
+                  </div>
+                  <pre>
+                    <code class="language-html">${ShareMenuDemo.demoSnippet}</code>
+                  </pre>
+                </div>
+
+                <share-menu title="${this.title}" text="${this.text}" url="${this.url}" ?no-backdrop="${this.hideBackdrop}">
+                  <share-target-facebook></share-target-facebook>
+                  <share-target-google-bookmarks></share-target-google-bookmarks>
+                  <share-target-telegram></share-target-telegram>
+                  <share-target-whatsapp></share-target-whatsapp>
+                  <share-target-reddit></share-target-reddit>
+                  <share-target-twitter></share-target-twitter>
+                  <share-target-linkedin></share-target-linkedin>
+                  <share-target-tumblr></share-target-tumblr>
+                  <share-target-pinterest></share-target-pinterest>
+                  <share-target-blogger></share-target-blogger>
+                  <share-target-livejournal></share-target-livejournal>
+                  <share-target-evernote></share-target-evernote>
+                  <share-target-addthis></share-target-addthis>
+                  <share-target-pocket></share-target-pocket>
+                  <share-target-hacker-news></share-target-hacker-news>
+                  <share-target-email></share-target-email>
+                  <share-target-sms></share-target-sms>
+                </share-menu>
+              `;
+            }
+          }
+
+          customElements.define('share-menu-demo', ShareMenuDemo);
+        });
     </script>
-
-    <script type="module" src="../share-menu.js"></script>
-    <script type="module" src="../targets/facebook.js"></script>
-    <script type="module" src="../targets/google-bookmarks.js"></script>
-    <script type="module" src="../targets/telegram.js"></script>
-    <script type="module" src="../targets/whatsapp.js"></script>
-    <script type="module" src="../targets/reddit.js"></script>
-    <script type="module" src="../targets/twitter.js"></script>
-    <script type="module" src="../targets/linkedin.js"></script>
-    <script type="module" src="../targets/tumblr.js"></script>
-    <script type="module" src="../targets/pinterest.js"></script>
-    <script type="module" src="../targets/blogger.js"></script>
-    <script type="module" src="../targets/livejournal.js"></script>
-    <script type="module" src="../targets/evernote.js"></script>
-    <script type="module" src="../targets/addthis.js"></script>
-    <script type="module" src="../targets/pocket.js"></script>
-    <script type="module" src="../targets/hacker-news.js"></script>
-    <script type="module" src="../targets/email.js"></script>
-    <script type="module" src="../targets/sms.js"></script>
-
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-        .toggleWrapper {
-          @apply --layout-horizontal;
-          margin-top: 12px;
-        }
-
-        .toggleWrapper > .label {
-          @apply --paper-font-subhead;
-        }
-
-        .toggleWrapper > .spacer {
-          @apply --layout-flex;
-        }
-
-        .toggleWrapper > paper-toggle-button {
-          cursor: pointer;
-        }
-
-        #buttonWrapper {
-          @apply --layout-horizontal;
-          @apply --layout-end-justified;
-          margin-top: 12px;
-        }
-
-        #buttonWrapper > paper-button {
-          @apply --paper-font-button;
-          background-color: var(--paper-indigo-500);
-          color: var(--dark-theme-text-color);
-        }
-      </style>
-    </custom-style>
   </head>
   <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic share-menu demo</h3>
-      <demo-snippet>
-        <template>
-          <dom-bind>
-            <template>
-              <paper-input label="Title" value="{{title}}"></paper-input>
-              <paper-textarea label="Text" value="{{text}}" rows="3" max-rows="3"></paper-textarea>
-              <paper-input label="URL" value="{{url}}"></paper-input>
-              <div class="toggleWrapper">
-                <div class="label">Hide backdrop</div>
-                <div class="spacer"></div>
-                <paper-toggle-button checked="{{hideBackdrop}}"></paper-toggle-button>
-              </div>
-              <div id="buttonWrapper">
-                <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
-              </div>
-
-              <share-menu id="shareMenu" title$="[[title]]" text$="[[text]]" url$="[[url]]" no-backdrop$="[[hideBackdrop]]">
-                <share-target-facebook></share-target-facebook>
-                <share-target-google-bookmarks></share-target-google-bookmarks>
-                <share-target-telegram></share-target-telegram>
-                <share-target-whatsapp></share-target-whatsapp>
-                <share-target-reddit></share-target-reddit>
-                <share-target-twitter></share-target-twitter>
-                <share-target-linkedin></share-target-linkedin>
-                <share-target-tumblr></share-target-tumblr>
-                <share-target-pinterest></share-target-pinterest>
-                <share-target-blogger></share-target-blogger>
-                <share-target-livejournal></share-target-livejournal>
-                <share-target-evernote></share-target-evernote>
-                <share-target-addthis></share-target-addthis>
-                <share-target-pocket></share-target-pocket>
-                <share-target-hacker-news></share-target-hacker-news>
-                <share-target-email></share-target-email>
-                <share-target-sms></share-target-sms>
-              </share-menu>
-            </template>
-          </dom-bind>
-        </template>
-      </demo-snippet>
-    </div>
+    <share-menu-demo></share-menu-demo>
   </body>
 </html>
