@@ -8,37 +8,18 @@ import filesize from 'rollup-plugin-filesize';
 
 const prod = process.env.NODE_ENV === 'production';
 
-const inputs = glob.sync('src/**/*.ts').map((file) => file.slice(4, -3));
+const input = glob.sync('src/**/*.ts');
 
-const getConfig = (input, minify) => ({
-  input: `src/${input}.ts`,
-  output: [
-    {
-      file: `${input}.js`,
-      format: 'es',
-      sourcemap: prod ? true : 'inline',
-    },
-    {
-      file: `${input}.iife.js`,
-      format: 'iife',
-      name: `dabolus.${input.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
-      globals: inputs
-        .filter((i) => i !== input)
-        .reduce(
-          (globals, i) => ({
-            ...globals,
-            [resolve(
-              __dirname,
-              `src/${i}.js`,
-            )]: `dabolus.${i.replace(/-([a-z])/g, ([, l]) => l.toUpperCase())}`,
-          }),
-          {},
-        ),
-      sourcemap: prod ? true : 'inline',
-    },
-  ],
+export default {
+  input,
+  output: {
+    dir: '.',
+    format: 'es',
+    sourcemap: prod ? true : 'inline',
+  },
+  preserveModules: true,
   plugins: [
-    ...(minify
+    ...(prod
       ? [
           minifyHtml({
             options: {
@@ -76,7 +57,7 @@ const getConfig = (input, minify) => ({
         },
       },
     }),
-    ...(minify
+    ...(prod
       ? [
           terser({
             ecma: 8,
@@ -102,8 +83,4 @@ const getConfig = (input, minify) => ({
         ]
       : []),
   ],
-  // Make all dependencies external
-  external: () => true,
-});
-
-export default inputs.map((input) => getConfig(input, prod));
+};

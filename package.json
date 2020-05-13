@@ -76,8 +76,6 @@
     "share-menu.d.ts",
     "share-menu.js",
     "share-menu.js.map",
-    "share-menu.iife.js",
-    "share-menu.iife.js.map",
     "targets",
     "package.json",
     "README.md"
