@@ -72,5 +72,6 @@
     "targets",
     "package.json",
     "README.md"
-  ]
+  ],
+  "packageManager": "yarn@3.3.0"
 }
