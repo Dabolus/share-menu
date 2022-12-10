@@ -429,12 +429,6 @@ describe('share menu', () => {
         });
       });
 
-      describe('viber', () => {
-        it('opens a window with Viber share screen', async () => {
-          await openSocialAndCheckWindow('viber');
-        });
-      });
-
       describe('line', () => {
         it('opens a window with Line share screen', async () => {
           await openSocialAndCheckWindow('line');
@@ -494,12 +488,6 @@ describe('share menu', () => {
         });
       });
 
-      describe('myspace', () => {
-        it('opens a window with Myspace share screen', async () => {
-          await openSocialAndCheckWindow('myspace');
-        });
-      });
-
       describe('pocket', () => {
         it('opens a window with Pocket share screen', async () => {
           await openSocialAndCheckWindow('pocket');
@@ -518,12 +506,6 @@ describe('share menu', () => {
         });
       });
 
-      describe('baidu', () => {
-        it('opens a window with Baidu share screen', async () => {
-          await openSocialAndCheckWindow('baidu');
-        });
-      });
-
       describe('okru', () => {
         it('opens a window with OK.ru share screen', async () => {
           await openSocialAndCheckWindow('okru', 'ok.ru');
@@ -536,27 +518,9 @@ describe('share menu', () => {
         });
       });
 
-      describe('buffer', () => {
-        it('opens a window with Buffer share screen', async () => {
-          await openSocialAndCheckWindow('buffer');
-        });
-      });
-
-      describe('digg', () => {
-        it('opens a window with Digg share screen', async () => {
-          await openSocialAndCheckWindow('digg');
-        });
-      });
-
       describe('douban', () => {
         it('opens a window with Douban share screen', async () => {
           await openSocialAndCheckWindow('douban');
-        });
-      });
-
-      describe('stumbleupon', () => {
-        it('opens a window with StumbleUpon share screen', async () => {
-          await openSocialAndCheckWindow('stumbleupon');
         });
       });
 

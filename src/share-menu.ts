@@ -45,11 +45,8 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  *
  * Here you can see the list of the supported socials, as well as the limitations that each one gives:
  *
- * - Baidu - _URL and title only_
  * - Blogger
- * - Buffer - _URL and title only_
  * - Copy to clipboard
- * - Digg - _URL and title only_
  * - Douban - _URL and title only_
  * - Email
  * - Evernote - _URL only_
@@ -59,7 +56,6 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Line - _URL only_
  * - LinkedIn
  * - LiveJournal
- * - Myspace
  * - Odnoklassniki (OK.ru) - _URL and title only_
  * - Pinterest - _Will only be visible if the URL is an image. Look for the `isImage` parameter on the API docs for more info_
  * - Pocket - _URL only_
@@ -68,12 +64,10 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
  * - Skype - _URL only_
  * - SMS
- * - StumbleUpon - _URL and title only_
  * - Telegram
  * - Translate - _Only translates the page at the given URL_
  * - Tumblr
  * - Twitter
- * - Viber
  * - VKontakte - _URL only_
  * - Weibo
  * - WhatsApp
