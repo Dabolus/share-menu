@@ -18,8 +18,8 @@
     "format:test": "npm run lint:test -- --fix",
     "format": "run-p format:src format:test",
     "prepublishOnly": "npm run build",
-    "test": "karma start --coverage",
-    "test:watch": "karma start --auto-watch=true --single-run=false"
+    "test": "wtr \"test/**/*.spec.ts\" --node-resolve",
+    "test:watch": "yarn test --watch"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.18.6",
@@ -32,11 +32,12 @@
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
     "@web/dev-server": "^0.1.35",
+    "@web/dev-server-esbuild": "^0.3.3",
+    "@web/test-runner": "^0.15.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "glob": "^8.0.3",
-    "karma": "^6.4.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.1",
     "rollup": "^3.7.2",
