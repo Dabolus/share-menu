@@ -14,10 +14,10 @@
     "lint:src": "eslint --ext .ts 'src/**/*.{js,ts}'",
     "lint:test": "eslint --ext .ts 'test/**/*.{js,ts}' --config .eslintrc.test",
     "lint": "run-p lint:src lint:test",
-    "format:src": "npm run lint:src -- --fix",
-    "format:test": "npm run lint:test -- --fix",
+    "format:src": "yarn lint:src -- --fix",
+    "format:test": "yarn lint:test -- --fix",
     "format": "run-p format:src format:test",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "yarn build",
     "test": "wtr \"test/**/*.spec.ts\" --node-resolve",
     "test:watch": "yarn test --watch"
   },
