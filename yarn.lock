@@ -1718,19 +1718,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-node-resolve@npm:^11.0.0":
-  version: 11.2.1
-  resolution: "@rollup/plugin-node-resolve@npm:11.2.1"
+"@rollup/plugin-node-resolve@npm:^13.0.4":
+  version: 13.3.0
+  resolution: "@rollup/plugin-node-resolve@npm:13.3.0"
   dependencies:
     "@rollup/pluginutils": ^3.1.0
     "@types/resolve": 1.17.1
-    builtin-modules: ^3.1.0
     deepmerge: ^4.2.2
+    is-builtin-module: ^3.1.0
     is-module: ^1.0.0
     resolve: ^1.19.0
   peerDependencies:
-    rollup: ^1.20.0||^2.0.0
-  checksum: 6f3b3ecf9a0596a5db4212984bdeb13bb7612693602407e9457ada075dea5a5f2e4e124c592352cf27066a88b194de9b9a95390149b52cf335d5b5e17b4e265b
+    rollup: ^2.42.0
+  checksum: ec5418e6b3c23a9e30683056b3010e9d325316dcfae93fbc673ae64dad8e56a2ce761c15c48f5e2dcfe0c822fdc4a4905ee6346e3dcf90603ba2260afef5a5e6
   languageName: node
   linkType: hard
 
@@ -2648,7 +2648,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web/dev-server-core@npm:^0.3.18":
+"@web/config-loader@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "@web/config-loader@npm:0.1.3"
+  dependencies:
+    semver: ^7.3.4
+  checksum: 278554bd00b757eaf296ba904a224c61d4698df1a5d6c04931c40bc6bb308e81e767055cbf283b763cc530aae6b200bb950aa19eb41aa8979a3a2b29e5f0ac7a
+  languageName: node
+  linkType: hard
+
+"@web/dev-server-core@npm:^0.3.18, @web/dev-server-core@npm:^0.3.19":
   version: 0.3.19
   resolution: "@web/dev-server-core@npm:0.3.19"
   dependencies:
@@ -2671,6 +2680,45 @@ __metadata:
     picomatch: ^2.2.2
     ws: ^7.4.2
   checksum: 00b3cafc7d9c25806ae4af824d34d44928b09e039c7cf87e66ddc7b2f7d3198ab667f860282f8f8287cf26aeea1e8f4b348609eba4e05259cc52f4a7451c174f
+  languageName: node
+  linkType: hard
+
+"@web/dev-server-rollup@npm:^0.3.19":
+  version: 0.3.19
+  resolution: "@web/dev-server-rollup@npm:0.3.19"
+  dependencies:
+    "@rollup/plugin-node-resolve": ^13.0.4
+    "@web/dev-server-core": ^0.3.19
+    nanocolors: ^0.2.1
+    parse5: ^6.0.1
+    rollup: ^2.67.0
+    whatwg-url: ^11.0.0
+  checksum: 480e4f976639a2014675c489c4c0c19d4e7e5f50a1a3cbde1eabf8823bc3189cc5aac7d7d0e1ee132ee2af93f12b5d723fff78ae0356f0d754f30d65f74fbb01
+  languageName: node
+  linkType: hard
+
+"@web/dev-server@npm:^0.1.35":
+  version: 0.1.35
+  resolution: "@web/dev-server@npm:0.1.35"
+  dependencies:
+    "@babel/code-frame": ^7.12.11
+    "@types/command-line-args": ^5.0.0
+    "@web/config-loader": ^0.1.3
+    "@web/dev-server-core": ^0.3.19
+    "@web/dev-server-rollup": ^0.3.19
+    camelcase: ^6.2.0
+    command-line-args: ^5.1.1
+    command-line-usage: ^6.1.1
+    debounce: ^1.2.0
+    deepmerge: ^4.2.2
+    ip: ^1.1.5
+    nanocolors: ^0.2.1
+    open: ^8.0.2
+    portfinder: ^1.0.32
+  bin:
+    wds: dist/bin.js
+    web-dev-server: dist/bin.js
+  checksum: eccaf90e2bcb25c8a1584a714e3139b63a67b969dc9df40910848e6f56de7eea22de67b80a2400580cab625cab7a00b2711aea742c112207d3e80a2791f6fc9c
   languageName: node
   linkType: hard
 
@@ -3299,7 +3347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"builtin-modules@npm:^3.1.0":
+"builtin-modules@npm:^3.1.0, builtin-modules@npm:^3.3.0":
   version: 3.3.0
   resolution: "builtin-modules@npm:3.3.0"
   checksum: db021755d7ed8be048f25668fe2117620861ef6703ea2c65ed2779c9e3636d5c3b82325bd912244293959ff3ae303afa3471f6a15bf5060c103e4cc3a839749d
@@ -3718,7 +3766,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"command-line-args@npm:^5.0.2":
+"command-line-args@npm:^5.0.2, command-line-args@npm:^5.1.1":
   version: 5.2.1
   resolution: "command-line-args@npm:5.2.1"
   dependencies:
@@ -3730,7 +3778,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"command-line-usage@npm:^6.1.0":
+"command-line-usage@npm:^6.1.0, command-line-usage@npm:^6.1.1":
   version: 6.1.3
   resolution: "command-line-usage@npm:6.1.3"
   dependencies:
@@ -4483,81 +4531,6 @@ __metadata:
   bin:
     es-dev-server: dist/cli.js
   checksum: 9c8885bc0f3d6b95c6d2ea886ee423c047f5fa54eed9312a0dc4149899b64a1e697797438f44cf4de55138d366bb20861ca89b24b3ade7976d9785244a03359e
-  languageName: node
-  linkType: hard
-
-"es-dev-server@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "es-dev-server@npm:2.1.0"
-  dependencies:
-    "@babel/core": ^7.11.1
-    "@babel/plugin-proposal-dynamic-import": ^7.10.4
-    "@babel/plugin-proposal-nullish-coalescing-operator": ^7.10.4
-    "@babel/plugin-proposal-optional-chaining": ^7.11.0
-    "@babel/plugin-syntax-class-properties": ^7.8.3
-    "@babel/plugin-syntax-import-meta": ^7.10.4
-    "@babel/plugin-syntax-nullish-coalescing-operator": ^7.8.3
-    "@babel/plugin-syntax-numeric-separator": ^7.8.3
-    "@babel/plugin-syntax-optional-chaining": ^7.8.3
-    "@babel/plugin-transform-template-literals": ^7.8.3
-    "@babel/preset-env": ^7.9.0
-    "@koa/cors": ^3.1.0
-    "@open-wc/building-utils": ^2.18.3
-    "@rollup/plugin-node-resolve": ^11.0.0
-    "@rollup/pluginutils": ^3.0.0
-    "@types/babel__core": ^7.1.3
-    "@types/browserslist": ^4.8.0
-    "@types/browserslist-useragent": ^3.0.0
-    "@types/caniuse-api": ^3.0.0
-    "@types/command-line-args": ^5.0.0
-    "@types/command-line-usage": ^5.0.1
-    "@types/debounce": ^1.2.0
-    "@types/koa": ^2.0.48
-    "@types/koa-compress": ^2.0.9
-    "@types/koa-etag": ^3.0.0
-    "@types/koa-static": ^4.0.1
-    "@types/koa__cors": ^3.0.1
-    "@types/lru-cache": ^5.1.0
-    "@types/mime-types": ^2.1.0
-    "@types/minimatch": ^3.0.3
-    "@types/path-is-inside": ^1.0.0
-    "@types/whatwg-url": ^6.4.0
-    browserslist: ^4.9.1
-    browserslist-useragent: ^3.0.2
-    builtin-modules: ^3.1.0
-    camelcase: ^5.3.1
-    caniuse-api: ^3.0.0
-    caniuse-lite: ^1.0.30001033
-    chokidar: ^3.0.0
-    command-line-args: ^5.0.2
-    command-line-usage: ^6.1.0
-    debounce: ^1.2.0
-    deepmerge: ^4.2.2
-    es-module-lexer: ^0.3.13
-    get-stream: ^5.1.0
-    is-stream: ^2.0.0
-    isbinaryfile: ^4.0.2
-    koa: ^2.7.0
-    koa-compress: ^3.0.0
-    koa-etag: ^3.0.0
-    koa-static: ^5.0.0
-    lru-cache: ^5.1.1
-    mime-types: ^2.1.27
-    minimatch: ^3.0.4
-    open: ^7.0.3
-    parse5: ^5.1.1
-    path-is-inside: ^1.0.2
-    polyfills-loader: ^1.7.4
-    portfinder: ^1.0.21
-    rollup: ^2.7.2
-    strip-ansi: ^5.2.0
-    systemjs: ^6.3.1
-    tslib: ^1.11.1
-    useragent: ^2.3.0
-    whatwg-url: ^7.0.0
-  bin:
-    es-dev-server: dist/cli.js
-  checksum: 0f3ee3caba60e8b95a8f3c3694d1a29938dd9b05c813296623054820a4976a3382b723885bab284fe7c0eaadeea2ef765e939505642ed20190f975354e5258de
   languageName: node
   linkType: hard
 
@@ -5864,6 +5837,15 @@ __metadata:
   version: 2.0.5
   resolution: "is-buffer@npm:2.0.5"
   checksum: 764c9ad8b523a9f5a32af29bdf772b08eb48c04d2ad0a7240916ac2688c983bf5f8504bf25b35e66240edeb9d9085461f9b5dae1f3d2861c6b06a65fe983de42
+  languageName: node
+  linkType: hard
+
+"is-builtin-module@npm:^3.1.0":
+  version: 3.2.0
+  resolution: "is-builtin-module@npm:3.2.0"
+  dependencies:
+    builtin-modules: ^3.3.0
+  checksum: 0315751b898feff0646511c896e88b608a755c5025d0ce9a3ad25783de50be870e47dafb838cebbb06fbb2a948b209ea55348eee267836c9dd40d3a11ec717d3
   languageName: node
   linkType: hard
 
@@ -8118,7 +8100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"portfinder@npm:^1.0.21":
+"portfinder@npm:^1.0.21, portfinder@npm:^1.0.32":
   version: 1.0.32
   resolution: "portfinder@npm:1.0.32"
   dependencies:
@@ -8674,7 +8656,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.7.2":
+"rollup@npm:^2.67.0, rollup@npm:^2.7.2":
   version: 2.79.1
   resolution: "rollup@npm:2.79.1"
   dependencies:
@@ -8840,7 +8822,7 @@ __metadata:
     "@types/glob": ^8.0.0
     "@typescript-eslint/eslint-plugin": ^5.46.0
     "@typescript-eslint/parser": ^5.46.0
-    es-dev-server: ^2.1.0
+    "@web/dev-server": ^0.1.35
     eslint: ^8.29.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.2.1
@@ -9585,6 +9567,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tr46@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "tr46@npm:3.0.0"
+  dependencies:
+    punycode: ^2.1.1
+  checksum: 44c3cc6767fb800490e6e9fd64fd49041aa4e49e1f6a012b34a75de739cc9ed3a6405296072c1df8b6389ae139c5e7c6496f659cfe13a04a4bff3a1422981270
+  languageName: node
+  linkType: hard
+
 "tr46@npm:~0.0.3":
   version: 0.0.3
   resolution: "tr46@npm:0.0.3"
@@ -10079,6 +10070,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"webidl-conversions@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "webidl-conversions@npm:7.0.0"
+  checksum: f05588567a2a76428515333eff87200fae6c83c3948a7482ebb109562971e77ef6dc49749afa58abb993391227c5697b3ecca52018793e0cb4620a48f10bd21b
+  languageName: node
+  linkType: hard
+
 "webpack-merge@npm:^5.8.0":
   version: 5.8.0
   resolution: "webpack-merge@npm:5.8.0"
@@ -10093,6 +10091,16 @@ __metadata:
   version: 3.6.2
   resolution: "whatwg-fetch@npm:3.6.2"
   checksum: ee976b7249e7791edb0d0a62cd806b29006ad7ec3a3d89145921ad8c00a3a67e4be8f3fb3ec6bc7b58498724fd568d11aeeeea1f7827e7e1e5eae6c8a275afed
+  languageName: node
+  linkType: hard
+
+"whatwg-url@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "whatwg-url@npm:11.0.0"
+  dependencies:
+    tr46: ^3.0.0
+    webidl-conversions: ^7.0.0
+  checksum: ed4826aaa57e66bb3488a4b25c9cd476c46ba96052747388b5801f137dd740b73fde91ad207d96baf9f17fbcc80fc1a477ad65181b5eb5fa718d27c69501d7af
   languageName: node
   linkType: hard
 

@@ -9,7 +9,7 @@
   "scripts": {
     "start": "run-p watch serve",
     "watch": "rollup -w -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "serve": "es-dev-server --node-resolve --port 8080 --watch --app-index 'demo/index.html'",
+    "serve": "wds --node-resolve --port 8080 --watch --app-index 'demo/index.html'",
     "build": "NODE_ENV=production rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "lint:src": "eslint --ext .ts 'src/**/*.{js,ts}'",
     "lint:test": "eslint --ext .ts 'test/**/*.{js,ts}' --config .eslintrc.test",
@@ -31,7 +31,7 @@
     "@types/glob": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
-    "es-dev-server": "^2.1.0",
+    "@web/dev-server": "^0.1.35",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
