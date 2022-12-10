@@ -30,7 +30,6 @@ export class FacebookShareTarget extends HTMLElement implements ShareTarget {
       });
     } else if (this.appId) {
       shareMenu.openWindow('https://www.facebook.com/dialog/share', {
-        // eslint-disable-next-line @typescript-eslint/camelcase
         app_id: this.appId,
         display: 'popup',
         href: shareMenu.url,

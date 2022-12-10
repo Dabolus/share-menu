@@ -7,7 +7,7 @@
     <title>share-menu demo</title>
     <meta name="description" content="share-menu demo description">
 
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.4.3/webcomponents-loader.js"></script>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.7.0/webcomponents-loader.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
 
@@ -18,12 +18,12 @@
         }
     </style>
 
-    <script defer src="https://unpkg.com/prismjs@1.20.0"></script>
+    <script defer src="https://unpkg.com/prismjs@1.29.0"></script>
     <script type="module">
-      import 'https://unpkg.com/@material/mwc-textfield@0.15.0?module';
-      import 'https://unpkg.com/@material/mwc-textarea@0.15.0?module';
-      import 'https://unpkg.com/@material/mwc-switch@0.15.0?module';
-      import 'https://unpkg.com/@material/mwc-button@0.15.0?module';
+      import 'https://unpkg.com/@material/mwc-textfield@0.27.0?module';
+      import 'https://unpkg.com/@material/mwc-textarea@0.27.0?module';
+      import 'https://unpkg.com/@material/mwc-switch@0.27.0?module';
+      import 'https://unpkg.com/@material/mwc-button@0.27.0?module';
 
       import '../share-menu.js';
       import '../targets/facebook.js';
@@ -44,17 +44,17 @@
       import '../targets/email.js';
       import '../targets/sms.js';
 
-      import { LitElement, css, html } from 'https://unpkg.com/lit-element@2.3.1?module';
+      import { LitElement, css, html } from 'https://unpkg.com/lit@2.5.0?module';
 
-      fetch('https://unpkg.com/prismjs@1.20.0/themes/prism.css')
+      fetch('https://unpkg.com/prismjs@1.29.0/themes/prism.css')
         .then(res => res.text())
         .then(prismStyles => {
           class ShareMenuDemo extends LitElement {
             static get properties() {
               return {
-                title: { type: String },
-                text: { type: String },
-                url: { type: String },
+                title: { type: String },
+                text: { type: String },
+                url: { type: String },
                 hideBackdrop: { type: Boolean },
               };
             }

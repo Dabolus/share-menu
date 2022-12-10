@@ -1,7 +1,9 @@
 import type { ShareMenu, ShareTarget } from '../share-menu';
 
-export class GoogleBookmarksShareTarget extends HTMLElement
-  implements ShareTarget {
+export class GoogleBookmarksShareTarget
+  extends HTMLElement
+  implements ShareTarget
+{
   public readonly displayName = 'Google Bookmarks';
   public readonly color = '4285f4';
   public readonly icon =

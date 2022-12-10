@@ -1,16 +1,3 @@
-// We need to do this because navigator.share and navigator.clipboard do not currently exist in TypeScript typings
-interface ShareOptions {
-  url?: string;
-  text?: string;
-  title?: string;
-}
-
-interface NavigatorWithShare extends Navigator {
-  share: (options: ShareOptions) => Promise<void>;
-}
-
-declare const navigator: NavigatorWithShare;
-
 interface ShadowRootWithAdoptedStylesheets extends ShadowRoot {
   adoptedStyleSheets: CSSStyleSheet[];
 }
@@ -537,10 +524,8 @@ export class ShareMenu extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     if (ShareMenu._supportsAdoptingStyleSheets) {
       ShareMenu.stylesheet = new CSSStyleSheet() as CSSStyleSheetWithReplace;
-      (this
-        .shadowRoot as ShadowRootWithAdoptedStylesheets).adoptedStyleSheets = [
-        ShareMenu.stylesheet,
-      ];
+      (this.shadowRoot as ShadowRootWithAdoptedStylesheets).adoptedStyleSheets =
+        [ShareMenu.stylesheet];
     }
     this.shadowRoot.appendChild(this._template.content.cloneNode(true));
   }
@@ -619,32 +604,26 @@ export class ShareMenu extends HTMLElement {
       this.handle = 'auto';
     }
 
-    this._backdropRef = this.shadowRoot.querySelector<HTMLDivElement>(
-      '#backdrop',
-    );
+    this._backdropRef =
+      this.shadowRoot.querySelector<HTMLDivElement>('#backdrop');
     this._dialogRef = this.shadowRoot.querySelector<HTMLDivElement>('#dialog');
-    this._dialogTitleRef = this.shadowRoot.querySelector<HTMLHeadingElement>(
-      '#title',
-    );
+    this._dialogTitleRef =
+      this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
     this._dialogTitleRef.textContent = this.dialogTitle;
-    this._socialsContainerRef = this.shadowRoot.querySelector<HTMLDivElement>(
-      '#socials-container',
-    );
-    this._copyHintRef = this.shadowRoot.querySelector<HTMLDivElement>(
-      '#copy-hint',
-    );
+    this._socialsContainerRef =
+      this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
+    this._copyHintRef =
+      this.shadowRoot.querySelector<HTMLDivElement>('#copy-hint');
     this._copyHintRef.textContent = this.copyHint;
 
-    this._clipboardPreviewRef = this.shadowRoot.querySelector<
-      HTMLParagraphElement
-    >('#clipboard-preview');
+    this._clipboardPreviewRef =
+      this.shadowRoot.querySelector<HTMLParagraphElement>('#clipboard-preview');
 
     this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
 
     if (navigator.clipboard) {
-      const cliboardButtonRef = this.shadowRoot.querySelector<
-        HTMLButtonElement
-      >('#clipboard');
+      const cliboardButtonRef =
+        this.shadowRoot.querySelector<HTMLButtonElement>('#clipboard');
 
       cliboardButtonRef.addEventListener('click', () => {
         navigator.clipboard
@@ -661,9 +640,8 @@ export class ShareMenu extends HTMLElement {
 
       this._firstFocusableElRef = cliboardButtonRef;
     } else {
-      const clipboardContainerRef = this.shadowRoot.querySelector<
-        HTMLDivElement
-      >('#clipboard-container');
+      const clipboardContainerRef =
+        this.shadowRoot.querySelector<HTMLDivElement>('#clipboard-container');
 
       clipboardContainerRef.parentNode.removeChild(clipboardContainerRef);
     }
@@ -799,7 +777,6 @@ export class ShareMenu extends HTMLElement {
       `width=${screen.width / 2},height=${screen.height / 2},left=${
         screen.width / 4
       },top=${screen.height / 4},menubar=0,status=0,titlebar=0,toolbar=0`,
-      false,
     );
   }
 
@@ -816,7 +793,7 @@ export class ShareMenu extends HTMLElement {
 
   /** @private */
   private _showFallbackShare() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       function shareListener(this: ShareMenu) {
         this.removeEventListener('share', shareListener);
         resolve();

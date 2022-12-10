@@ -36,6 +36,7 @@ declare const window: CustomWindow;
 
 describe('share menu', () => {
   describe('native share via Web Share API', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const fakeShare = fake(async () => {});
     const shareMenu: ShareMenu = await fixture(html`
       <share-menu></share-menu>
@@ -71,7 +72,7 @@ describe('share menu', () => {
     }
 
     const openSocial = (social?: string): Promise<ShareResult> =>
-      new Promise(resolve => {
+      new Promise((resolve) => {
         shareMenu.addEventListener(
           'share',
           (({ detail }: CustomEvent) => resolve(detail)) as any,
@@ -103,7 +104,7 @@ describe('share menu', () => {
     });
 
     it("doesn't get triggered if navigator.share throws an 'AbortError'", () =>
-      new Promise(resolve => {
+      new Promise((resolve) => {
         const abortError = new Error();
         abortError.name = 'AbortError';
         const fakeBrokenShare = fake.rejects(abortError);
@@ -171,7 +172,7 @@ describe('share menu', () => {
       });
 
       it('closes when pressing the Escape character', async () => {
-        const waitForCloseEventPromise = new Promise(resolve => {
+        const waitForCloseEventPromise = new Promise((resolve) => {
           shareMenu.addEventListener('close', () => resolve(true), {
             once: true,
           });
@@ -185,7 +186,7 @@ describe('share menu', () => {
       });
 
       it('closes when clicking on the backdrop', async () => {
-        const waitForCloseEventPromise = new Promise(resolve => {
+        const waitForCloseEventPromise = new Promise((resolve) => {
           shareMenu.addEventListener('close', () => resolve(true), {
             once: true,
           });
@@ -222,9 +223,10 @@ describe('share menu', () => {
       });
 
       it('creates a button for each social', () => {
-        const buttons = shareMenu.shadowRoot.querySelectorAll<
-          HTMLButtonElement
-        >('button.social');
+        const buttons =
+          shareMenu.shadowRoot.querySelectorAll<HTMLButtonElement>(
+            'button.social',
+          );
 
         expect(buttons.length).to.equal(shareMenu.socials.length);
         buttons.forEach((button, index) => {
@@ -236,9 +238,10 @@ describe('share menu', () => {
 
       it('creates a button only for the specified socials and in the specified order', () => {
         shareMenu.socials = ['facebook', 'skype', 'telegram'];
-        const buttons = shareMenu.shadowRoot.querySelectorAll<
-          HTMLButtonElement
-        >('button.social');
+        const buttons =
+          shareMenu.shadowRoot.querySelectorAll<HTMLButtonElement>(
+            'button.social',
+          );
 
         expect(buttons.length).to.equal(3);
         expect(buttons[0].title).to.equal(
@@ -846,7 +849,7 @@ describe('share menu', () => {
       });
 
       it("doesn't render image only socials if is-image is auto and the URL isn't an image", () =>
-        new Promise(resolve => {
+        new Promise((resolve) => {
           shareMenu.isImage = 'auto';
           shareMenu.url = `data:,${encodeURIComponent('Not an image')}`;
           // We need to wait some time for the image to be loaded
@@ -861,7 +864,7 @@ describe('share menu', () => {
         }));
 
       it('renders image only socials if is-image is auto and the URL is an image', () =>
-        new Promise(resolve => {
+        new Promise((resolve) => {
           shareMenu.isImage = 'auto';
           shareMenu.url =
             'data:image/gif;base64,R0lGODdhAQABAIABAAAAAP///ywAAAAAAQABAAACAkQBADs';

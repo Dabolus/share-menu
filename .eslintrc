@@ -4,15 +4,8 @@
     "project": "tsconfig.json",
     "ecmaVersion": 2018
   },
-  "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "prettier/@typescript-eslint"
-  ],
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "env": {
     "browser": true
   },
