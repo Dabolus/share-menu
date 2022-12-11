@@ -120,7 +120,7 @@
                   <mwc-textfield outlined id="url" type="url" label="URL" @input="\${e => this.url = e.target.value}"></mwc-textfield>
                   <div class="toggle-container">
                     <label for="backdrop">Hide backdrop</label>
-                    <mwc-switch id="backdrop" @change="\${e => this.hideBackdrop = e.target.checked}"></mwc-switch>
+                    <mwc-switch id="backdrop" @click="\${e => this.hideBackdrop = e.target.selected}"></mwc-switch>
                   </div>
                   <div class="actions-container">
                     <mwc-button raised ?disabled="\${!this.title || !this.text || !this.url}" @click="\${() => this.shareMenu.share()}">
@@ -186,7 +186,7 @@
                   <mwc-textfield outlined id="url" type="url" label="URL" @input="${e => this.url = e.target.value}"></mwc-textfield>
                   <div class="toggle-container">
                     <label for="backdrop">Hide backdrop</label>
-                    <mwc-switch id="backdrop" @change="${e => this.hideBackdrop = e.target.checked}"></mwc-switch>
+                    <mwc-switch id="backdrop" @click="${e => this.hideBackdrop = e.target.selected}"></mwc-switch>
                   </div>
                   <div class="actions-container">
                     <mwc-button raised ?disabled="${!this.title || !this.text || !this.url}" @click="${() => this.shareMenu.share()}">
