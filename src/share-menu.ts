@@ -47,7 +47,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  *
  * - Blogger
  * - Copy to clipboard
- * - Douban - _URL and title only_
+ * - Douban
  * - Email
  * - Evernote - _URL only_
  * - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_

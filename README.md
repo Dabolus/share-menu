@@ -121,7 +121,7 @@ that each one gives:
 
 - Blogger
 - Copy to clipboard
-- Douban - _URL and title only_
+- Douban
 - Email
 - Evernote - _URL only_
 - Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_
