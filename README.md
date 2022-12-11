@@ -146,7 +146,7 @@ that each one gives:
 - Weibo
 - WhatsApp
 - WordPress
-- Xing - _URL only_
+- XING - _URL only_
 - Yahoo
 
 ## Icons
