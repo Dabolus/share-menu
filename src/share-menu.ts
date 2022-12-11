@@ -559,7 +559,7 @@ export class ShareMenu extends HTMLElement {
         .then(() => {
           this.opened = false;
           ['share', 'close'].forEach((event) =>
-            this._emitEvent(event, { origin: 'native' }),
+            this._emitCustomEvent(event, { origin: 'native' }),
           );
         })
         .catch(({ name }) => {
@@ -569,7 +569,7 @@ export class ShareMenu extends HTMLElement {
           if (name !== 'AbortError') {
             return this._showFallbackShare();
           }
-          this._emitEvent('close', { origin: 'native' });
+          this._emitCustomEvent('close', { origin: 'native' });
         });
     }
     return this._showFallbackShare();
@@ -630,14 +630,20 @@ export class ShareMenu extends HTMLElement {
 
       cliboardButtonRef.addEventListener('click', () => {
         navigator.clipboard
-          .writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
-          .catch(() =>
-            this._emitEvent('error', {
-              message: 'Unable to copy to clipboard',
-            }),
+          ?.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
+          .catch((error) =>
+            this.dispatchEvent(
+              new ErrorEvent('error', {
+                message: 'Unable to copy to clipboard',
+                error,
+              }),
+            ),
           );
 
-        this._emitEvent('share', { target: 'clipboard', origin: 'fallback' });
+        this._emitCustomEvent('share', {
+          target: 'clipboard',
+          origin: 'fallback',
+        });
         this._close();
       });
 
@@ -723,7 +729,7 @@ export class ShareMenu extends HTMLElement {
       targetButton.setAttribute('part', 'target-button');
       targetButton.addEventListener('click', () => {
         shareTarget.share(this);
-        this._emitEvent('share', { target, origin: 'fallback' });
+        this._emitCustomEvent('share', { target, origin: 'fallback' });
         this._close();
       });
 
@@ -784,7 +790,10 @@ export class ShareMenu extends HTMLElement {
   }
 
   /** @private */
-  private _emitEvent(type: string, detail: unknown) {
+  private _emitCustomEvent<T extends ShareMenuShareEvent | ShareMenuCloseEvent>(
+    type: string,
+    detail: T['detail'],
+  ) {
     return this.dispatchEvent(
       new CustomEvent(type, {
         bubbles: true,
@@ -832,7 +841,7 @@ export class ShareMenu extends HTMLElement {
     }
     setTimeout(() => {
       this.style.display = 'none';
-      this._emitEvent('close', { origin: 'fallback' });
+      this._emitCustomEvent('close', { origin: 'fallback' });
     }, 300);
   }
 
@@ -866,6 +875,32 @@ export class ShareMenu extends HTMLElement {
         break;
     }
   }
+}
+
+export type ShareMenuEventOrigin = 'fallback' | 'native';
+
+export interface ShareMenuShareEventPayload {
+  target?: string;
+  origin: ShareMenuEventOrigin;
+}
+export type ShareMenuShareEvent = CustomEvent<ShareMenuShareEventPayload>;
+
+export interface ShareMenuCloseEventPayload {
+  origin: ShareMenuEventOrigin;
+}
+export type ShareMenuCloseEvent = CustomEvent<ShareMenuCloseEventPayload>;
+
+export interface ShareMenuEventMap extends HTMLElementEventMap {
+  share: ShareMenuShareEvent;
+  close: ShareMenuCloseEvent;
+}
+
+export declare interface ShareMenu {
+  addEventListener<K extends keyof ShareMenuEventMap>(
+    type: K,
+    listener: (this: ShareMenu, ev: ShareMenuEventMap[K]) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): void;
 }
 
 window.customElements.define('share-menu', ShareMenu);
