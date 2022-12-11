@@ -27,6 +27,7 @@
 
       import '../share-menu.js';
       import '../targets/print.js';
+      import '../targets/google-translate.js';
       import '../targets/facebook.js';
       import '../targets/telegram.js';
       import '../targets/whatsapp.js';
@@ -130,6 +131,7 @@
 
                 <share-menu title="\${this.title}" text="\${this.text}" url="\${this.url}" ?no-backdrop="\${this.hideBackdrop}">
                   <share-target-print></share-target-print>
+                  <share-target-google-translate></share-target-google-translate>
                   <share-target-facebook></share-target-facebook>
                   <share-target-telegram></share-target-telegram>
                   <share-target-whatsapp></share-target-whatsapp>
@@ -198,6 +200,7 @@
 
                 <share-menu title="${this.title}" text="${this.text}" url="${this.url}" ?no-backdrop="${this.hideBackdrop}">
                   <share-target-print></share-target-print>
+                  <share-target-google-translate></share-target-google-translate>
                   <share-target-facebook></share-target-facebook>
                   <share-target-telegram></share-target-telegram>
                   <share-target-whatsapp></share-target-whatsapp>
