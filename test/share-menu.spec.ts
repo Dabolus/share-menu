@@ -1,7 +1,16 @@
 import { html, fixture, expect } from '@open-wc/testing';
+import { sendKeys } from '@web/test-runner-commands';
 import { fake } from 'sinon';
+import {
+  ShareMenu,
+  ShareMenuShareEvent,
+  ShareMenuShareEventPayload,
+} from '../src/share-menu';
+import { FacebookShareTarget } from '../src/targets/facebook';
+import { SMSShareTarget } from '../src/targets/sms';
+import { EmailShareTarget } from '../src/targets/email';
 import '../src/share-menu';
-import { ShareMenu } from '../src/share-menu';
+import '../src/targets/facebook';
 import '../src/targets/sms';
 import '../src/targets/email';
 
@@ -40,9 +49,7 @@ describe('share menu', () => {
   describe('native share via Web Share API', async () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const fakeShare = fake(async () => {});
-    const shareMenu: ShareMenu = await fixture(html`
-      <share-menu></share-menu>
-    `);
+    const shareMenu = await fixture<ShareMenu>(html`<share-menu></share-menu>`);
 
     it('uses the Web Share API', async () => {
       window.navigator.share = fakeShare;
@@ -54,7 +61,7 @@ describe('share menu', () => {
     it("emits a 'share' event with 'native' as origin", async () => {
       window.navigator.share = fakeShare;
 
-      const listener = fake(({ detail: { origin } }: CustomEvent) => {
+      const listener = fake(({ detail: { origin } }: ShareMenuShareEvent) => {
         expect(origin).to.equal('native');
       });
       shareMenu.addEventListener('share', listener, { once: true });
@@ -66,23 +73,17 @@ describe('share menu', () => {
   describe('share via fallback dialog', async () => {
     const shareMenu: ShareMenu = await fixture(html`
       <share-menu>
+        <share-target-facebook></share-target-facebook>
         <share-target-sms></share-target-sms>
         <share-target-email></share-target-email>
       </share-menu>
     `);
 
-    interface ShareResult {
-      origin: 'fallback';
-      target: string;
-    }
-
-    const openTarget = (target?: string): Promise<ShareResult> =>
+    const openTarget = (target?: string): Promise<ShareMenuShareEventPayload> =>
       new Promise((resolve) => {
-        shareMenu.addEventListener(
-          'share',
-          (({ detail }: CustomEvent) => resolve(detail)) as any,
-          { once: true },
-        );
+        shareMenu.addEventListener('share', ({ detail }) => resolve(detail), {
+          once: true,
+        });
         shareMenu.share();
         shareMenu.shadowRoot
           .querySelector<HTMLButtonElement>(
@@ -109,7 +110,7 @@ describe('share menu', () => {
     });
 
     it("doesn't get triggered if navigator.share throws an 'AbortError'", () =>
-      new Promise((resolve) => {
+      new Promise<void>((resolve) => {
         const abortError = new Error();
         abortError.name = 'AbortError';
         const fakeBrokenShare = fake.rejects(abortError);
@@ -117,7 +118,7 @@ describe('share menu', () => {
 
         shareMenu.addEventListener(
           'close',
-          ({ detail: { origin } }: CustomEvent) => {
+          ({ detail: { origin } }) => {
             expect(origin).to.equal('native');
             resolve();
           },
@@ -146,16 +147,12 @@ describe('share menu', () => {
         await expect(possiblyAccessibleShareMenu).to.be.accessible();
       });
 
-      // FIXME: discover why focus isn't working properly in tests and re-enable these two specs
       xit('focuses the last target when pressing Shift+Tab on the first target', async () => {
         shareMenu.share();
         firstTarget.focus();
 
-        const event = new KeyboardEvent('keydown', {
-          key: 'Tab',
-          shiftKey: true,
-        });
-        shareMenu.dispatchEvent(event);
+        await sendKeys({ press: 'Shift+Tab' });
+
         const activeEl =
           shareMenu.shadowRoot.activeElement || document.activeElement;
 
@@ -166,10 +163,8 @@ describe('share menu', () => {
         shareMenu.share();
         lastTarget.focus();
 
-        const event = new KeyboardEvent('keydown', {
-          key: 'Tab',
-        });
-        shareMenu.dispatchEvent(event);
+        await sendKeys({ press: 'Tab' });
+
         const activeEl =
           shareMenu.shadowRoot.activeElement || document.activeElement;
 
@@ -222,40 +217,11 @@ describe('share menu', () => {
         shareMenu.openWindow = openWindowBackup;
       };
 
-      it('creates a button for each share target', () => {
-        const buttons =
-          shareMenu.shadowRoot.querySelectorAll<HTMLButtonElement>(
-            'button.target',
-          );
-
-        expect(buttons.length).to.equal(shareMenu.targets.length);
-        buttons.forEach((button, index) => {
-          expect(button.title).to.equal(
-            shareMenu['_supportedTargets'][shareMenu.targets[index]].title,
-          );
-        });
-      });
-
       it('creates a button only for the specified targets and in the specified order', () => {
-        shareMenu.targets = ['facebook', 'skype', 'telegram'];
-        const buttons =
-          shareMenu.shadowRoot.querySelectorAll<HTMLButtonElement>(
-            'button.target',
-          );
-
-        expect(buttons.length).to.equal(3);
-        expect(buttons[0].title).to.equal(
-          shareMenu['_supportedTargets'].facebook.title,
-        );
-        expect(buttons[1].title).to.equal(
-          shareMenu['_supportedTargets'].skype.title,
-        );
-        expect(buttons[2].title).to.equal(
-          shareMenu['_supportedTargets'].telegram.title,
-        );
-
-        // Restore targets
-        shareMenu.targets = Object.keys(shareMenu['_supportedTargets']);
+        expect(shareMenu.targets.length).to.equal(3);
+        expect(shareMenu.targets[0]).to.be.instanceOf(FacebookShareTarget);
+        expect(shareMenu.targets[1]).to.be.instanceOf(SMSShareTarget);
+        expect(shareMenu.targets[2]).to.be.instanceOf(EmailShareTarget);
       });
 
       describe('clipboard', () => {
@@ -282,9 +248,10 @@ describe('share menu', () => {
 
           shareMenu.addEventListener(
             'error',
-            (({ detail: { message } }: CustomEvent) => {
-              expect(message).to.equal('Unable to copy to clipboard');
-            }) as any,
+            (event) => {
+              expect(event).to.be.instanceOf(ErrorEvent);
+              expect(event.message).to.equal('Unable to copy to clipboard');
+            },
             { once: true },
           );
           const sharePromise = shareMenu.share();
@@ -301,9 +268,10 @@ describe('share menu', () => {
 
           shareMenu.addEventListener(
             'error',
-            (({ detail: { message } }: CustomEvent) => {
-              expect(message).to.equal('Unable to copy to clipboard');
-            }) as any,
+            (event) => {
+              expect(event).to.be.instanceOf(ErrorEvent);
+              expect(event.message).to.equal('Unable to copy to clipboard');
+            },
             { once: true },
           );
           const sharePromise = shareMenu.share();
@@ -742,79 +710,6 @@ describe('share menu', () => {
       });
     });
 
-    describe('via', () => {
-      it('syncs via property with via attribute', () => {
-        shareMenu.setAttribute('via', 'Test via');
-        expect(shareMenu.via).to.equal('Test via');
-
-        shareMenu.via = 'Another test via';
-        expect(shareMenu.getAttribute('via')).to.equal('Another test via');
-      });
-    });
-
-    describe('is image', () => {
-      const [imageOnlyTargetId] = Object.entries(
-        shareMenu['_supportedTargets'],
-      ).find(([, { imageOnly }]) => imageOnly);
-
-      it('syncs isImage property with is-image attribute', () => {
-        shareMenu.setAttribute('is-image', 'no');
-        expect(shareMenu.isImage).to.equal('no');
-
-        shareMenu.isImage = 'yes';
-        expect(shareMenu.getAttribute('is-image')).to.equal('yes');
-      });
-
-      it("doesn't render image only targets if is-imsage is falsy", () => {
-        shareMenu.isImage = 'no';
-        expect(
-          shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-            `button.target#${imageOnlyTargetId}`,
-          ),
-        ).to.be.null;
-      });
-
-      it('renders image only targets if is-imsage is truthy', () => {
-        shareMenu.isImage = 'yes';
-        expect(
-          shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-            `button.target#${imageOnlyTargetId}`,
-          ),
-        ).not.to.be.null;
-      });
-
-      it("doesn't render image only targets if is-image is auto and the URL isn't an image", () =>
-        new Promise((resolve) => {
-          shareMenu.isImage = 'auto';
-          shareMenu.url = `data:,${encodeURIComponent('Not an image')}`;
-          // We need to wait some time for the image to be loaded
-          setTimeout(() => {
-            expect(
-              shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-                `button.target#${imageOnlyTargetId}`,
-              ),
-            ).to.be.null;
-            resolve();
-          }, 50);
-        }));
-
-      it('renders image only targets if is-image is auto and the URL is an image', () =>
-        new Promise((resolve) => {
-          shareMenu.isImage = 'auto';
-          shareMenu.url =
-            'data:image/gif;base64,R0lGODdhAQABAIABAAAAAP///ywAAAAAAQABAAACAkQBADs';
-          // We need to wait some time for the image to be loaded
-          setTimeout(() => {
-            expect(
-              shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-                `button.target#${imageOnlyTargetId}`,
-              ),
-            ).not.to.be.null;
-            resolve();
-          }, 50);
-        }));
-    });
-
     describe('no backdrop', () => {
       it('syncs noBackdrop property with no-backdrop attribute', () => {
         shareMenu.setAttribute('no-backdrop', '');
@@ -826,16 +721,6 @@ describe('share menu', () => {
         expect(shareMenu.getAttribute('no-backdrop')).to.be.a.string;
         shareMenu.noBackdrop = false;
         expect(shareMenu.getAttribute('no-backdrop')).to.be.null;
-      });
-    });
-
-    describe('handle', () => {
-      it('syncs handle property with handle attribute', () => {
-        shareMenu.setAttribute('handle', 'never');
-        expect(shareMenu.handle).to.equal('never');
-
-        shareMenu.handle = 'always';
-        expect(shareMenu.getAttribute('handle')).to.equal('always');
       });
     });
   });
@@ -851,9 +736,10 @@ describe('share menu', () => {
       const fakeOpen = fake((url: string, target: string) => {
         expect(url).to.equal(urlToOpen);
         expect(target).to.equal('_blank');
+        return window;
       });
       window.open = fakeOpen;
-      shareMenu.openWindow(urlToOpen, false);
+      shareMenu.openWindow(urlToOpen, {}, false);
       window.open = backupOpen;
     });
 
@@ -862,9 +748,10 @@ describe('share menu', () => {
       const fakeOpen = fake((url: string, target: string) => {
         expect(url).to.equal(urlToOpen);
         expect(target).to.equal('_self');
+        return window;
       });
       window.open = fakeOpen;
-      shareMenu.openWindow(urlToOpen, true);
+      shareMenu.openWindow(urlToOpen, {}, true);
       window.open = backupOpen;
     });
   });
