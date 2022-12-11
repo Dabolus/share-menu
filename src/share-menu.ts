@@ -63,7 +63,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Print - _Only prints the page at the given URL_
  * - QZone
  * - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
- * - Skype - _URL only_
+ * - Skype
  * - SMS
  * - Telegram
  * - Translate - _Only translates the page at the given URL_
