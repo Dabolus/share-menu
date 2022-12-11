@@ -21,6 +21,19 @@ export class FacebookShareTarget extends HTMLElement implements ShareTarget {
     this.setAttribute('app-id', val);
   }
 
+  /**
+   * A URL to redirect to after the share has been completed
+   *
+   * @return {string}
+   */
+  public get redirectUri(): string {
+    return this.getAttribute('redirect-uri');
+  }
+
+  public set redirectUri(val: string) {
+    this.setAttribute('redirect-uri', val);
+  }
+
   public share(shareMenu: ShareMenu) {
     if (window.FB) {
       window.FB.ui({
@@ -34,6 +47,7 @@ export class FacebookShareTarget extends HTMLElement implements ShareTarget {
         display: 'popup',
         href: shareMenu.url,
         quote: `${shareMenu.title}\n${shareMenu.text}`,
+        redirect_uri: this.redirectUri || undefined,
       });
     } else {
       shareMenu.openWindow('https://www.facebook.com/sharer.php', {
