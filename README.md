@@ -148,6 +148,7 @@ that each one gives:
 - WordPress
 - XING - _URL only_
 - Yahoo
+- Gmail
 
 ## Icons
 
