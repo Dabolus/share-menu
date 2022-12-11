@@ -767,20 +767,27 @@ export class ShareMenu extends HTMLElement {
 
   public openWindow(
     url: string,
-    query?: Record<string, string | number | boolean | null | undefined>,
+    query: Record<string, string | number | boolean | null | undefined> = {},
     replace?: boolean,
   ) {
+    const queryEntries = Object.entries(query);
     return window.open(
       query
-        ? `${url}?${new URLSearchParams(
-            Object.entries(query).reduce(
-              (newQuery, [key, value]) => ({
-                ...newQuery,
-                ...(typeof value !== 'undefined' && { [key]: `${value}` }),
-              }),
-              {},
-            ),
-          ).toString()}`
+        ? `${url}${
+            queryEntries.length > 0
+              ? `?${new URLSearchParams(
+                  queryEntries.reduce(
+                    (newQuery, [key, value]) => ({
+                      ...newQuery,
+                      ...(typeof value !== 'undefined' && {
+                        [key]: `${value}`,
+                      }),
+                    }),
+                    {},
+                  ),
+                ).toString()}`
+              : ''
+          }`
         : url,
       replace ? '_self' : '_blank',
       `width=${screen.width / 2},height=${screen.height / 2},left=${
