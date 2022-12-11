@@ -2755,7 +2755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web/test-runner-commands@npm:^0.6.1, @web/test-runner-commands@npm:^0.6.3":
+"@web/test-runner-commands@npm:^0.6.1, @web/test-runner-commands@npm:^0.6.3, @web/test-runner-commands@npm:^0.6.5":
   version: 0.6.5
   resolution: "@web/test-runner-commands@npm:0.6.5"
   dependencies:
@@ -2818,6 +2818,17 @@ __metadata:
     "@types/mocha": ^8.2.0
     "@web/test-runner-core": ^0.10.20
   checksum: 12f87299945d230815bb783de2953ac4239306c1a67145ef5b78cfb0b361ae7f659e5d3e5150af2cedc6f2c55adf10652b761f016430a7ac2d7f77b91ecb9cd1
+  languageName: node
+  linkType: hard
+
+"@web/test-runner-playwright@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "@web/test-runner-playwright@npm:0.9.0"
+  dependencies:
+    "@web/test-runner-core": ^0.10.20
+    "@web/test-runner-coverage-v8": ^0.5.0
+    playwright: ^1.22.2
+  checksum: 8c00882e45fcbea867d46668188c61ed53d0f532641b9615e420deaa9245ae85f55660d870a1c32e13376c28584bc27ad3a5160031c6b8cd3ebe5151229e18b0
   languageName: node
   linkType: hard
 
@@ -8426,6 +8437,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright-core@npm:1.28.1":
+  version: 1.28.1
+  resolution: "playwright-core@npm:1.28.1"
+  bin:
+    playwright: cli.js
+  checksum: 8899e0d65de43ee10fadc171e0d48cd514bb574f3505478700094afa8a6e0dcd888a5c87af22acf31ebad455ada1327028909c42e20b8e25908b6255dc143bf0
+  languageName: node
+  linkType: hard
+
+"playwright@npm:^1.22.2":
+  version: 1.28.1
+  resolution: "playwright@npm:1.28.1"
+  dependencies:
+    playwright-core: 1.28.1
+  bin:
+    playwright: cli.js
+  checksum: 97c6fff2835878da856bf1f587ec4cdcbcc9aa61c0efcf592633f6df37eabbb9e59d7a2ef994ec9283338e43ef80e278d6d52fed5f7c29abd0408fac0f69b3ca
+  languageName: node
+  linkType: hard
+
 "polyfills-loader@npm:^1.7.4":
   version: 1.7.6
   resolution: "polyfills-loader@npm:1.7.6"
@@ -9208,6 +9239,8 @@ __metadata:
     "@web/dev-server": ^0.1.35
     "@web/dev-server-esbuild": ^0.3.3
     "@web/test-runner": ^0.15.0
+    "@web/test-runner-commands": ^0.6.5
+    "@web/test-runner-playwright": ^0.9.0
     eslint: ^8.29.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.2.1

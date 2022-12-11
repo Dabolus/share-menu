@@ -18,7 +18,7 @@
     "format:test": "yarn lint:test -- --fix",
     "format": "run-p format:src format:test",
     "prepublishOnly": "yarn build",
-    "test": "wtr \"test/**/*.spec.ts\" --node-resolve",
+    "test": "wtr \"test/**/*.spec.ts\"",
     "test:watch": "yarn test --watch"
   },
   "devDependencies": {
@@ -34,6 +34,8 @@
     "@web/dev-server": "^0.1.35",
     "@web/dev-server-esbuild": "^0.3.3",
     "@web/test-runner": "^0.15.0",
+    "@web/test-runner-commands": "^0.6.5",
+    "@web/test-runner-playwright": "^0.9.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
