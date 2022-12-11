@@ -762,7 +762,7 @@ export class ShareMenu extends HTMLElement {
             Object.entries(query).reduce(
               (newQuery, [key, value]) => ({
                 ...newQuery,
-                ...(value && { [key]: `${value}` }),
+                ...(typeof value !== 'undefined' && { [key]: `${value}` }),
               }),
               {},
             ),
