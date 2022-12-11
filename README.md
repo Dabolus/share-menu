@@ -142,7 +142,7 @@ that each one gives:
 - Translate - _Only translates the page at the given URL_
 - Tumblr
 - Twitter
-- VKontakte - _URL only_
+- VKontakte
 - Weibo
 - WhatsApp
 - WordPress

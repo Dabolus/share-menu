@@ -69,7 +69,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Translate - _Only translates the page at the given URL_
  * - Tumblr
  * - Twitter
- * - VKontakte - _URL only_
+ * - VKontakte
  * - Weibo
  * - WhatsApp
  * - WordPress
