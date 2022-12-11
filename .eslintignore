@@ -3,6 +3,6 @@ node_modules/
 .rpt2_cache/
 demo/
 /share-menu.*
-/social-icons.*
+/targets/
 *.log
 coverage/

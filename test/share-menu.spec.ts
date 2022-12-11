@@ -2,6 +2,8 @@ import { html, fixture, expect } from '@open-wc/testing';
 import { fake } from 'sinon';
 import '../src/share-menu';
 import { ShareMenu } from '../src/share-menu';
+import '../src/targets/sms';
+import '../src/targets/email';
 
 // We need to do this because navigator.share does not currently exist in TypeScript typings
 interface ShareOptions {
@@ -63,15 +65,18 @@ describe('share menu', () => {
 
   describe('share via fallback dialog', async () => {
     const shareMenu: ShareMenu = await fixture(html`
-      <share-menu is-image="yes"></share-menu>
+      <share-menu>
+        <share-target-sms></share-target-sms>
+        <share-target-email></share-target-email>
+      </share-menu>
     `);
 
     interface ShareResult {
       origin: 'fallback';
-      social: string;
+      target: string;
     }
 
-    const openSocial = (social?: string): Promise<ShareResult> =>
+    const openTarget = (target?: string): Promise<ShareResult> =>
       new Promise((resolve) => {
         shareMenu.addEventListener(
           'share',
@@ -81,7 +86,7 @@ describe('share menu', () => {
         shareMenu.share();
         shareMenu.shadowRoot
           .querySelector<HTMLButtonElement>(
-            `button.social${social ? `#${social}` : ''}`,
+            `button.target${target ? `#${target}` : ''}`,
           )
           .click();
       });
@@ -89,7 +94,7 @@ describe('share menu', () => {
     it("emits a 'share' event with 'fallback' as origin", async () => {
       delete window.navigator.share;
 
-      const { origin } = await openSocial();
+      const { origin } = await openTarget();
       expect(origin).to.equal('fallback');
     });
 
@@ -97,7 +102,7 @@ describe('share menu', () => {
       const fakeBrokenShare = fake.rejects(undefined);
       window.navigator.share = fakeBrokenShare;
 
-      const { origin } = await openSocial();
+      const { origin } = await openTarget();
       expect(origin).to.equal('fallback');
 
       delete window.navigator.share;
@@ -124,11 +129,11 @@ describe('share menu', () => {
       }));
 
     describe('a11y', () => {
-      const firstSocial = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-        'button.social:first-of-type',
+      const firstTarget = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+        'button.target:first-of-type',
       );
-      const lastSocial = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-        'button.social:last-of-type',
+      const lastTarget = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
+        'button.target:last-of-type',
       );
 
       it('generates an accessible markup', async () => {
@@ -142,9 +147,9 @@ describe('share menu', () => {
       });
 
       // FIXME: discover why focus isn't working properly in tests and re-enable these two specs
-      xit('focuses the last social when pressing Shift+Tab on the first social', async () => {
+      xit('focuses the last target when pressing Shift+Tab on the first target', async () => {
         shareMenu.share();
-        firstSocial.focus();
+        firstTarget.focus();
 
         const event = new KeyboardEvent('keydown', {
           key: 'Tab',
@@ -154,12 +159,12 @@ describe('share menu', () => {
         const activeEl =
           shareMenu.shadowRoot.activeElement || document.activeElement;
 
-        expect(activeEl).to.equal(lastSocial);
+        expect(activeEl).to.equal(lastTarget);
       });
 
-      xit('focuses the first social when pressing Tab on the last social', async () => {
+      xit('focuses the first target when pressing Tab on the last target', async () => {
         shareMenu.share();
-        lastSocial.focus();
+        lastTarget.focus();
 
         const event = new KeyboardEvent('keydown', {
           key: 'Tab',
@@ -168,7 +173,7 @@ describe('share menu', () => {
         const activeEl =
           shareMenu.shadowRoot.activeElement || document.activeElement;
 
-        expect(activeEl).to.equal(firstSocial);
+        expect(activeEl).to.equal(firstTarget);
       });
 
       it('closes when pressing the Escape character', async () => {
@@ -199,63 +204,58 @@ describe('share menu', () => {
       });
     });
 
-    describe('socials', () => {
-      const openSocialAndCheckWindow = async (
-        social: string,
-        match = social,
+    describe('targets', () => {
+      const openTargetAndCheckWindow = async (
+        target: string,
+        match = target,
       ) => {
-        const openWindowBackup = shareMenu['_openWindow'];
+        const openWindowBackup = shareMenu.openWindow;
         const fakeOpenWindow = fake((url: string) => {
           expect(url).to.contain(match);
+          return window;
         });
-        shareMenu['_openWindow'] = fakeOpenWindow;
+        shareMenu.openWindow = fakeOpenWindow;
 
-        await openSocial(social);
+        await openTarget(target);
         expect(fakeOpenWindow.calledOnce).to.equal(true);
 
-        shareMenu['_openWindow'] = openWindowBackup;
+        shareMenu.openWindow = openWindowBackup;
       };
 
-      it('defaults to all of them unless specified', () => {
-        expect(shareMenu.socials).to.deep.equal(
-          Object.keys(shareMenu['_supportedSocials']),
-        );
-      });
-
-      it('creates a button for each social', () => {
+      it('creates a button for each share target', () => {
         const buttons =
           shareMenu.shadowRoot.querySelectorAll<HTMLButtonElement>(
-            'button.social',
+            'button.target',
           );
 
-        expect(buttons.length).to.equal(shareMenu.socials.length);
+        expect(buttons.length).to.equal(shareMenu.targets.length);
         buttons.forEach((button, index) => {
           expect(button.title).to.equal(
-            shareMenu['_supportedSocials'][shareMenu.socials[index]].title,
+            shareMenu['_supportedTargets'][shareMenu.targets[index]].title,
           );
         });
       });
 
-      it('creates a button only for the specified socials and in the specified order', () => {
-        shareMenu.socials = ['facebook', 'skype', 'telegram'];
+      it('creates a button only for the specified targets and in the specified order', () => {
+        shareMenu.targets = ['facebook', 'skype', 'telegram'];
         const buttons =
           shareMenu.shadowRoot.querySelectorAll<HTMLButtonElement>(
-            'button.social',
+            'button.target',
           );
 
         expect(buttons.length).to.equal(3);
         expect(buttons[0].title).to.equal(
-          shareMenu['_supportedSocials'].facebook.title,
+          shareMenu['_supportedTargets'].facebook.title,
         );
         expect(buttons[1].title).to.equal(
-          shareMenu['_supportedSocials'].skype.title,
+          shareMenu['_supportedTargets'].skype.title,
         );
         expect(buttons[2].title).to.equal(
-          shareMenu['_supportedSocials'].telegram.title,
+          shareMenu['_supportedTargets'].telegram.title,
         );
 
-        // Restore socials
-        shareMenu.socials = Object.keys(shareMenu['_supportedSocials']);
+        // Restore targets
+        shareMenu.targets = Object.keys(shareMenu['_supportedTargets']);
       });
 
       describe('clipboard', () => {
@@ -270,7 +270,7 @@ describe('share menu', () => {
           const fakeClipboardWriteText = fake.resolves(undefined);
           window.navigator.clipboard.writeText = fakeClipboardWriteText;
 
-          await openSocial('clipboard');
+          await openTarget('clipboard');
           expect(fakeClipboardWriteText.calledOnce).to.equal(true);
 
           window.navigator.clipboard = clipboardBackup;
@@ -289,7 +289,7 @@ describe('share menu', () => {
           );
           const sharePromise = shareMenu.share();
           shareMenu.shadowRoot
-            .querySelector<HTMLButtonElement>('button.social#clipboard')
+            .querySelector<HTMLButtonElement>('button.target#clipboard')
             .click();
           await sharePromise;
 
@@ -308,7 +308,7 @@ describe('share menu', () => {
           );
           const sharePromise = shareMenu.share();
           shareMenu.shadowRoot
-            .querySelector<HTMLButtonElement>('button.social#clipboard')
+            .querySelector<HTMLButtonElement>('button.target#clipboard')
             .click();
           await sharePromise;
 
@@ -323,26 +323,26 @@ describe('share menu', () => {
             ui: fakeFBUI,
           };
 
-          await openSocial('facebook');
+          await openTarget('facebook');
           expect(fakeFBUI.calledOnce).to.equal(true);
 
           delete window.FB;
         });
 
         it('opens a window with Facebook share screen if Facebook JS API is not available', async () => {
-          await openSocialAndCheckWindow('facebook');
+          await openTargetAndCheckWindow('facebook');
         });
       });
 
       describe('twitter', () => {
         it('opens a window with Twitter share screen', async () => {
-          await openSocialAndCheckWindow('twitter');
+          await openTargetAndCheckWindow('twitter');
         });
 
         it('adds the via parameter if via is set', async () => {
           const viaBackup = shareMenu.via;
           shareMenu.via = 'via';
-          await openSocialAndCheckWindow('twitter', 'via=');
+          await openTargetAndCheckWindow('twitter', 'via=');
           shareMenu.via = viaBackup;
         });
 
@@ -350,14 +350,14 @@ describe('share menu', () => {
           const viaBackup = shareMenu.via;
           shareMenu.via = '';
 
-          const openWindowBackup = shareMenu['_openWindow'];
+          const openWindowBackup = shareMenu.openWindow;
           const fakeOpenWindow = fake((url: string) => {
             expect(url).not.to.contain('via=');
           });
-          shareMenu['_openWindow'] = fakeOpenWindow;
-          await openSocial('twitter');
+          shareMenu.openWindow = fakeOpenWindow;
+          await openTarget('twitter');
           expect(fakeOpenWindow.calledOnce).to.equal(true);
-          shareMenu['_openWindow'] = openWindowBackup;
+          shareMenu.openWindow = openWindowBackup;
 
           shareMenu.via = viaBackup;
         });
@@ -365,19 +365,19 @@ describe('share menu', () => {
 
       describe('whatsapp', () => {
         it('opens a window with WhatsApp share screen', async () => {
-          await openSocialAndCheckWindow('whatsapp');
+          await openTargetAndCheckWindow('whatsapp');
         });
       });
 
       describe('telegram', () => {
         it('opens a window with Telegram share screen', async () => {
-          await openSocialAndCheckWindow('telegram', 't.me');
+          await openTargetAndCheckWindow('telegram', 't.me');
         });
       });
 
       describe('linkedin', () => {
         it('opens a window with LinkedIn share screen', async () => {
-          await openSocialAndCheckWindow('linkedin');
+          await openTargetAndCheckWindow('linkedin');
         });
       });
 
@@ -386,147 +386,147 @@ describe('share menu', () => {
           expect(document.body.innerHTML).not.to.contain(
             'assets.pinterest.com',
           );
-          await openSocial('pinterest');
+          await openTarget('pinterest');
           expect(document.body.innerHTML).to.contain('assets.pinterest.com');
         });
       });
 
       describe('tumblr', () => {
         it('opens a window with Tumblr share screen', async () => {
-          await openSocialAndCheckWindow('tumblr');
+          await openTargetAndCheckWindow('tumblr');
         });
       });
 
       describe('reddit', () => {
         it('opens a window with Reddit share screen', async () => {
-          await openSocialAndCheckWindow('reddit');
+          await openTargetAndCheckWindow('reddit');
         });
 
         it('shares an URL if share menu has no text', async () => {
           const textBackup = shareMenu.text;
           shareMenu.text = '';
-          await openSocialAndCheckWindow('reddit', 'url=');
+          await openTargetAndCheckWindow('reddit', 'url=');
           shareMenu.text = textBackup;
         });
 
         it('shares a text if share menu has text', async () => {
           const textBackup = shareMenu.text;
           shareMenu.text = 'A text';
-          await openSocialAndCheckWindow('reddit', 'text=');
+          await openTargetAndCheckWindow('reddit', 'text=');
           shareMenu.text = textBackup;
         });
       });
 
       describe('vk', () => {
         it('opens a window with VK share screen', async () => {
-          await openSocialAndCheckWindow('vk');
+          await openTargetAndCheckWindow('vk');
         });
       });
 
       describe('skype', () => {
         it('opens a window with Skype share screen', async () => {
-          await openSocialAndCheckWindow('skype');
+          await openTargetAndCheckWindow('skype');
         });
       });
 
       describe('line', () => {
         it('opens a window with Line share screen', async () => {
-          await openSocialAndCheckWindow('line');
+          await openTargetAndCheckWindow('line');
         });
       });
 
       describe('qzone', () => {
         it('opens a window with Qzone share screen', async () => {
-          await openSocialAndCheckWindow('qzone');
+          await openTargetAndCheckWindow('qzone');
         });
       });
 
       describe('blogger', () => {
         it('opens a window with Blogger share screen', async () => {
-          await openSocialAndCheckWindow('blogger');
+          await openTargetAndCheckWindow('blogger');
         });
       });
 
       describe('flipboard', () => {
         it('opens a window with Flipboard share screen', async () => {
-          await openSocialAndCheckWindow('flipboard');
+          await openTargetAndCheckWindow('flipboard');
         });
       });
 
       describe('evernote', () => {
         it('opens a window with Evernote share screen', async () => {
-          await openSocialAndCheckWindow('evernote');
+          await openTargetAndCheckWindow('evernote');
         });
       });
 
       describe('pocket', () => {
         it('opens a window with Pocket share screen', async () => {
-          await openSocialAndCheckWindow('pocket');
+          await openTargetAndCheckWindow('pocket');
         });
       });
 
       describe('livejournal', () => {
         it('opens a window with LiveJournal share screen', async () => {
-          await openSocialAndCheckWindow('livejournal');
+          await openTargetAndCheckWindow('livejournal');
         });
       });
 
       describe('instapaper', () => {
         it('opens a window with Instapaper share screen', async () => {
-          await openSocialAndCheckWindow('instapaper');
+          await openTargetAndCheckWindow('instapaper');
         });
       });
 
       describe('okru', () => {
         it('opens a window with OK.ru share screen', async () => {
-          await openSocialAndCheckWindow('okru', 'ok.ru');
+          await openTargetAndCheckWindow('okru', 'ok.ru');
         });
       });
 
       describe('xing', () => {
         it('opens a window with XING share screen', async () => {
-          await openSocialAndCheckWindow('xing');
+          await openTargetAndCheckWindow('xing');
         });
       });
 
       describe('douban', () => {
         it('opens a window with Douban share screen', async () => {
-          await openSocialAndCheckWindow('douban');
+          await openTargetAndCheckWindow('douban');
         });
       });
 
       describe('weibo', () => {
         it('opens a window with Weibo share screen', async () => {
-          await openSocialAndCheckWindow('weibo');
+          await openTargetAndCheckWindow('weibo');
         });
       });
 
       describe('print', () => {
         it('opens a new window at the given URL and prints it', async () => {
-          const openWindowBackup = shareMenu['_openWindow'];
+          const openWindowBackup = shareMenu.openWindow;
           const fakePrint = fake();
           const fakeOpenWindow = () =>
             ({
               print: fakePrint,
             } as any);
-          shareMenu['_openWindow'] = fakeOpenWindow;
+          shareMenu.openWindow = fakeOpenWindow;
 
-          await openSocial('print');
+          await openTarget('print');
           expect(fakePrint.calledOnce).to.equal(true);
 
-          shareMenu['_openWindow'] = openWindowBackup;
+          shareMenu.openWindow = openWindowBackup;
         });
       });
 
       describe('translate', () => {
         it('opens a window with Google Translator translation page', async () => {
-          await openSocialAndCheckWindow('translate');
+          await openTargetAndCheckWindow('translate');
         });
       });
 
       describe('email', () => {
         it('opens a mailto link', async () => {
-          await openSocialAndCheckWindow('email', 'mailto');
+          await openTargetAndCheckWindow('email', 'mailto');
         });
       });
 
@@ -545,11 +545,11 @@ describe('share menu', () => {
         });
 
         it('opens an sms link', async () => {
-          await openSocialAndCheckWindow('sms', 'sms');
+          await openTargetAndCheckWindow('sms', 'sms');
         });
 
         it('uses ? as separator by default', async () => {
-          await openSocialAndCheckWindow('sms', '?');
+          await openTargetAndCheckWindow('sms', '?');
         });
 
         it('uses ; as separator on iOS < 8', async () => {
@@ -557,7 +557,7 @@ describe('share menu', () => {
           window.navigator.appVersion =
             '5.0 (iPhone; CPU iPhone OS 7_0_2 like Mac OS X)';
 
-          await openSocialAndCheckWindow('sms', ';');
+          await openTargetAndCheckWindow('sms', ';');
 
           window.navigator.platform = platformBackup;
           window.navigator.appVersion = appVersionBackup;
@@ -568,7 +568,7 @@ describe('share menu', () => {
           window.navigator.appVersion =
             '5.0 (iPhone; CPU iPhone OS 12_3 like Mac OS X)';
 
-          await openSocialAndCheckWindow('sms', '&');
+          await openTargetAndCheckWindow('sms', '&');
 
           window.navigator.platform = platformBackup;
           window.navigator.appVersion = appVersionBackup;
@@ -577,7 +577,7 @@ describe('share menu', () => {
 
       describe('yahoo', () => {
         it('opens a window with Yahoo! share screen', async () => {
-          await openSocialAndCheckWindow('yahoo');
+          await openTargetAndCheckWindow('yahoo');
         });
       });
     });
@@ -753,8 +753,8 @@ describe('share menu', () => {
     });
 
     describe('is image', () => {
-      const [imageOnlySocialId] = Object.entries(
-        shareMenu['_supportedSocials'],
+      const [imageOnlyTargetId] = Object.entries(
+        shareMenu['_supportedTargets'],
       ).find(([, { imageOnly }]) => imageOnly);
 
       it('syncs isImage property with is-image attribute', () => {
@@ -765,25 +765,25 @@ describe('share menu', () => {
         expect(shareMenu.getAttribute('is-image')).to.equal('yes');
       });
 
-      it("doesn't render image only socials if is-imsage is falsy", () => {
+      it("doesn't render image only targets if is-imsage is falsy", () => {
         shareMenu.isImage = 'no';
         expect(
           shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-            `button.social#${imageOnlySocialId}`,
+            `button.target#${imageOnlyTargetId}`,
           ),
         ).to.be.null;
       });
 
-      it('renders image only socials if is-imsage is truthy', () => {
+      it('renders image only targets if is-imsage is truthy', () => {
         shareMenu.isImage = 'yes';
         expect(
           shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-            `button.social#${imageOnlySocialId}`,
+            `button.target#${imageOnlyTargetId}`,
           ),
         ).not.to.be.null;
       });
 
-      it("doesn't render image only socials if is-image is auto and the URL isn't an image", () =>
+      it("doesn't render image only targets if is-image is auto and the URL isn't an image", () =>
         new Promise((resolve) => {
           shareMenu.isImage = 'auto';
           shareMenu.url = `data:,${encodeURIComponent('Not an image')}`;
@@ -791,14 +791,14 @@ describe('share menu', () => {
           setTimeout(() => {
             expect(
               shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-                `button.social#${imageOnlySocialId}`,
+                `button.target#${imageOnlyTargetId}`,
               ),
             ).to.be.null;
             resolve();
           }, 50);
         }));
 
-      it('renders image only socials if is-image is auto and the URL is an image', () =>
+      it('renders image only targets if is-image is auto and the URL is an image', () =>
         new Promise((resolve) => {
           shareMenu.isImage = 'auto';
           shareMenu.url =
@@ -807,7 +807,7 @@ describe('share menu', () => {
           setTimeout(() => {
             expect(
               shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-                `button.social#${imageOnlySocialId}`,
+                `button.target#${imageOnlyTargetId}`,
               ),
             ).not.to.be.null;
             resolve();
@@ -853,7 +853,7 @@ describe('share menu', () => {
         expect(target).to.equal('_blank');
       });
       window.open = fakeOpen;
-      shareMenu['_openWindow'](urlToOpen, false);
+      shareMenu.openWindow(urlToOpen, false);
       window.open = backupOpen;
     });
 
@@ -864,7 +864,7 @@ describe('share menu', () => {
         expect(target).to.equal('_self');
       });
       window.open = fakeOpen;
-      shareMenu['_openWindow'](urlToOpen, true);
+      shareMenu.openWindow(urlToOpen, true);
       window.open = backupOpen;
     });
   });

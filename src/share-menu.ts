@@ -43,7 +43,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  *
  * -----------------------------------------------------------------------------------------------------------------
  *
- * Here you can see the list of the supported socials, as well as the limitations that each one gives:
+ * Here you can see the list of the supported targets, as well as the limitations that each one gives:
  *
  * - Blogger
  * - Copy to clipboard
@@ -93,12 +93,13 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  */
 export class ShareMenu extends HTMLElement {
   /**
-   * Fired when the content is shared (i.e. when a social is clicked).
+   * Fired when the content is shared (i.e. when a target is clicked).
    * The event payload contains an `origin` field that will be equal
    * to `native` if the native share menu has been triggered, or to
    * `fallback` if the fallback share menu has been used instead.
    * If the fallback share menu is used, the event payload will also
-   * have a `social` field, that contains the ID of the social chosen by the user.
+   * have a `target` field, that contains the ID of the share target
+   * chosen by the user.
    *
    * @event share
    */
@@ -243,6 +244,13 @@ export class ShareMenu extends HTMLElement {
     this.setAttribute('handle', val);
   }
 
+  /**
+   * The list of share targets displayed in the fallback dialog.
+   */
+  public get targets() {
+    return this._targets;
+  }
+
   public static readonly observedAttributes = [
     'dialog-title',
     'copy-hint',
@@ -266,9 +274,9 @@ export class ShareMenu extends HTMLElement {
   private _dialogRef: HTMLDivElement;
   private _dialogTitleRef: HTMLHeadingElement;
   private _copyHintRef: HTMLDivElement;
-  private _socialsContainerRef: HTMLDivElement;
+  private _targetsContainerRef: HTMLDivElement;
   private _clipboardPreviewRef: HTMLParagraphElement;
-  private _socials: ShareTarget[] = [];
+  private _targets: ShareTarget[] = [];
 
   public constructor() {
     super();
@@ -391,14 +399,14 @@ export class ShareMenu extends HTMLElement {
         overflow: hidden;
       }
 
-      #socials-container {
+      #targets-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         padding: 12px;
       }
 
-      .social {
+      .target {
         padding: 12px;
         display: flex;
         flex-direction: column;
@@ -413,7 +421,7 @@ export class ShareMenu extends HTMLElement {
         transition: .3s transform;
       }
 
-      .social:hover {
+      .target:hover {
         transform: scale(1.05);
       }
 
@@ -455,10 +463,10 @@ export class ShareMenu extends HTMLElement {
         opacity: .4;
       }
 
-      .social:focus .icon::before,
-      .social:active .icon::after,
-      .social:focus .clipboard-icon::before,
-      .social:active .clipboard-icon::after {
+      .target:focus .icon::before,
+      .target:active .icon::after,
+      .target:focus .clipboard-icon::before,
+      .target:active .clipboard-icon::after {
         transform: scale(1);
       }
 
@@ -501,7 +509,7 @@ export class ShareMenu extends HTMLElement {
         <h2 id="title" part="title"></h2>
         <div id="clipboard-container">
           <p id="clipboard-preview"></p>
-          <button class="social" id="clipboard">
+          <button class="target" id="clipboard">
             <div class="clipboard-icon">
               <svg viewBox="0 0 256 256">
                 <path d="M180 233H41V70H17v164a23 23 0 0024 22h139zm36-24a23 23 0 0023-23V23v-1a23 23 0 00-24-22H87a23 23 0 00-23 23v163a23 23 0 0023 23h128zm-1-23H87V23h128z"/>
@@ -511,7 +519,7 @@ export class ShareMenu extends HTMLElement {
           </button>
         </div>
         <hr>
-        <div id="socials-container"></div>
+        <div id="targets-container"></div>
       </div>
       <slot></slot>
     `;
@@ -531,7 +539,7 @@ export class ShareMenu extends HTMLElement {
    * useful if you are creating the dialog directly from JavaScript.
    *
    * @param {{ text: string, title: string, url: string }=} props An object containing `text`, `title`, and `url`, that will override the element attributes/properties.
-   * @return {Promise<void>} A promise that resolves when the user selects a social.
+   * @return {Promise<void>} A promise that resolves when the user selects a share target.
    */
   public share({
     text = this.text,
@@ -605,8 +613,8 @@ export class ShareMenu extends HTMLElement {
     this._dialogTitleRef =
       this.shadowRoot.querySelector<HTMLHeadingElement>('#title');
     this._dialogTitleRef.textContent = this.dialogTitle;
-    this._socialsContainerRef =
-      this.shadowRoot.querySelector<HTMLDivElement>('#socials-container');
+    this._targetsContainerRef =
+      this.shadowRoot.querySelector<HTMLDivElement>('#targets-container');
     this._copyHintRef =
       this.shadowRoot.querySelector<HTMLDivElement>('#copy-hint');
     this._copyHintRef.textContent = this.copyHint;
@@ -629,7 +637,7 @@ export class ShareMenu extends HTMLElement {
             }),
           );
 
-        this._emitEvent('share', { social: 'clipboard', origin: 'fallback' });
+        this._emitEvent('share', { target: 'clipboard', origin: 'fallback' });
         this._close();
       });
 
@@ -656,8 +664,8 @@ export class ShareMenu extends HTMLElement {
         ),
       );
 
-      this._socials = shareTargets.filter(isShareTarget);
-      this._renderSocials();
+      this._targets = shareTargets.filter(isShareTarget);
+      this._renderTargets();
     });
   }
 
@@ -699,54 +707,54 @@ export class ShareMenu extends HTMLElement {
   }
 
   /** @private */
-  private _renderSocials() {
-    if (!this._socialsContainerRef) {
+  private _renderTargets() {
+    if (!this._targetsContainerRef) {
       return;
     }
-    this._socialsContainerRef.innerHTML = '';
-    this._socials.forEach((shareTarget, index) => {
+    this._targetsContainerRef.innerHTML = '';
+    this._targets.forEach((shareTarget, index) => {
       const { nodeName, color, icon, displayName, hint } = shareTarget;
 
-      const social = nodeName.slice(13).toLowerCase();
-      const socialButton: HTMLButtonElement = document.createElement('button');
-      socialButton.className = 'social';
-      socialButton.id = social;
-      socialButton.title = displayName;
-      socialButton.setAttribute('part', 'social-button');
-      socialButton.addEventListener('click', () => {
+      const target = nodeName.slice(13).toLowerCase();
+      const targetButton: HTMLButtonElement = document.createElement('button');
+      targetButton.className = 'target';
+      targetButton.id = target;
+      targetButton.title = displayName;
+      targetButton.setAttribute('part', 'target-button');
+      targetButton.addEventListener('click', () => {
         shareTarget.share(this);
-        this._emitEvent('share', { social, origin: 'fallback' });
+        this._emitEvent('share', { target, origin: 'fallback' });
         this._close();
       });
 
-      const socialIcon: HTMLDivElement = document.createElement('div');
-      socialIcon.className = 'icon';
-      socialIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${icon}"/></svg>`;
-      socialIcon.style.background = `#${color}`;
-      socialIcon.setAttribute('part', 'social-icon');
-      socialButton.appendChild(socialIcon);
+      const targetIcon: HTMLDivElement = document.createElement('div');
+      targetIcon.className = 'icon';
+      targetIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${icon}"/></svg>`;
+      targetIcon.style.background = `#${color}`;
+      targetIcon.setAttribute('part', 'target-icon');
+      targetButton.appendChild(targetIcon);
 
-      const socialLabel: HTMLDivElement = document.createElement('div');
-      socialLabel.className = 'label';
-      socialLabel.textContent = displayName;
-      socialLabel.setAttribute('part', 'social-label');
-      socialButton.appendChild(socialLabel);
+      const targetLabel: HTMLDivElement = document.createElement('div');
+      targetLabel.className = 'label';
+      targetLabel.textContent = displayName;
+      targetLabel.setAttribute('part', 'target-label');
+      targetButton.appendChild(targetLabel);
 
       if (hint) {
-        const socialHint: HTMLDivElement = document.createElement('div');
-        socialHint.className = 'hint';
-        socialHint.textContent = hint;
-        socialButton.appendChild(socialHint);
+        const targetHint: HTMLDivElement = document.createElement('div');
+        targetHint.className = 'hint';
+        targetHint.textContent = hint;
+        targetButton.appendChild(targetHint);
       }
 
-      this._socialsContainerRef.appendChild(socialButton);
+      this._targetsContainerRef.appendChild(targetButton);
 
       if (!navigator.clipboard && index === 0) {
-        this._firstFocusableElRef = socialButton;
+        this._firstFocusableElRef = targetButton;
       }
 
-      if (index === this._socials.length - 1) {
-        this._lastFocusableElRef = socialButton;
+      if (index === this._targets.length - 1) {
+        this._lastFocusableElRef = targetButton;
       }
     });
   }
@@ -842,7 +850,7 @@ export class ShareMenu extends HTMLElement {
         this._close();
         break;
       case 'Tab':
-        if (this._socials.length < 2) {
+        if (this._targets.length < 2) {
           e.preventDefault();
           break;
         }

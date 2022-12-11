@@ -114,9 +114,9 @@ _**Note:** these scripts will not work if the website implements a strict CSP
 </share-menu>
 ```
 
-## Supported socials (in the fallback dialog)
+## Supported targets (in the fallback dialog)
 
-Here you can see the list of the supported socials, as well as the limitations
+Here you can see the list of the supported targets, as well as the limitations
 that each one gives:
 
 - Blogger
