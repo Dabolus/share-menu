@@ -26,6 +26,7 @@
       import 'https://unpkg.com/@material/mwc-button@0.27.0?module';
 
       import '../share-menu.js';
+      import '../targets/print.js';
       import '../targets/facebook.js';
       import '../targets/telegram.js';
       import '../targets/whatsapp.js';
@@ -128,6 +129,7 @@
                 </div>
 
                 <share-menu title="\${this.title}" text="\${this.text}" url="\${this.url}" ?no-backdrop="\${this.hideBackdrop}">
+                  <share-target-print></share-target-print>
                   <share-target-facebook></share-target-facebook>
                   <share-target-telegram></share-target-telegram>
                   <share-target-whatsapp></share-target-whatsapp>
@@ -195,6 +197,7 @@
                 </div>
 
                 <share-menu title="${this.title}" text="${this.text}" url="${this.url}" ?no-backdrop="${this.hideBackdrop}">
+                  <share-target-print></share-target-print>
                   <share-target-facebook></share-target-facebook>
                   <share-target-telegram></share-target-telegram>
                   <share-target-whatsapp></share-target-whatsapp>
