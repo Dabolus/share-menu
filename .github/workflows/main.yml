@@ -2,7 +2,7 @@ name: Lint, test and build
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   main:
     runs-on: ubuntu-latest
