@@ -54,7 +54,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - FlipBoard - _URL and title only_
  * - Instapaper
  * - Diaspora - _URL and title only_
- * - Line - _URL only_
+ * - LINE - _URL only_
  * - LinkedIn
  * - LiveJournal
  * - Odnoklassniki (OK.ru)

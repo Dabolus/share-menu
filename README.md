@@ -127,7 +127,7 @@ that each one gives:
 - Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_
 - FlipBoard - _URL and title only_
 - Instapaper
-- Line - _URL only_
+- LINE - _URL only_
 - LinkedIn
 - LiveJournal
 - Odnoklassniki (OK.ru)
