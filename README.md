@@ -134,7 +134,7 @@ that each one gives:
 - Pinterest - _Will only be visible if the URL is an image. Look for the `isImage` parameter on the API docs for more info_
 - Pocket - _URL only_
 - Print - _Only prints the page at the given URL_
-- QZone - _URL only_
+- QZone
 - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
 - Skype - _URL only_
 - SMS
