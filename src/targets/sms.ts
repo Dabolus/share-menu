@@ -4,7 +4,7 @@ export class SMSShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'SMS';
   public readonly color = '43695b';
   public readonly icon =
-    'M230 26H26A26 26 0 0 0 0 51v154a26 26 0 0 0 26 25h204a26 26 0 0 0 26-25V51a26 26 0 0 0-26-25zm0 51l-102 64L26 77V51l102 64 102-64z';
+    'M230 0H26A26 26 0 0 0 0 26v230l51-51h179a26 26 0 0 0 26-26V26a26 26 0 0 0-26-26zM51 90h154v25H51zm103 64H51v-26h103zm51-77H51V51h154z';
 
   public share(shareMenu: ShareMenu) {
     let separator = '?';
