@@ -53,6 +53,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
  * - FlipBoard - _URL and title only_
  * - Instapaper
+ * - Diaspora - _URL and title only_
  * - Line - _URL only_
  * - LinkedIn
  * - LiveJournal
