@@ -57,7 +57,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Line - _URL only_
  * - LinkedIn
  * - LiveJournal
- * - Odnoklassniki (OK.ru) - _URL and title only_
+ * - Odnoklassniki (OK.ru)
  * - Pinterest - _Will only be visible if the URL is an image. Look for the `isImage` parameter on the API docs for more info_
  * - Pocket - _URL only_
  * - Print - _Only prints the page at the given URL_
