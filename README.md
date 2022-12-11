@@ -145,7 +145,6 @@ that each one gives:
 - VKontakte
 - Weibo
 - WhatsApp
-- WordPress
 - XING - _URL only_
 - Yahoo
 - Gmail
