@@ -119,46 +119,53 @@ _**Note:** these scripts will not work if the website implements a strict CSP
 Here you can see the list of the supported targets, as well as the limitations
 that each one gives:
 
-- Blogger
 - Copy to clipboard
+- Blogger
+- Diaspora - _URL and title only_
 - Douban
 - Email
-- Evernote - _URL only_
-- Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_
+- Evernote - _URL and title only_
+- Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_ or not providing an API Key
 - FlipBoard - _URL and title only_
+- Gmail
+- Google Translate - _Only translates the page at the given URL_
+- Hacker News - _URL and title only_
 - Instapaper
 - LINE - _URL only_
-- LinkedIn
+- LinkedIn - _URL only_
 - LiveJournal
 - Odnoklassniki (OK.ru)
-- Pinterest - _Will only be visible if the URL is an image. Look for the `isImage` parameter on the API docs for more info_
+- Pinterest
 - Pocket - _URL only_
 - Print - _Only prints the page at the given URL_
 - QZone
-- Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
+- Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end_
 - Skype
 - SMS
 - Telegram
-- Translate - _Only translates the page at the given URL_
 - Tumblr
 - Twitter
-- VKontakte
+- VKontakte (VK)
 - Weibo
 - WhatsApp
 - XING - _URL only_
-- Yahoo
-- Gmail
+- Yahoo Mail
 
-## Icons
+## Custom share targets
 
-The icons used by the component are just simple SVG paths, so you can use them anywhere in your app simply by importing
-`social-icons.js` located in this package, e.g.
+Share targets in the fallback dialog are just simple HTML custom elements that
+implement the `ShareTarget` interface. More specifically, they must expose:
 
-```js
-import { twitter } from 'share-menu/social-icons';
+- A `displayName` field that contains the name of the target;
+- A `color` field that contains the hex color of the target **without the hash**;
+- An `icon` field that contains the SVG path of the icon of the target;
+  **Only the path must be provided** (i.e. what you have inside the the `d` attribute of your SVG), **not the whole SVG**.
+  Icon must will be rendered inside a 256x256 viewBox, so make sure that the icon fits correctly inside that area;
+- A `share` method that takes the `ShareMenu` instance as parameter and that performs
+  the actual share action when the target button is clicked;
+- Optionally, a `hint` field that contains a hint for the target.
 
-myIconContainer.innerHTML = `<svg viewBox="0 0 256 256"><path d="${twitter}"/></svg>`;
-```
+See [any of the built-in targets](./src/targets/) for a practical example on how to implement yours.
 
 ## Styling
 

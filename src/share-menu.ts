@@ -45,37 +45,37 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  *
  * Here you can see the list of the supported targets, as well as the limitations that each one gives:
  *
- * - Blogger
  * - Copy to clipboard
+ * - Blogger
+ * - Diaspora - _URL and title only_
  * - Douban
  * - Email
- * - Evernote - _URL only_
- * - Facebook - _URL only if not using a Facebook App with the `facebook-app-id` parameter_
+ * - Evernote - _URL and title only_
+ * - Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_ or not providing an API Key
  * - FlipBoard - _URL and title only_
+ * - Gmail
+ * - Google Translate - _Only translates the page at the given URL_
+ * - Hacker News - _URL and title only_
  * - Instapaper
- * - Diaspora - _URL and title only_
  * - LINE - _URL only_
- * - LinkedIn
+ * - LinkedIn - _URL only_
  * - LiveJournal
  * - Odnoklassniki (OK.ru)
- * - Pinterest - _Will only be visible if the URL is an image. Look for the `isImage` parameter on the API docs for more info_
+ * - Pinterest
  * - Pocket - _URL only_
  * - Print - _Only prints the page at the given URL_
  * - QZone
- * - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end will be shared._
+ * - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end_
  * - Skype
  * - SMS
  * - Telegram
- * - Translate - _Only translates the page at the given URL_
  * - Tumblr
  * - Twitter
- * - VKontakte
+ * - VKontakte (VK)
  * - Weibo
  * - WhatsApp
- * - Xing - _URL only_
- * - Yahoo
- * - Gmail
- *
+ * - XING - _URL only_
+ * - Yahoo Mail
  *
  * -----------------------------------------------------------------------------------------------------------------
  *
