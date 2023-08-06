@@ -725,7 +725,7 @@ export class ShareMenu extends HTMLElement {
       const targetButton: HTMLButtonElement = document.createElement('button');
       targetButton.className = 'target';
       targetButton.id = target;
-      targetButton.title = displayName;
+      targetButton.title = `${displayName}${hint ? ` ${hint}` : ''}`;
       targetButton.setAttribute('part', 'target-button');
       targetButton.addEventListener('click', () => {
         shareTarget.share(this);
