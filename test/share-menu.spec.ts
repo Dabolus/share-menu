@@ -67,6 +67,8 @@ import { XINGShareTarget } from '../src/targets/xing';
 import '../src/targets/xing';
 import { YahooShareTarget } from '../src/targets/yahoo';
 import '../src/targets/yahoo';
+import { SubstackShareTarget } from '../src/targets/substack';
+import '../src/targets/substack';
 
 // We need to do this because navigator.share does not currently exist in TypeScript typings
 interface ShareOptions {
@@ -159,6 +161,7 @@ describe('share menu', () => {
         <share-target-whatsapp></share-target-whatsapp>
         <share-target-xing></share-target-xing>
         <share-target-yahoo></share-target-yahoo>
+        <share-target-substack></share-target-substack>
       </share-menu>
     `);
 
@@ -332,6 +335,7 @@ describe('share menu', () => {
           WhatsAppShareTarget,
           XINGShareTarget,
           YahooShareTarget,
+          SubstackShareTarget,
         ];
         expect(shareMenu.targets.length).to.equal(socials.length);
         shareMenu.targets.forEach((target, index) => {
@@ -660,6 +664,12 @@ describe('share menu', () => {
       describe('yahoo', () => {
         it('opens a window with Yahoo! share screen', async () => {
           await openTargetAndCheckWindow('yahoo');
+        });
+      });
+
+      describe('substack', () => {
+        it('opens a window with Substack share screen', async () => {
+          await openTargetAndCheckWindow('substack');
         });
       });
     });

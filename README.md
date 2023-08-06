@@ -150,6 +150,7 @@ that each one gives:
 - WhatsApp
 - XING - _URL only_
 - Yahoo Mail
+- Substack Notes
 
 ## Custom share targets
 

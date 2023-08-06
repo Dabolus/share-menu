@@ -76,6 +76,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - WhatsApp
  * - XING - _URL only_
  * - Yahoo Mail
+ * - Substack Notes
  *
  * -----------------------------------------------------------------------------------------------------------------
  *
