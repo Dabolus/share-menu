@@ -1,4 +1,4 @@
-import glob from 'glob';
+import { glob } from 'glob';
 import minifyHtml from 'rollup-plugin-minify-html-literals';
 import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
@@ -49,14 +49,7 @@ export default defineConfig({
           }),
         ]
       : []),
-    typescript({
-      useTsconfigDeclarationDir: true,
-      tsconfigOverride: {
-        compilerOptions: {
-          declaration: prod,
-        },
-      },
-    }),
+    typescript({ useTsconfigDeclarationDir: true }),
     ...(prod
       ? [
           terser({
@@ -70,6 +63,7 @@ export default defineConfig({
         ]
       : []),
     replace({
+      preventAssignment: true,
       include: 'src/**/*.ts',
       delimiters: ['', ''],
       '../share-target': '../share-target.js',
