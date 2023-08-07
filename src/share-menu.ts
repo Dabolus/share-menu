@@ -396,7 +396,7 @@ export class ShareMenu extends HTMLElement {
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;  
+        -webkit-box-orient: vertical;
         overflow: hidden;
       }
 
