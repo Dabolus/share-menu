@@ -9,17 +9,21 @@
   "env": {
     "browser": true
   },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "error",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unsafe-declaration-merging": "off"
+  },
   "overrides": [
     {
       "files": ["test/**/*.spec.ts"],
       "env": {
         "mocha": true
+      },
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": "off"
       }
     }
-  ],
-  "rules": {
-    "prettier/prettier": "error",
-    "no-console": "error",
-    "@typescript-eslint/explicit-function-return-type": "off"
-  }
+  ]
 }
