@@ -731,10 +731,9 @@ describe('share menu', () => {
       });
     });
 
-    describe('opened', async () => {
-      const shareMenu = await createShareMenu();
-
-      it('syncs opened property with opened attribute', () => {
+    describe('opened', () => {
+      it('syncs opened property with opened attribute', async () => {
+        const shareMenu = await createShareMenu();
         shareMenu.setAttribute('opened', '');
         expect(shareMenu.opened).to.equal(true);
         shareMenu.removeAttribute('opened');
@@ -746,7 +745,23 @@ describe('share menu', () => {
         expect(shareMenu.getAttribute('opened')).to.be.null;
       });
 
-      // TODO: maybe add some specs to make sure that changing this attribute opens/closes the share menu
+      it('opens the share menu when set to true', () => async () => {
+        const shareListener = fake();
+        const shareMenu = await createShareMenu();
+        shareMenu.opened = false;
+        shareMenu.addEventListener('share', shareListener, { once: true });
+        shareMenu.opened = true;
+        expect(shareListener.calledOnce).to.equal(true);
+      });
+
+      it('closes the share menu when set to false', () => async () => {
+        const closeListener = fake();
+        const shareMenu = await createShareMenu();
+        shareMenu.opened = true;
+        shareMenu.addEventListener('close', closeListener, { once: true });
+        shareMenu.opened = false;
+        expect(closeListener.calledOnce).to.equal(true);
+      });
     });
 
     describe('dialog title', async () => {
