@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+      - name: Run Static Code Analysis
+        uses: codacy/codacy-analysis-cli-action@master
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
@@ -17,7 +19,11 @@ jobs:
         run: yarn install --immutable
       - name: Lint
         run: yarn lint
-      - name: Test
-        run: yarn test --coverage
       - name: Build
         run: yarn build
+      - name: Test
+        run: yarn test --coverage
+      - name: Upload coverage on Codacy
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage/lcov.info
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
