@@ -70,20 +70,6 @@ import '../src/targets/yahoo';
 import { SubstackShareTarget } from '../src/targets/substack';
 import '../src/targets/substack';
 
-// We need to do this because navigator.share does not currently exist in TypeScript typings
-interface ShareOptions {
-  url?: string;
-  text?: string;
-  title?: string;
-}
-
-interface CustomNavigator extends Navigator {
-  share: (options: ShareOptions) => Promise<void>;
-  clipboard: Clipboard;
-  platform: string;
-  appVersion: string;
-}
-
 // We need to do this because of window.FB (Facebook JS API)
 interface FB {
   ui: (options: {
@@ -95,7 +81,6 @@ interface FB {
 }
 
 interface CustomWindow extends Window {
-  navigator: CustomNavigator;
   FB?: FB;
 }
 
@@ -128,57 +113,69 @@ describe('share menu', () => {
     });
   });
 
-  describe('share via fallback dialog', async () => {
-    const shareMenu: ShareMenu = await fixture(html`
-      <share-menu url="https://www.example.com">
-        <share-target-print></share-target-print>
-        <share-target-google-translate></share-target-google-translate>
-        <share-target-blogger></share-target-blogger>
-        <share-target-diaspora></share-target-diaspora>
-        <share-target-douban></share-target-douban>
-        <share-target-email></share-target-email>
-        <share-target-evernote></share-target-evernote>
-        <share-target-facebook></share-target-facebook>
-        <share-target-flipboard></share-target-flipboard>
-        <share-target-gmail></share-target-gmail>
-        <share-target-hacker-news></share-target-hacker-news>
-        <share-target-instapaper></share-target-instapaper>
-        <share-target-line></share-target-line>
-        <share-target-linkedin></share-target-linkedin>
-        <share-target-livejournal></share-target-livejournal>
-        <share-target-ok></share-target-ok>
-        <share-target-pinterest></share-target-pinterest>
-        <share-target-pocket></share-target-pocket>
-        <share-target-qzone></share-target-qzone>
-        <share-target-reddit></share-target-reddit>
-        <share-target-skype></share-target-skype>
-        <share-target-sms></share-target-sms>
-        <share-target-telegram></share-target-telegram>
-        <share-target-tumblr></share-target-tumblr>
-        <share-target-twitter></share-target-twitter>
-        <share-target-vk></share-target-vk>
-        <share-target-weibo></share-target-weibo>
-        <share-target-whatsapp></share-target-whatsapp>
-        <share-target-xing></share-target-xing>
-        <share-target-yahoo></share-target-yahoo>
-        <share-target-substack></share-target-substack>
-      </share-menu>
-    `);
+  describe('share via fallback dialog', () => {
+    const createShareMenu = async () => {
+      const shareMenu = await fixture<ShareMenu>(html`
+        <share-menu url="https://www.example.com">
+          <share-target-print></share-target-print>
+          <share-target-google-translate></share-target-google-translate>
+          <share-target-blogger></share-target-blogger>
+          <share-target-diaspora></share-target-diaspora>
+          <share-target-douban></share-target-douban>
+          <share-target-email></share-target-email>
+          <share-target-evernote></share-target-evernote>
+          <share-target-facebook></share-target-facebook>
+          <share-target-flipboard></share-target-flipboard>
+          <share-target-gmail></share-target-gmail>
+          <share-target-hacker-news></share-target-hacker-news>
+          <share-target-instapaper></share-target-instapaper>
+          <share-target-line></share-target-line>
+          <share-target-linkedin></share-target-linkedin>
+          <share-target-livejournal></share-target-livejournal>
+          <share-target-ok></share-target-ok>
+          <share-target-pinterest></share-target-pinterest>
+          <share-target-pocket></share-target-pocket>
+          <share-target-qzone></share-target-qzone>
+          <share-target-reddit></share-target-reddit>
+          <share-target-skype></share-target-skype>
+          <share-target-sms></share-target-sms>
+          <share-target-telegram></share-target-telegram>
+          <share-target-tumblr></share-target-tumblr>
+          <share-target-twitter></share-target-twitter>
+          <share-target-vk></share-target-vk>
+          <share-target-weibo></share-target-weibo>
+          <share-target-whatsapp></share-target-whatsapp>
+          <share-target-xing></share-target-xing>
+          <share-target-yahoo></share-target-yahoo>
+          <share-target-substack></share-target-substack>
+        </share-menu>
+      `);
+      shareMenu.shadowRoot
+        ?.querySelector('slot')
+        ?.dispatchEvent(new Event('slotchange'));
+      return shareMenu;
+    };
 
-    const openTarget = (target?: string): Promise<ShareMenuShareEventPayload> =>
-      new Promise((resolve) => {
-        shareMenu.addEventListener('share', ({ detail }) => resolve(detail), {
-          once: true,
+    const createTargetOpener =
+      (shareMenu: ShareMenu) =>
+      (target?: string): Promise<ShareMenuShareEventPayload> =>
+        new Promise((resolve) => {
+          shareMenu.addEventListener('share', ({ detail }) => resolve(detail), {
+            once: true,
+          });
+          shareMenu.share();
+          shareMenu.shadowRoot
+            ?.querySelector<HTMLButtonElement>(
+              `button.target${target ? `#${target}` : ''}`,
+            )
+            ?.click();
         });
-        shareMenu.share();
-        shareMenu.shadowRoot
-          .querySelector<HTMLButtonElement>(
-            `button.target${target ? `#${target}` : ''}`,
-          )
-          .click();
-      });
 
     it("emits a 'share' event with 'fallback' as origin", async () => {
+      const shareMenu = await createShareMenu();
+      const openTarget = createTargetOpener(shareMenu);
+
+      // @ts-ignore We need to simulate the Web Share API not being available
       delete window.navigator.share;
 
       const { origin } = await openTarget();
@@ -186,17 +183,23 @@ describe('share menu', () => {
     });
 
     it('gets triggered if navigator.share throws', async () => {
+      const shareMenu = await createShareMenu();
+      const openTarget = createTargetOpener(shareMenu);
+
       const fakeBrokenShare = fake.rejects(undefined);
       window.navigator.share = fakeBrokenShare;
 
       const { origin } = await openTarget();
       expect(origin).to.equal('fallback');
 
+      // @ts-ignore We need to simulate the Web Share API not being available
       delete window.navigator.share;
     });
 
     it("doesn't get triggered if navigator.share throws an 'AbortError'", () =>
-      new Promise<void>((resolve) => {
+      new Promise<void>(async (resolve) => {
+        const shareMenu = await createShareMenu();
+
         const abortError = new Error();
         abortError.name = 'AbortError';
         const fakeBrokenShare = fake.rejects(abortError);
@@ -212,52 +215,63 @@ describe('share menu', () => {
         );
         shareMenu.share();
 
+        // @ts-ignore We need to simulate the Web Share API not being available
         delete window.navigator.share;
       }));
 
     describe('a11y', () => {
-      const firstTarget = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-        'button.target:first-of-type',
-      );
-      const lastTarget = shareMenu.shadowRoot.querySelector<HTMLButtonElement>(
-        'button.target:last-of-type',
-      );
-
       it('generates an accessible markup', async () => {
-        // For some reason we need to create a new share menu,
-        // otherwise axe will complain about "no elements in frame context"
-        const possiblyAccessibleShareMenu: ShareMenu = await fixture(html`
-          <share-menu url="https://www.example.com"></share-menu>
-        `);
-
-        await expect(possiblyAccessibleShareMenu).to.be.accessible();
+        const shareMenu = await createShareMenu();
+        await expect(shareMenu).to.be.accessible();
       });
 
-      xit('focuses the last target when pressing Shift+Tab on the first target', async () => {
+      it('focuses the first target when pressing Tab on the copy to clipboard button', async () => {
+        const shareMenu = await createShareMenu();
+        const firstTarget =
+          shareMenu.shadowRoot?.querySelector<HTMLButtonElement>(
+            '#targets-container > button.target:first-of-type',
+          );
+        const copyToClipboardButton =
+          shareMenu.shadowRoot?.querySelector<HTMLButtonElement>(
+            '.target#clipboard',
+          );
+
         shareMenu.share();
-        firstTarget.focus();
-
-        await sendKeys({ press: 'Shift+Tab' });
-
-        const activeEl =
-          shareMenu.shadowRoot.activeElement || document.activeElement;
-
-        expect(activeEl).to.equal(lastTarget);
-      });
-
-      xit('focuses the first target when pressing Tab on the last target', async () => {
-        shareMenu.share();
-        lastTarget.focus();
+        copyToClipboardButton?.focus();
 
         await sendKeys({ press: 'Tab' });
 
         const activeEl =
-          shareMenu.shadowRoot.activeElement || document.activeElement;
+          shareMenu.shadowRoot?.activeElement || document.activeElement;
 
-        expect(activeEl).to.equal(firstTarget);
+        expect(activeEl?.id).to.equal(firstTarget?.id);
+      });
+
+      it('focuses the last target when pressing Shift+Tab on the copy to clipboard button', async () => {
+        const shareMenu = await createShareMenu();
+        const lastTarget =
+          shareMenu.shadowRoot?.querySelector<HTMLButtonElement>(
+            '#targets-container > button.target:last-of-type',
+          );
+        const copyToClipboardButton =
+          shareMenu.shadowRoot?.querySelector<HTMLButtonElement>(
+            '.target#clipboard',
+          );
+
+        shareMenu.share();
+        copyToClipboardButton?.focus();
+
+        await sendKeys({ press: 'Shift+Tab' });
+
+        const activeEl =
+          shareMenu.shadowRoot?.activeElement || document.activeElement;
+
+        expect(activeEl?.id).to.equal(lastTarget?.id);
       });
 
       it('closes when pressing the Escape character', async () => {
+        const shareMenu = await createShareMenu();
+
         const waitForCloseEventPromise = new Promise((resolve) => {
           shareMenu.addEventListener('close', () => resolve(true), {
             once: true,
@@ -272,6 +286,8 @@ describe('share menu', () => {
       });
 
       it('closes when clicking on the backdrop', async () => {
+        const shareMenu = await createShareMenu();
+
         const waitForCloseEventPromise = new Promise((resolve) => {
           shareMenu.addEventListener('close', () => resolve(true), {
             once: true,
@@ -279,13 +295,18 @@ describe('share menu', () => {
         });
 
         shareMenu.share();
-        shareMenu.shadowRoot.querySelector<HTMLDivElement>('#backdrop').click();
+        shareMenu.shadowRoot
+          ?.querySelector<HTMLDivElement>('#backdrop')
+          ?.click();
         await waitForCloseEventPromise;
         expect(shareMenu.opened).to.equal(false);
       });
     });
 
-    describe('targets', () => {
+    describe('targets', async () => {
+      const shareMenu = await createShareMenu();
+      const openTarget = createTargetOpener(shareMenu);
+
       const openTargetAndCheckWindow = async (
         target: string,
         match = target,
@@ -358,6 +379,7 @@ describe('share menu', () => {
           await openTarget('clipboard');
           expect(fakeClipboardWriteText.calledOnce).to.equal(true);
 
+          // @ts-ignore We need to restore the original clipboard
           window.navigator.clipboard = clipboardBackup;
         });
 
@@ -375,14 +397,16 @@ describe('share menu', () => {
           );
           const sharePromise = shareMenu.share();
           shareMenu.shadowRoot
-            .querySelector<HTMLButtonElement>('button.target#clipboard')
-            .click();
+            ?.querySelector<HTMLButtonElement>('button.target#clipboard')
+            ?.click();
           await sharePromise;
 
+          // @ts-ignore We need to restore the original clipboard
           window.navigator.clipboard = clipboardBackup;
         });
 
         it('emits an error event if navigator.clipboard is not supported', async () => {
+          // @ts-ignore We need to simulate the clipboard not being supported
           window.navigator.clipboard = undefined;
 
           shareMenu.addEventListener(
@@ -395,10 +419,11 @@ describe('share menu', () => {
           );
           const sharePromise = shareMenu.share();
           shareMenu.shadowRoot
-            .querySelector<HTMLButtonElement>('button.target#clipboard')
-            .click();
+            ?.querySelector<HTMLButtonElement>('button.target#clipboard')
+            ?.click();
           await sharePromise;
 
+          // @ts-ignore We need to restore the original clipboard
           window.navigator.clipboard = clipboardBackup;
         });
       });
@@ -427,26 +452,32 @@ describe('share menu', () => {
         });
 
         xit('adds the via parameter if via is set', async () => {
-          const viaBackup = shareMenu.via;
-          shareMenu.via = 'via';
+          const twitterShareTarget = shareMenu.querySelector(
+            'share-target-twitter',
+          )!;
+          const viaBackup = twitterShareTarget.via;
+          twitterShareTarget.via = 'via';
           await openTargetAndCheckWindow('twitter', 'via=');
-          shareMenu.via = viaBackup;
+          twitterShareTarget.via = viaBackup;
         });
 
         xit("doesn't add the via parameter if via isn't set", async () => {
-          const viaBackup = shareMenu.via;
-          shareMenu.via = '';
-
+          const twitterShareTarget = shareMenu.querySelector(
+            'share-target-twitter',
+          )!;
+          const viaBackup = twitterShareTarget.via;
+          twitterShareTarget.via = '';
           const openWindowBackup = shareMenu.openWindow;
           const fakeOpenWindow = fake((url: string) => {
             expect(url).not.to.contain('via=');
+            return null;
           });
           shareMenu.openWindow = fakeOpenWindow;
           await openTarget('twitter');
           expect(fakeOpenWindow.calledOnce).to.equal(true);
           shareMenu.openWindow = openWindowBackup;
 
-          shareMenu.via = viaBackup;
+          twitterShareTarget.via = viaBackup;
         });
       });
 
@@ -530,6 +561,12 @@ describe('share menu', () => {
         });
       });
 
+      describe('diaspora', () => {
+        it('opens a window with Diaspora share screen', async () => {
+          await openTargetAndCheckWindow('diaspora');
+        });
+      });
+
       describe('flipboard', () => {
         it('opens a window with Flipboard share screen', async () => {
           await openTargetAndCheckWindow('flipboard');
@@ -551,6 +588,18 @@ describe('share menu', () => {
       describe('livejournal', () => {
         it('opens a window with LiveJournal share screen', async () => {
           await openTargetAndCheckWindow('livejournal');
+        });
+      });
+
+      describe('gmail', () => {
+        it('opens a window with Gmail share screen', async () => {
+          await openTargetAndCheckWindow('gmail', 'mail.google.com');
+        });
+      });
+
+      describe('hacker-news', () => {
+        it('opens a window with Hacker News share screen', async () => {
+          await openTargetAndCheckWindow('hacker-news', 'news.ycombinator.com');
         });
       });
 
@@ -591,7 +640,7 @@ describe('share menu', () => {
           const fakeOpenWindow = () =>
             ({
               print: fakePrint,
-            } as unknown as Window);
+            }) as unknown as Window;
           shareMenu.openWindow = fakeOpenWindow;
 
           await openTarget('print');
@@ -639,24 +688,32 @@ describe('share menu', () => {
         });
 
         it('uses ; as separator on iOS < 8', async () => {
+          // @ts-ignore These properties are deprecated, but we need to use them to simulate an old iOS version
           window.navigator.platform = 'iPhone';
+          // @ts-ignore
           window.navigator.appVersion =
             '5.0 (iPhone; CPU iPhone OS 7_0_2 like Mac OS X)';
 
           await openTargetAndCheckWindow('sms', ';');
 
+          // @ts-ignore We also need to restore them to their original value
           window.navigator.platform = platformBackup;
+          // @ts-ignore
           window.navigator.appVersion = appVersionBackup;
         });
 
         it('uses & as separator on iOS >= 8', async () => {
+          // @ts-ignore These properties are deprecated, but we need to use them to simulate an old iOS version
           window.navigator.platform = 'iPhone';
+          // @ts-ignore
           window.navigator.appVersion =
             '5.0 (iPhone; CPU iPhone OS 12_3 like Mac OS X)';
 
           await openTargetAndCheckWindow('sms', '&');
 
+          // @ts-ignore We also need to restore them to their original value
           window.navigator.platform = platformBackup;
+          // @ts-ignore
           window.navigator.appVersion = appVersionBackup;
         });
       });
@@ -674,7 +731,9 @@ describe('share menu', () => {
       });
     });
 
-    describe('opened', () => {
+    describe('opened', async () => {
+      const shareMenu = await createShareMenu();
+
       it('syncs opened property with opened attribute', () => {
         shareMenu.setAttribute('opened', '');
         expect(shareMenu.opened).to.equal(true);
@@ -690,7 +749,9 @@ describe('share menu', () => {
       // TODO: maybe add some specs to make sure that changing this attribute opens/closes the share menu
     });
 
-    describe('dialog title', () => {
+    describe('dialog title', async () => {
+      const shareMenu = await createShareMenu();
+
       it('syncs dialogTitle property with dialog-title attribute', () => {
         shareMenu.setAttribute('dialog-title', 'Test title');
         expect(shareMenu.dialogTitle).to.equal('Test title');
@@ -704,13 +765,13 @@ describe('share menu', () => {
       it('updates the title in the HTML', () => {
         shareMenu.dialogTitle = 'Test title';
         expect(
-          shareMenu.shadowRoot.querySelector<HTMLHeadingElement>('#title')
-            .textContent,
+          shareMenu.shadowRoot?.querySelector<HTMLHeadingElement>('#title')
+            ?.textContent,
         ).to.equal('Test title');
       });
 
       it('it correctly sets the dialogTitle property if initialized with the dialog-title attribute', async () => {
-        const dialogTitleShareMenu: ShareMenu = await fixture(html`
+        const dialogTitleShareMenu = await fixture<ShareMenu>(html`
           <share-menu dialog-title="dialogTitle"></share-menu>
         `);
 
@@ -718,7 +779,7 @@ describe('share menu', () => {
       });
 
       it('defaults to "Share" if dialog-title attribute is not passed', async () => {
-        const noDialogTitleShareMenu: ShareMenu = await fixture(html`
+        const noDialogTitleShareMenu = await fixture<ShareMenu>(html`
           <share-menu></share-menu>
         `);
 
@@ -726,7 +787,9 @@ describe('share menu', () => {
       });
     });
 
-    describe('text', () => {
+    describe('text', async () => {
+      const shareMenu = await createShareMenu();
+
       it('syncs text property with text attribute', () => {
         shareMenu.setAttribute('text', 'Test text');
         expect(shareMenu.text).to.equal('Test text');
@@ -736,7 +799,7 @@ describe('share menu', () => {
       });
 
       it('it correctly sets the text property if initialized with the text attribute', async () => {
-        const descriptionShareMenu: ShareMenu = await fixture(html`
+        const descriptionShareMenu = await fixture<ShareMenu>(html`
           <share-menu text="text"></share-menu>
         `);
 
@@ -744,7 +807,7 @@ describe('share menu', () => {
       });
 
       it('defaults to an empty string if text attribute is not passed and meta description is not set', async () => {
-        const noDescriptionShareMenu: ShareMenu = await fixture(html`
+        const noDescriptionShareMenu = await fixture<ShareMenu>(html`
           <share-menu></share-menu>
         `);
 
@@ -757,7 +820,7 @@ describe('share menu', () => {
         metaDescription.content = 'text';
         document.head.appendChild(metaDescription);
 
-        const noDescriptionShareMenu: ShareMenu = await fixture(html`
+        const noDescriptionShareMenu = await fixture<ShareMenu>(html`
           <share-menu></share-menu>
         `);
 
@@ -767,7 +830,9 @@ describe('share menu', () => {
       });
     });
 
-    describe('title', () => {
+    describe('title', async () => {
+      const shareMenu = await createShareMenu();
+
       it('syncs title property with title attribute', () => {
         shareMenu.setAttribute('title', 'Test title');
         expect(shareMenu.title).to.equal('Test title');
@@ -777,7 +842,7 @@ describe('share menu', () => {
       });
 
       it('it correctly sets the title property if initialized with the title attribute', async () => {
-        const titleShareMenu: ShareMenu = await fixture(html`
+        const titleShareMenu = await fixture<ShareMenu>(html`
           <share-menu title="title"></share-menu>
         `);
 
@@ -785,7 +850,7 @@ describe('share menu', () => {
       });
 
       it('defaults to current window title if title attribute is not passed', async () => {
-        const noTitleShareMenu: ShareMenu = await fixture(html`
+        const noTitleShareMenu = await fixture<ShareMenu>(html`
           <share-menu></share-menu>
         `);
 
@@ -793,7 +858,9 @@ describe('share menu', () => {
       });
     });
 
-    describe('url', () => {
+    describe('url', async () => {
+      const shareMenu = await createShareMenu();
+
       it('syncs url property with url attribute', () => {
         shareMenu.setAttribute('url', 'Test url');
         expect(shareMenu.url).to.equal('Test url');
@@ -803,7 +870,7 @@ describe('share menu', () => {
       });
 
       it('it correctly sets the url property if initialized with the url attribute', async () => {
-        const urlShareMenu: ShareMenu = await fixture(html`
+        const urlShareMenu = await fixture<ShareMenu>(html`
           <share-menu url="url"></share-menu>
         `);
 
@@ -811,7 +878,7 @@ describe('share menu', () => {
       });
 
       it('defaults to current URL if url attribute is not passed and canonical URL is not set', async () => {
-        const noUrlShareMenu: ShareMenu = await fixture(html`
+        const noUrlShareMenu = await fixture<ShareMenu>(html`
           <share-menu></share-menu>
         `);
 
@@ -824,7 +891,7 @@ describe('share menu', () => {
         canonicalUrl.href = 'https://example.com/canonical';
         document.head.appendChild(canonicalUrl);
 
-        const noUrlShareMenu: ShareMenu = await fixture(html`
+        const noUrlShareMenu = await fixture<ShareMenu>(html`
           <share-menu></share-menu>
         `);
 
@@ -834,7 +901,9 @@ describe('share menu', () => {
       });
     });
 
-    describe('no backdrop', () => {
+    describe('no backdrop', async () => {
+      const shareMenu = await createShareMenu();
+
       it('syncs noBackdrop property with no-backdrop attribute', () => {
         shareMenu.setAttribute('no-backdrop', '');
         expect(shareMenu.noBackdrop).to.equal(true);
@@ -849,13 +918,13 @@ describe('share menu', () => {
     });
   });
 
-  describe('open window helper', async () => {
+  describe('open window helper', () => {
     const backupOpen = window.open;
-    const shareMenu: ShareMenu = await fixture(html`
-      <share-menu></share-menu>
-    `);
 
-    it('opens the given URL in a new window if replace param is falsy', () => {
+    it('opens the given URL in a new window if replace param is falsy', async () => {
+      const shareMenu = await fixture<ShareMenu>(
+        html`<share-menu></share-menu>`,
+      );
       const urlToOpen = 'https://example.com';
       const fakeOpen = fake((url: string, target: string) => {
         expect(url).to.equal(urlToOpen);
@@ -867,7 +936,10 @@ describe('share menu', () => {
       window.open = backupOpen;
     });
 
-    it('opens the given URL in the same window if replace param is truthy', () => {
+    it('opens the given URL in the same window if replace param is truthy', async () => {
+      const shareMenu = await fixture<ShareMenu>(
+        html`<share-menu></share-menu>`,
+      );
       const urlToOpen = 'https://example.com';
       const fakeOpen = fake((url: string, target: string) => {
         expect(url).to.equal(urlToOpen);
