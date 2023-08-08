@@ -5,70 +5,40 @@ import {
   ShareMenu,
   ShareMenuShareEvent,
   ShareMenuShareEventPayload,
-} from '../src/share-menu';
-import '../src/share-menu';
-import { PrintShareTarget } from '../src/targets/print';
-import '../src/targets/print';
-import { GoogleTranslateShareTarget } from '../src/targets/google-translate';
-import '../src/targets/google-translate';
-import { BloggerShareTarget } from '../src/targets/blogger';
-import '../src/targets/blogger';
-import { DiasporaShareTarget } from '../src/targets/diaspora';
-import '../src/targets/diaspora';
-import { DoubanShareTarget } from '../src/targets/douban';
-import '../src/targets/douban';
-import { EmailShareTarget } from '../src/targets/email';
-import '../src/targets/email';
-import { EverNoteShareTarget } from '../src/targets/evernote';
-import '../src/targets/evernote';
-import { FacebookShareTarget } from '../src/targets/facebook';
-import '../src/targets/facebook';
-import { FlipboardShareTarget } from '../src/targets/flipboard';
-import '../src/targets/flipboard';
-import { GmailShareTarget } from '../src/targets/gmail';
-import '../src/targets/gmail';
-import { HackerNewsShareTarget } from '../src/targets/hacker-news';
-import '../src/targets/hacker-news';
-import { InstapaperShareTarget } from '../src/targets/instapaper';
-import '../src/targets/instapaper';
-import { LINEShareTarget } from '../src/targets/line';
-import '../src/targets/line';
-import { LinkedInShareTarget } from '../src/targets/linkedin';
-import '../src/targets/linkedin';
-import { LiveJournalShareTarget } from '../src/targets/livejournal';
-import '../src/targets/livejournal';
-import { OKShareTarget } from '../src/targets/ok';
-import '../src/targets/ok';
-import { PinterestShareTarget } from '../src/targets/pinterest';
-import '../src/targets/pinterest';
-import { PocketShareTarget } from '../src/targets/pocket';
-import '../src/targets/pocket';
-import { QZoneShareTarget } from '../src/targets/qzone';
-import '../src/targets/qzone';
-import { RedditShareTarget } from '../src/targets/reddit';
-import '../src/targets/reddit';
-import { SkypeShareTarget } from '../src/targets/skype';
-import '../src/targets/skype';
-import { SMSShareTarget } from '../src/targets/sms';
-import '../src/targets/sms';
-import { TelegramShareTarget } from '../src/targets/telegram';
-import '../src/targets/telegram';
-import { TumblrShareTarget } from '../src/targets/tumblr';
-import '../src/targets/tumblr';
-import { TwitterShareTarget } from '../src/targets/twitter';
-import '../src/targets/twitter';
-import { VKShareTarget } from '../src/targets/vk';
-import '../src/targets/vk';
-import { WeiboShareTarget } from '../src/targets/weibo';
-import '../src/targets/weibo';
-import { WhatsAppShareTarget } from '../src/targets/whatsapp';
-import '../src/targets/whatsapp';
-import { XINGShareTarget } from '../src/targets/xing';
-import '../src/targets/xing';
-import { YahooShareTarget } from '../src/targets/yahoo';
-import '../src/targets/yahoo';
-import { SubstackShareTarget } from '../src/targets/substack';
-import '../src/targets/substack';
+} from '../src/share-menu.js';
+import { PrintShareTarget } from '../src/targets/print.js';
+import { GoogleTranslateShareTarget } from '../src/targets/google-translate.js';
+import { FacebookShareTarget } from '../src/targets/facebook.js';
+import { TelegramShareTarget } from '../src/targets/telegram.js';
+import { WhatsAppShareTarget } from '../src/targets/whatsapp.js';
+import { RedditShareTarget } from '../src/targets/reddit.js';
+import { TwitterShareTarget } from '../src/targets/twitter.js';
+import { LinkedInShareTarget } from '../src/targets/linkedin.js';
+import { TumblrShareTarget } from '../src/targets/tumblr.js';
+import { PinterestShareTarget } from '../src/targets/pinterest.js';
+import { BloggerShareTarget } from '../src/targets/blogger.js';
+import { LiveJournalShareTarget } from '../src/targets/livejournal.js';
+import { EverNoteShareTarget } from '../src/targets/evernote.js';
+import { PocketShareTarget } from '../src/targets/pocket.js';
+import { HackerNewsShareTarget } from '../src/targets/hacker-news.js';
+import { FlipboardShareTarget } from '../src/targets/flipboard.js';
+import { InstapaperShareTarget } from '../src/targets/instapaper.js';
+import { DiasporaShareTarget } from '../src/targets/diaspora.js';
+import { QZoneShareTarget } from '../src/targets/qzone.js';
+import { WeiboShareTarget } from '../src/targets/weibo.js';
+import { VKShareTarget } from '../src/targets/vk.js';
+import { OKShareTarget } from '../src/targets/ok.js';
+import { DoubanShareTarget } from '../src/targets/douban.js';
+import { XINGShareTarget } from '../src/targets/xing.js';
+import { SkypeShareTarget } from '../src/targets/skype.js';
+import { LINEShareTarget } from '../src/targets/line.js';
+import { GmailShareTarget } from '../src/targets/gmail.js';
+import { YahooShareTarget } from '../src/targets/yahoo.js';
+import { SubstackShareTarget } from '../src/targets/substack.js';
+import { EmailShareTarget } from '../src/targets/email.js';
+import { SMSShareTarget } from '../src/targets/sms.js';
+import '../src/share-menu.js';
+import '../src/targets/presets/all.js';
 
 // We need to do this because of window.FB (Facebook JS API)
 interface FB {
@@ -117,37 +87,7 @@ describe('share menu', () => {
     const createShareMenu = async () => {
       const shareMenu = await fixture<ShareMenu>(html`
         <share-menu url="https://www.example.com">
-          <share-target-print></share-target-print>
-          <share-target-google-translate></share-target-google-translate>
-          <share-target-blogger></share-target-blogger>
-          <share-target-diaspora></share-target-diaspora>
-          <share-target-douban></share-target-douban>
-          <share-target-email></share-target-email>
-          <share-target-evernote></share-target-evernote>
-          <share-target-facebook></share-target-facebook>
-          <share-target-flipboard></share-target-flipboard>
-          <share-target-gmail></share-target-gmail>
-          <share-target-hacker-news></share-target-hacker-news>
-          <share-target-instapaper></share-target-instapaper>
-          <share-target-line></share-target-line>
-          <share-target-linkedin></share-target-linkedin>
-          <share-target-livejournal></share-target-livejournal>
-          <share-target-ok></share-target-ok>
-          <share-target-pinterest></share-target-pinterest>
-          <share-target-pocket></share-target-pocket>
-          <share-target-qzone></share-target-qzone>
-          <share-target-reddit></share-target-reddit>
-          <share-target-skype></share-target-skype>
-          <share-target-sms></share-target-sms>
-          <share-target-telegram></share-target-telegram>
-          <share-target-tumblr></share-target-tumblr>
-          <share-target-twitter></share-target-twitter>
-          <share-target-vk></share-target-vk>
-          <share-target-weibo></share-target-weibo>
-          <share-target-whatsapp></share-target-whatsapp>
-          <share-target-xing></share-target-xing>
-          <share-target-yahoo></share-target-yahoo>
-          <share-target-substack></share-target-substack>
+          <share-target-preset-all></share-target-preset-all>
         </share-menu>
       `);
       shareMenu.shadowRoot
@@ -328,35 +268,35 @@ describe('share menu', () => {
         const socials = [
           PrintShareTarget,
           GoogleTranslateShareTarget,
-          BloggerShareTarget,
-          DiasporaShareTarget,
-          DoubanShareTarget,
-          EmailShareTarget,
-          EverNoteShareTarget,
           FacebookShareTarget,
-          FlipboardShareTarget,
-          GmailShareTarget,
-          HackerNewsShareTarget,
-          InstapaperShareTarget,
-          LINEShareTarget,
-          LinkedInShareTarget,
-          LiveJournalShareTarget,
-          OKShareTarget,
-          PinterestShareTarget,
-          PocketShareTarget,
-          QZoneShareTarget,
-          RedditShareTarget,
-          SkypeShareTarget,
-          SMSShareTarget,
           TelegramShareTarget,
-          TumblrShareTarget,
-          TwitterShareTarget,
-          VKShareTarget,
-          WeiboShareTarget,
           WhatsAppShareTarget,
+          RedditShareTarget,
+          TwitterShareTarget,
+          LinkedInShareTarget,
+          TumblrShareTarget,
+          PinterestShareTarget,
+          BloggerShareTarget,
+          LiveJournalShareTarget,
+          EverNoteShareTarget,
+          PocketShareTarget,
+          HackerNewsShareTarget,
+          FlipboardShareTarget,
+          InstapaperShareTarget,
+          DiasporaShareTarget,
+          QZoneShareTarget,
+          WeiboShareTarget,
+          VKShareTarget,
+          OKShareTarget,
+          DoubanShareTarget,
           XINGShareTarget,
+          SkypeShareTarget,
+          LINEShareTarget,
+          GmailShareTarget,
           YahooShareTarget,
           SubstackShareTarget,
+          EmailShareTarget,
+          SMSShareTarget,
         ];
         expect(shareMenu.targets.length).to.equal(socials.length);
         shareMenu.targets.forEach((target, index) => {

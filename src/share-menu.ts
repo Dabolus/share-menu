@@ -21,9 +21,14 @@ export interface ShareTarget extends HTMLElement {
   readonly share: (shareMenu: ShareMenu) => unknown;
 }
 
-const isShareTargetNode = (node: Node): boolean =>
+const isShareTargetNode = (node: Node): node is ShareTarget =>
   node.nodeType === Node.ELEMENT_NODE &&
-  node.nodeName.startsWith('SHARE-TARGET-');
+  node.nodeName.startsWith('SHARE-TARGET-') &&
+  !node.nodeName.startsWith('SHARE-TARGET-PRESET-');
+
+const isShareTargetPreset = (node: Node): boolean =>
+  node.nodeType === Node.ELEMENT_NODE &&
+  node.nodeName.startsWith('SHARE-TARGET-PRESET-');
 
 const isShareTarget = (node: Node): node is ShareTarget => {
   const shareTarget = node as ShareTarget;
@@ -656,14 +661,19 @@ export class ShareMenu extends HTMLElement {
       clipboardContainerRef.parentNode.removeChild(clipboardContainerRef);
     }
 
-    const slotRef = this.shadowRoot.querySelector<HTMLSlotElement>('slot');
+    const slotRef = this.shadowRoot.querySelector('slot');
 
     slotRef.addEventListener('slotchange', async () => {
-      const shareTargets = slotRef
-        .assignedNodes({
-          flatten: true,
-        })
-        .filter(isShareTargetNode);
+      const assignedNodes = slotRef.assignedNodes({ flatten: true });
+      const rootShareTargets = assignedNodes.filter(
+        isShareTargetNode,
+      ) as ShareTarget[];
+      const nestedShareTargets = assignedNodes
+        .filter(isShareTargetPreset)
+        .flatMap((target) => Array.from((target as HTMLElement).children));
+      const shareTargets = [...rootShareTargets, ...nestedShareTargets].filter(
+        isShareTarget,
+      );
 
       await Promise.all(
         shareTargets.map((target) =>
@@ -671,7 +681,7 @@ export class ShareMenu extends HTMLElement {
         ),
       );
 
-      this._targets = shareTargets.filter(isShareTarget);
+      this._targets = shareTargets;
       this._renderTargets();
     });
   }
