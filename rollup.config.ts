@@ -1,6 +1,5 @@
 import { glob } from 'glob';
 import minifyHtml from 'rollup-plugin-minify-html-literals';
-import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import filesize from 'rollup-plugin-filesize';
@@ -62,12 +61,6 @@ export default defineConfig({
           }),
         ]
       : []),
-    replace({
-      preventAssignment: true,
-      include: 'src/**/*.ts',
-      delimiters: ['', ''],
-      '../share-target': '../share-target.js',
-    }),
     ...(prod
       ? [
           filesize({
