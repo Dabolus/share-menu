@@ -21,7 +21,7 @@ export default defineConfig({
   plugins: [
     ...(prod
       ? [
-          minifyHtml.default({
+          (minifyHtml as unknown as { default: typeof minifyHtml }).default({
             options: {
               shouldMinify: (template) =>
                 template.parts[0].text.startsWith('<!-- html -->'),
