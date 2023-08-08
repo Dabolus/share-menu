@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": ".",
     "target": "es2017",
     "module": "es2015",
+    "moduleResolution": "node",
     "lib": ["esnext", "dom"],
     "strict": true,
     "strictNullChecks": false,
@@ -10,14 +11,12 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "checkJs": true,
     "declaration": true,
     "declarationDir": ".",
     "sourceMap": true
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*.ts", "test/**/*.ts", "rollup.config.ts"],
+  "exclude": ["node_modules"]
 }

@@ -48,7 +48,10 @@ export default defineConfig({
           }),
         ]
       : []),
-    typescript({ useTsconfigDeclarationDir: true }),
+    typescript({
+      tsconfig: 'tsconfig.build.json',
+      useTsconfigDeclarationDir: true,
+    }),
     ...(prod
       ? [
           terser({
