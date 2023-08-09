@@ -14,7 +14,40 @@
     <style>
         html, body {
           font-family: 'Roboto', sans-serif;
-          background: #f0f0f0;
+          background: var(--mdc-theme-background);
+          color: var(--mdc-theme-on-surface);
+          --mdc-theme-primary: #37a0ce;
+
+          --mdc-theme-on-surface: var(--mdc-text-field-ink-color);
+          --mdc-text-field-ink-color: var(--mdc-theme-text-primary-on-background);
+          --mdc-text-field-label-ink-color: var(--mdc-theme-text-secondary-on-background);
+          --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-disabled-on-background);
+          --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-text-primary-on-background);
+
+          --mdc-theme-surface: #fff;
+          --mdc-theme-background: #f0f0f0;
+          --mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+          --mdc-theme-text-secondary-on-background: rgba(0, 0, 0, 0.54);
+          --mdc-theme-text-disabled-on-background: rgba(0, 0, 0, 0.38);
+
+          --mdc-switch-selected-track-color: #a0d8ff;
+          --mdc-switch-selected-hover-track-color: #a0d8ff;
+          --mdc-switch-selected-focus-track-color: #a0d8ff;
+          --mdc-switch-selected-pressed-track-color: #a0d8ff;
+          --mdc-switch-selected-handle-color: #37a0ce;
+          --mdc-switch-selected-hover-handle-color: #37a0ce;
+          --mdc-switch-selected-focus-handle-color: #37a0ce;
+          --mdc-switch-selected-pressed-handle-color: #37a0ce;
+        }
+
+        @media screen and (prefers-color-scheme: dark) {
+          html, body {
+            --mdc-theme-surface: #121212;
+            --mdc-theme-background: #000;
+            --mdc-theme-text-primary-on-background: #fff;
+            --mdc-theme-text-secondary-on-background: rgba(255, 255, 255, 0.7);
+            --mdc-theme-text-disabled-on-background: rgba(255, 255, 255, 0.5);
+          }
         }
     </style>
 
@@ -30,125 +63,163 @@
 
       import { LitElement, css, html } from 'https://unpkg.com/lit@2.5.0?module';
 
-      fetch('https://unpkg.com/prismjs@1.29.0/themes/prism.css')
-        .then(res => res.text())
-        .then(prismStyles => {
-          class ShareMenuDemo extends LitElement {
-            static get properties() {
-              return {
-                title: { type: String },
-                text: { type: String },
-                url: { type: String },
-                hideBackdrop: { type: Boolean },
-              };
-            }
+      class ShareMenuDemo extends LitElement {
+        _prismStyles = '';
 
-            static get styles() {
-              return [
-                css([prismStyles]),
-                css`
-                  .container {
-                    max-width: 600px;
-                    margin: 24px auto;
-                    padding: 24px;
-                    background: #fff;
-                    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-                  }
+        static get properties() {
+          return {
+            title: { type: String },
+            text: { type: String },
+            url: { type: String },
+            hideBackdrop: { type: Boolean },
+          };
+        }
 
-                  .container > :not(:last-child) {
-                    width: 100%;
-                    margin: 12px 0;
-                  }
+        static get styles() {
+          return [
+            css`
+              share-menu {
+                --background-color: var(--mdc-theme-surface);
+                --labels-color: var(--mdc-theme-text-primary-on-background);
+                --ripple-color: var(--mdc-theme-text-secondary-on-background);
+                --title-color: var(--mdc-theme-text-secondary-on-background);
+                --hint-color: var(--mdc-theme-text-secondary-on-background);
+              }
 
-                  .toggle-container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                  }
+              .container {
+                max-width: 600px;
+                margin: 24px auto;
+                padding: 24px;
+                background: var(--mdc-theme-surface);
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+              }
 
-                  .actions-container {
-                    overflow: hidden;
-                  }
+              .container > :not(:last-child) {
+                width: 100%;
+                margin: 12px 0;
+              }
 
-                  .actions-container > * {
-                    float: right;
-                  }
+              .toggle-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              }
 
-                  pre {
-                    border-radius: 12px;
-                    border: 1px solid #f0f0f0;
-                  }
-                `,
-              ];
-            }
+              .actions-container {
+                overflow: hidden;
+              }
 
-            static get demoSnippet() {
-              return `
-                <div class="container">
-                  <h3>&lt;share-menu&gt; demo</h3>
-                  <mwc-textfield outlined id="title" label="Title" @input="\${e => this.title = e.target.value}"></mwc-textfield>
-                  <mwc-textarea outlined id="text" label="Text" @input="\${e => this.text = e.target.value}"></mwc-textarea>
-                  <mwc-textfield outlined id="url" type="url" label="URL" @input="\${e => this.url = e.target.value}"></mwc-textfield>
-                  <div class="toggle-container">
-                    <label for="backdrop">Hide backdrop</label>
-                    <mwc-switch id="backdrop" @click="\${e => this.hideBackdrop = e.target.selected}"></mwc-switch>
-                  </div>
-                  <div class="actions-container">
-                    <mwc-button raised ?disabled="\${!this.title || !this.text || !this.url}" @click="\${() => this.shareMenu.share()}">
-                      Share!
-                    </mwc-button>
-                  </div>
-                </div>
+              .actions-container > * {
+                float: right;
+              }
 
-                <share-menu title="\${this.title}" text="\${this.text}" url="\${this.url}" ?no-backdrop="\${this.hideBackdrop}">
-                  <share-target-preset-all></share-target-preset-all>
-                </share-menu>
-                `.replace(/ {16}/g, '');
-            }
+              pre {
+                border-radius: 12px;
+                border: 1px solid var(--mdc-text-field-outlined-idle-border-color);
+              }
 
-            constructor() {
-              super();
-              this.title = '';
-              this.text = '';
-              this.url = '';
-              this.hideBackdrop = false;
-            }
+              pre.language-html {
+                padding-top: 0;
+                padding-bottom: 0;
+              }
+            `,
+          ];
+        }
 
-            firstUpdated() {
-              this.shareMenu = this.shadowRoot.querySelector('share-menu');
-              Prism.highlightAllUnder(this.shadowRoot.querySelector('pre'));
-            }
+        static get demoSnippet() {
+          return `
+            <style>
+              /**
+               * Style the fallback share menu according to the theme
+               * values coming from Material Web Components
+               */
+              share-menu {
+                --background-color: var(--mdc-theme-surface);
+                --ripple-color: var(--mdc-theme-text-primary-on-background);
+                --labels-color: var(--mdc-theme-text-primary-on-background);
+                --title-color: var(--mdc-theme-text-secondary-on-background);
+                --hint-color: var(--mdc-theme-text-secondary-on-background);
+              }
+            <\/style>
 
-            render() {
-              return html`
-                <div class="container">
-                  <h3>&lt;share-menu&gt; demo</h3>
-                  <mwc-textfield outlined id="title" label="Title" @input="${e => this.title = e.target.value}"></mwc-textfield>
-                  <mwc-textarea outlined id="text" label="Text" @input="${e => this.text = e.target.value}"></mwc-textarea>
-                  <mwc-textfield outlined id="url" type="url" label="URL" @input="${e => this.url = e.target.value}"></mwc-textfield>
-                  <div class="toggle-container">
-                    <label for="backdrop">Hide backdrop</label>
-                    <mwc-switch id="backdrop" @click="${e => this.hideBackdrop = e.target.selected}"></mwc-switch>
-                  </div>
-                  <div class="actions-container">
-                    <mwc-button raised ?disabled="${!this.title || !this.text || !this.url}" @click="${() => this.shareMenu.share()}">
-                      Share!
-                    </mwc-button>
-                  </div>
-                  <pre>
-                    <code class="language-html">${ShareMenuDemo.demoSnippet}</code>
-                  </pre>
-                </div>
+            <div class="container">
+              <h3>&lt;share-menu&gt; demo</h3>
+              <mwc-textfield outlined id="title" label="Title" @input="\${e => this.title = e.target.value}"></mwc-textfield>
+              <mwc-textarea outlined id="text" label="Text" @input="\${e => this.text = e.target.value}"></mwc-textarea>
+              <mwc-textfield outlined id="url" type="url" label="URL" @input="\${e => this.url = e.target.value}"></mwc-textfield>
+              <div class="toggle-container">
+                <label for="backdrop">Hide backdrop</label>
+                <mwc-switch id="backdrop" @click="\${e => this.hideBackdrop = e.target.selected}"></mwc-switch>
+              </div>
+              <div class="actions-container">
+                <mwc-button raised ?disabled="\${!this.title || !this.text || !this.url}" @click="\${() => this.shareMenu.share()}">
+                  Share!
+                </mwc-button>
+              </div>
+            <\/div>
 
-                <share-menu title="${this.title}" text="${this.text}" url="${this.url}" ?no-backdrop="${this.hideBackdrop}">
-                  <share-target-preset-all></share-target-preset-all>
-                </share-menu>
-              `;
-            }
-          }
+            <share-menu title="\${this.title}" text="\${this.text}" url="\${this.url}" ?no-backdrop="\${this.hideBackdrop}">
+              <share-target-preset-all></share-target-preset-all>
+            <\/share-menu>
 
-          customElements.define('share-menu-demo', ShareMenuDemo);
-        });
+            <script type="module">
+              import 'https://unpkg.com/share-menu@5.0.0/share-menu.js';
+              import 'https://unpkg.com/share-menu@5.0.0/targets/presets/all.js';
+            <\/script>
+          `.replace(/ {12}/g, '');
+        }
+
+        constructor() {
+          super();
+          this.title = '';
+          this.text = '';
+          this.url = '';
+          this.hideBackdrop = false;
+          const mql = window.matchMedia('(prefers-color-scheme: dark)');
+          const updatePrismTheme = async () => {
+            const res = await fetch(`https://unpkg.com/prismjs@1.29.0/themes/${mql.matches ? 'prism-okaidia' : 'prism'}.css`);
+            this._prismStyles = await res.text();
+            this.requestUpdate();
+          };
+          mql.addEventListener('change', updatePrismTheme);
+          updatePrismTheme();
+        }
+
+        firstUpdated() {
+          this.shareMenu = this.shadowRoot.querySelector('share-menu');
+          Prism.highlightAllUnder(this.shadowRoot.querySelector('pre'));
+        }
+
+        render() {
+          return html`
+            <style>${this._prismStyles}</style>
+            <div class="container">
+              <h3>&lt;share-menu&gt; demo</h3>
+              <mwc-textfield outlined id="title" label="Title" @input="${e => this.title = e.target.value}"></mwc-textfield>
+              <mwc-textarea outlined id="text" label="Text" @input="${e => this.text = e.target.value}"></mwc-textarea>
+              <mwc-textfield outlined id="url" type="url" label="URL" @input="${e => this.url = e.target.value}"></mwc-textfield>
+              <div class="toggle-container">
+                <label for="backdrop">Hide backdrop</label>
+                <mwc-switch id="backdrop" @click="${e => this.hideBackdrop = e.target.selected}"></mwc-switch>
+              </div>
+              <div class="actions-container">
+                <mwc-button raised ?disabled="${!this.title || !this.text || !this.url}" @click="${() => this.shareMenu.share()}">
+                  Share!
+                </mwc-button>
+              </div>
+              <pre>
+                <code class="language-html">${ShareMenuDemo.demoSnippet}</code>
+              </pre>
+            </div>
+
+            <share-menu title="${this.title}" text="${this.text}" url="${this.url}" ?no-backdrop="${this.hideBackdrop}">
+              <share-target-preset-all></share-target-preset-all>
+            </share-menu>
+          `;
+        }
+      }
+
+      customElements.define('share-menu-demo', ShareMenuDemo);
     </script>
   </head>
   <body>
