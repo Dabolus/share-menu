@@ -381,6 +381,19 @@ describe('share menu', () => {
           delete window.FB;
         });
 
+        it('uses dialog/share API if a Facebook App ID is provided', async () => {
+          const facebookShareTarget = shareMenu.querySelector(
+            'share-target-facebook',
+          )!;
+          const appIdBackup = facebookShareTarget.appId;
+          facebookShareTarget.appId = 'test';
+          await openTargetAndCheckWindow(
+            'facebook',
+            'facebook.com/dialog/share',
+          );
+          facebookShareTarget.appId = appIdBackup;
+        });
+
         it('opens a window with Facebook share screen if Facebook JS API is not available', async () => {
           await openTargetAndCheckWindow('facebook');
         });
