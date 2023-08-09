@@ -289,7 +289,7 @@ export class ShareMenu extends HTMLElement {
 
     this._styles = `/* css */
       :host {
-        font-family: 'Roboto', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        font-family: 'Google Sans', 'Roboto', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
         position: fixed;
         top: 0;
         left: 0;
