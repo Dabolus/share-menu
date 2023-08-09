@@ -398,6 +398,7 @@ export class ShareMenu extends HTMLElement {
       }
 
       #clipboard-container > p {
+        color: var(--preview-color, rgba(0, 0, 0, .6));
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 3;
