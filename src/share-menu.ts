@@ -377,8 +377,7 @@ export class ShareMenu extends HTMLElement {
 
       hr {
         margin: 0;
-        border-style: solid;
-        border-color: var(--divider-color, rgba(0, 0, 0, .12));
+        border: 1px solid var(--divider-color, rgba(0, 0, 0, .12));
       }
 
       #title {
