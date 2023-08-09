@@ -444,9 +444,10 @@ export class ShareMenu extends HTMLElement {
       }
 
       .clipboard-icon {
-        width: 26px;
-        height: 26px;
-        padding: 2px;
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+        margin: -5px;
         fill: var(--hint-color, rgba(0, 0, 0, .6));
       }
 
