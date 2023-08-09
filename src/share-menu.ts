@@ -14,9 +14,10 @@ export interface ShareMenuParams {
 }
 
 export interface ShareTarget extends HTMLElement {
-  displayName: string;
-  hint?: string;
+  readonly displayName: string;
+  readonly hint?: string;
   readonly color: string;
+  readonly outline?: string;
   readonly icon: string;
   readonly share: (shareMenu: ShareMenu) => unknown;
 }
@@ -733,7 +734,7 @@ export class ShareMenu extends HTMLElement {
     }
     this._targetsContainerRef.innerHTML = '';
     this._targets.forEach((shareTarget, index) => {
-      const { nodeName, color, icon, displayName, hint } = shareTarget;
+      const { nodeName, color, outline, icon, displayName, hint } = shareTarget;
 
       const target = nodeName.slice(13).toLowerCase();
       const targetButton: HTMLButtonElement = document.createElement('button');
@@ -749,7 +750,11 @@ export class ShareMenu extends HTMLElement {
 
       const targetIcon: HTMLDivElement = document.createElement('div');
       targetIcon.className = 'icon';
-      targetIcon.innerHTML = `<svg viewBox="0 0 256 256"><path d="${icon}"/></svg>`;
+      targetIcon.innerHTML = `<svg viewBox="0 0 256 256"${
+        outline
+          ? `stroke="#${outline}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"`
+          : ''
+      }><path d="${icon}"/></svg>`;
       targetIcon.style.background = `#${color}`;
       targetIcon.setAttribute('part', 'target-icon');
       targetButton.appendChild(targetIcon);

@@ -168,7 +168,8 @@ implement the `ShareTarget` interface. More specifically, they must expose:
   Icon must will be rendered inside a 256x256 viewBox, so make sure that the icon fits correctly inside that area;
 - A `share` method that takes the `ShareMenu` instance as parameter and that performs
   the actual share action when the target button is clicked;
-- Optionally, a `hint` field that contains a hint for the target.
+- Optionally, an `outline` field that contains the hex color of the outline of the target **without the hash**;
+- Optionally, a `hint` field that contains an additional hint text for the target.
 
 See [any of the built-in targets](./src/targets/) for a practical example on how to implement yours.
 
