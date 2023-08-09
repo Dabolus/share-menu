@@ -136,25 +136,25 @@ that each one gives:
 - LINE - _URL only_
 - LinkedIn - _URL only_
 - LiveJournal
+- Mastodon
+- Messenger - _URL only, requires a Facebook App ID_
 - Odnoklassniki (OK.ru)
 - Pinterest
-- Mastodon
 - Pocket - _URL only_
 - Print - _Only prints the page at the given URL_
 - QZone
 - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end_
 - Skype
 - SMS
+- Substack Notes
 - Telegram
 - Tumblr
 - Twitter
-- Messenger - _URL only, requires a Facebook App ID_
 - VKontakte (VK)
 - Weibo
 - WhatsApp
 - XING - _URL only_
 - Yahoo Mail
-- Substack Notes
 
 ## Custom share targets
 

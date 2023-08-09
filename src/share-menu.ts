@@ -56,7 +56,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Douban
  * - Email
  * - Evernote - _URL and title only_
- * - Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_ or not providing an API Key
+ * - Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript) or not providing a Facebook App ID_
  * - FlipBoard - _URL and title only_
  * - Gmail
  * - Google Translate - _Only translates the page at the given URL_
@@ -65,25 +65,25 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - LINE - _URL only_
  * - LinkedIn - _URL only_
  * - LiveJournal
+ * - Mastodon
+ * - Messenger - _URL only, requires a Facebook App ID_
  * - Odnoklassniki (OK.ru)
  * - Pinterest
- * - Mastodon
  * - Pocket - _URL only_
  * - Print - _Only prints the page at the given URL_
  * - QZone
  * - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end_
  * - Skype
  * - SMS
+ * - Substack Notes
  * - Telegram
  * - Tumblr
  * - Twitter
- * - Messenger - _URL only, requires a Facebook App ID_
  * - VKontakte (VK)
  * - Weibo
  * - WhatsApp
  * - XING - _URL only_
  * - Yahoo Mail
- * - Substack Notes
  *
  * -----------------------------------------------------------------------------------------------------------------
  *
