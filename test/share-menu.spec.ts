@@ -13,6 +13,7 @@ import { TelegramShareTarget } from '../src/targets/telegram.js';
 import { WhatsAppShareTarget } from '../src/targets/whatsapp.js';
 import { RedditShareTarget } from '../src/targets/reddit.js';
 import { TwitterShareTarget } from '../src/targets/twitter.js';
+import { MessengerShareTarget } from '../src/targets/messenger.js';
 import { LinkedInShareTarget } from '../src/targets/linkedin.js';
 import { TumblrShareTarget } from '../src/targets/tumblr.js';
 import { PinterestShareTarget } from '../src/targets/pinterest.js';
@@ -273,6 +274,7 @@ describe('share menu', () => {
           WhatsAppShareTarget,
           RedditShareTarget,
           TwitterShareTarget,
+          MessengerShareTarget,
           LinkedInShareTarget,
           TumblrShareTarget,
           PinterestShareTarget,
@@ -431,6 +433,15 @@ describe('share menu', () => {
           shareMenu.openWindow = openWindowBackup;
 
           twitterShareTarget.via = viaBackup;
+        });
+      });
+
+      describe('messenger', () => {
+        it('opens a window with Messenger share screen', async () => {
+          await openTargetAndCheckWindow(
+            'messenger',
+            'facebook.com/dialog/send',
+          );
         });
       });
 

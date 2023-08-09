@@ -76,6 +76,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Telegram
  * - Tumblr
  * - Twitter
+ * - Messenger - _URL only, requires a Facebook App ID_
  * - VKontakte (VK)
  * - Weibo
  * - WhatsApp

@@ -127,7 +127,7 @@ that each one gives:
 - Douban
 - Email
 - Evernote - _URL and title only_
-- Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript)_ or not providing an API Key
+- Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript) or not providing a Facebook App ID_
 - FlipBoard - _URL and title only_
 - Gmail
 - Google Translate - _Only translates the page at the given URL_
@@ -147,6 +147,7 @@ that each one gives:
 - Telegram
 - Tumblr
 - Twitter
+- Messenger - _URL only, requires a Facebook App ID_
 - VKontakte (VK)
 - Weibo
 - WhatsApp

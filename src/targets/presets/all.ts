@@ -5,6 +5,7 @@ import '../telegram.js';
 import '../whatsapp.js';
 import '../reddit.js';
 import '../twitter.js';
+import '../messenger.js';
 import '../linkedin.js';
 import '../tumblr.js';
 import '../pinterest.js';
@@ -43,6 +44,7 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-whatsapp></share-target-whatsapp>
       <share-target-reddit></share-target-reddit>
       <share-target-twitter></share-target-twitter>
+      <share-target-messenger></share-target-messenger>
       <share-target-linkedin></share-target-linkedin>
       <share-target-tumblr></share-target-tumblr>
       <share-target-pinterest></share-target-pinterest>
