@@ -17,6 +17,7 @@ import { MessengerShareTarget } from '../src/targets/messenger.js';
 import { LinkedInShareTarget } from '../src/targets/linkedin.js';
 import { TumblrShareTarget } from '../src/targets/tumblr.js';
 import { PinterestShareTarget } from '../src/targets/pinterest.js';
+import { SnapchatShareTarget } from '../src/targets/snapchat.js';
 import { MastodonShareTarget } from '../src/targets/mastodon.js';
 import { BloggerShareTarget } from '../src/targets/blogger.js';
 import { LiveJournalShareTarget } from '../src/targets/livejournal.js';
@@ -279,6 +280,7 @@ describe('share menu', () => {
           LinkedInShareTarget,
           TumblrShareTarget,
           PinterestShareTarget,
+          SnapchatShareTarget,
           MastodonShareTarget,
           BloggerShareTarget,
           LiveJournalShareTarget,
@@ -468,6 +470,12 @@ describe('share menu', () => {
       describe('pinterest', () => {
         it('opens a window with Pinterest share screen', async () => {
           await openTargetAndCheckWindow('pinterest');
+        });
+      });
+
+      describe('snapchat', () => {
+        it('opens a window with Snapchat share screen', async () => {
+          await openTargetAndCheckWindow('snapchat');
         });
       });
 

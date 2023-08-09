@@ -146,6 +146,7 @@ that each one gives:
 - Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end_
 - Skype
 - SMS
+- Snapchat - _URL only_
 - Substack Notes
 - Telegram
 - Tumblr
