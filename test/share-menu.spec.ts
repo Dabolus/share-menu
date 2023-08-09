@@ -17,6 +17,7 @@ import { MessengerShareTarget } from '../src/targets/messenger.js';
 import { LinkedInShareTarget } from '../src/targets/linkedin.js';
 import { TumblrShareTarget } from '../src/targets/tumblr.js';
 import { PinterestShareTarget } from '../src/targets/pinterest.js';
+import { MastodonShareTarget } from '../src/targets/mastodon.js';
 import { BloggerShareTarget } from '../src/targets/blogger.js';
 import { LiveJournalShareTarget } from '../src/targets/livejournal.js';
 import { EverNoteShareTarget } from '../src/targets/evernote.js';
@@ -278,6 +279,7 @@ describe('share menu', () => {
           LinkedInShareTarget,
           TumblrShareTarget,
           PinterestShareTarget,
+          MastodonShareTarget,
           BloggerShareTarget,
           LiveJournalShareTarget,
           EverNoteShareTarget,
@@ -466,6 +468,12 @@ describe('share menu', () => {
       describe('pinterest', () => {
         it('opens a window with Pinterest share screen', async () => {
           await openTargetAndCheckWindow('pinterest');
+        });
+      });
+
+      describe('mastodon', () => {
+        it('opens a window with Mastodon share screen (through toot)', async () => {
+          await openTargetAndCheckWindow('mastodon', 'toot');
         });
       });
 

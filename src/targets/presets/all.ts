@@ -9,6 +9,7 @@ import '../messenger.js';
 import '../linkedin.js';
 import '../tumblr.js';
 import '../pinterest.js';
+import '../mastodon.js';
 import '../blogger.js';
 import '../livejournal.js';
 import '../evernote.js';
@@ -48,6 +49,7 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-linkedin></share-target-linkedin>
       <share-target-tumblr></share-target-tumblr>
       <share-target-pinterest></share-target-pinterest>
+      <share-target-mastodon></share-target-mastodon>
       <share-target-blogger></share-target-blogger>
       <share-target-livejournal></share-target-livejournal>
       <share-target-evernote></share-target-evernote>

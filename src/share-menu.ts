@@ -67,6 +67,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - LiveJournal
  * - Odnoklassniki (OK.ru)
  * - Pinterest
+ * - Mastodon
  * - Pocket - _URL only_
  * - Print - _Only prints the page at the given URL_
  * - QZone
