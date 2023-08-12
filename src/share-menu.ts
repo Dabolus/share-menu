@@ -1,12 +1,3 @@
-interface ShadowRootWithAdoptedStylesheets extends ShadowRoot {
-  adoptedStyleSheets: CSSStyleSheet[];
-}
-
-interface CSSStyleSheetWithReplace extends CSSStyleSheet {
-  replace: (text: string) => Promise<CSSStyleSheet>;
-  replaceSync: (text: string) => void;
-}
-
 export interface ShareMenuParams {
   text?: string;
   title?: string;
@@ -271,7 +262,7 @@ export class ShareMenu extends HTMLElement {
     'no-backdrop',
     'handle',
   ];
-  public static stylesheet?: CSSStyleSheetWithReplace;
+  public static stylesheet?: CSSStyleSheet;
 
   private static readonly _supportsAdoptingStyleSheets =
     'adoptedStyleSheets' in Document.prototype;
@@ -537,9 +528,8 @@ export class ShareMenu extends HTMLElement {
 
     this.attachShadow({ mode: 'open' });
     if (ShareMenu._supportsAdoptingStyleSheets) {
-      ShareMenu.stylesheet = new CSSStyleSheet() as CSSStyleSheetWithReplace;
-      (this.shadowRoot as ShadowRootWithAdoptedStylesheets).adoptedStyleSheets =
-        [ShareMenu.stylesheet];
+      ShareMenu.stylesheet = new CSSStyleSheet();
+      this.shadowRoot.adoptedStyleSheets = [ShareMenu.stylesheet];
     }
     this.shadowRoot.appendChild(this._template.content.cloneNode(true));
   }
