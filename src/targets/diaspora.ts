@@ -14,7 +14,7 @@ export class DiasporaShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-diaspora', DiasporaShareTarget);
+customElements.define('share-target-diaspora', DiasporaShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

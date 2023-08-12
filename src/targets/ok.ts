@@ -34,7 +34,7 @@ export class OKShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-ok', OKShareTarget);
+customElements.define('share-target-ok', OKShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

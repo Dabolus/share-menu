@@ -265,7 +265,7 @@ export class ShareMenu extends HTMLElement {
   public static stylesheet?: CSSStyleSheet;
 
   private static readonly _supportsAdoptingStyleSheets =
-    'adoptedStyleSheets' in Document.prototype;
+    typeof globalThis.CSSStyleSheet?.prototype.replace === 'function';
   private readonly _styles: string;
   private readonly _template: HTMLTemplateElement;
   private _previousFocus: HTMLElement;
@@ -525,6 +525,13 @@ export class ShareMenu extends HTMLElement {
       </div>
       <slot></slot>
     `;
+
+    // If the shadow root already exists, it means that the component
+    // has been rendered on the server using Declarative Shadow DOM,
+    // so we don't need to create a new shadow root
+    if (this.shadowRoot) {
+      return;
+    }
 
     this.attachShadow({ mode: 'open' });
     if (ShareMenu._supportsAdoptingStyleSheets) {
@@ -920,7 +927,7 @@ export declare interface ShareMenu {
   ): void;
 }
 
-window.customElements.define('share-menu', ShareMenu);
+customElements.define('share-menu', ShareMenu);
 
 declare global {
   interface HTMLElementTagNameMap {

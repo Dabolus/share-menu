@@ -16,7 +16,7 @@ export class DoubanShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-douban', DoubanShareTarget);
+customElements.define('share-target-douban', DoubanShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

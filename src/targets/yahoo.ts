@@ -15,7 +15,7 @@ export class YahooShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-yahoo', YahooShareTarget);
+customElements.define('share-target-yahoo', YahooShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

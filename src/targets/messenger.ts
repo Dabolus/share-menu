@@ -42,7 +42,7 @@ export class MessengerShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-messenger', MessengerShareTarget);
+customElements.define('share-target-messenger', MessengerShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

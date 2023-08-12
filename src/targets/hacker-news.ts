@@ -14,7 +14,7 @@ export class HackerNewsShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-hacker-news', HackerNewsShareTarget);
+customElements.define('share-target-hacker-news', HackerNewsShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

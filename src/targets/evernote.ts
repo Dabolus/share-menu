@@ -14,7 +14,7 @@ export class EverNoteShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-evernote', EverNoteShareTarget);
+customElements.define('share-target-evernote', EverNoteShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

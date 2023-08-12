@@ -13,7 +13,7 @@ export class LINEShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-line', LINEShareTarget);
+customElements.define('share-target-line', LINEShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

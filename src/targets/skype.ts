@@ -14,7 +14,7 @@ export class SkypeShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-skype', SkypeShareTarget);
+customElements.define('share-target-skype', SkypeShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

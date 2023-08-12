@@ -13,7 +13,7 @@ export class PocketShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-pocket', PocketShareTarget);
+customElements.define('share-target-pocket', PocketShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

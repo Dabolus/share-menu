@@ -13,7 +13,7 @@ export class WhatsAppShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-whatsapp', WhatsAppShareTarget);
+customElements.define('share-target-whatsapp', WhatsAppShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

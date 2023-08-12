@@ -79,7 +79,7 @@ export class AllShareTargetPreset extends HTMLElement {
   }
 }
 
-window.customElements.define('share-target-preset-all', AllShareTargetPreset);
+customElements.define('share-target-preset-all', AllShareTargetPreset);
 
 declare global {
   interface HTMLElementTagNameMap {

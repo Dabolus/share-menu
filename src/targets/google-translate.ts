@@ -64,7 +64,7 @@ export class GoogleTranslateShareTarget
   }
 }
 
-window.customElements.define(
+customElements.define(
   'share-target-google-translate',
   GoogleTranslateShareTarget,
 );

@@ -15,7 +15,7 @@ export class BloggerShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-blogger', BloggerShareTarget);
+customElements.define('share-target-blogger', BloggerShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

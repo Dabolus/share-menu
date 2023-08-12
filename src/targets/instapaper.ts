@@ -15,7 +15,7 @@ export class InstapaperShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-instapaper', InstapaperShareTarget);
+customElements.define('share-target-instapaper', InstapaperShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

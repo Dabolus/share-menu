@@ -17,7 +17,7 @@ export class PrintShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-print', PrintShareTarget);
+customElements.define('share-target-print', PrintShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -13,7 +13,7 @@ export class LinkedInShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-linkedin', LinkedInShareTarget);
+customElements.define('share-target-linkedin', LinkedInShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -13,7 +13,7 @@ export class MastodonShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-mastodon', MastodonShareTarget);
+customElements.define('share-target-mastodon', MastodonShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

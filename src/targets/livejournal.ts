@@ -14,10 +14,7 @@ export class LiveJournalShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define(
-  'share-target-livejournal',
-  LiveJournalShareTarget,
-);
+customElements.define('share-target-livejournal', LiveJournalShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

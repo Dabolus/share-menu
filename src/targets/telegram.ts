@@ -14,7 +14,7 @@ export class TelegramShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-telegram', TelegramShareTarget);
+customElements.define('share-target-telegram', TelegramShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -57,7 +57,7 @@ export class FacebookShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-facebook', FacebookShareTarget);
+customElements.define('share-target-facebook', FacebookShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

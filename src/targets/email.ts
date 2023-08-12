@@ -18,7 +18,7 @@ export class EmailShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-email', EmailShareTarget);
+customElements.define('share-target-email', EmailShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

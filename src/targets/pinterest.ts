@@ -11,12 +11,12 @@ export class PinterestShareTarget extends HTMLElement implements ShareTarget {
    *
    * @return {string}
    */
-  public get media(): string {
-    return this.getAttribute('media');
+  public get image(): string {
+    return this.getAttribute('image');
   }
 
-  public set media(val: string) {
-    this.setAttribute('media', val);
+  public set image(val: string) {
+    this.setAttribute('image', val);
   }
 
   public share(shareMenu: ShareMenu) {
@@ -24,14 +24,14 @@ export class PinterestShareTarget extends HTMLElement implements ShareTarget {
       url: shareMenu.url,
       description: `${shareMenu.title}\n\n${shareMenu.text}`,
       media:
-        this.media ||
+        this.image ||
         document.querySelector<HTMLMetaElement>("meta[property='og:image']")
           ?.content,
     });
   }
 }
 
-window.customElements.define('share-target-pinterest', PinterestShareTarget);
+customElements.define('share-target-pinterest', PinterestShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

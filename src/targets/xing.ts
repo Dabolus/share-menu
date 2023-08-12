@@ -27,7 +27,7 @@ export class XINGShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-xing', XINGShareTarget);
+customElements.define('share-target-xing', XINGShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

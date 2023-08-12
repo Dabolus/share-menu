@@ -29,7 +29,7 @@ export class TumblrShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-tumblr', TumblrShareTarget);
+customElements.define('share-target-tumblr', TumblrShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

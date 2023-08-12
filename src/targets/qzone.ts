@@ -18,7 +18,7 @@ export class QZoneShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-qzone', QZoneShareTarget);
+customElements.define('share-target-qzone', QZoneShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

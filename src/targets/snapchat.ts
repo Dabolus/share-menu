@@ -14,7 +14,7 @@ export class SnapchatShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-snapchat', SnapchatShareTarget);
+customElements.define('share-target-snapchat', SnapchatShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -26,7 +26,7 @@ export class SMSShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-sms', SMSShareTarget);
+customElements.define('share-target-sms', SMSShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

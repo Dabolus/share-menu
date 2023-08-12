@@ -15,7 +15,7 @@ export class VKShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-vk', VKShareTarget);
+customElements.define('share-target-vk', VKShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

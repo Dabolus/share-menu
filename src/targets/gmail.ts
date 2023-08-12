@@ -15,7 +15,7 @@ export class GmailShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-gmail', GmailShareTarget);
+customElements.define('share-target-gmail', GmailShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

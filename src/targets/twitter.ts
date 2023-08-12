@@ -46,7 +46,7 @@ export class TwitterShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-twitter', TwitterShareTarget);
+customElements.define('share-target-twitter', TwitterShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

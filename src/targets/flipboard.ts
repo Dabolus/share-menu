@@ -14,7 +14,7 @@ export class FlipboardShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-flipboard', FlipboardShareTarget);
+customElements.define('share-target-flipboard', FlipboardShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {

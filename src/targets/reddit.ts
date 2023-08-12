@@ -20,7 +20,7 @@ export class RedditShareTarget extends HTMLElement implements ShareTarget {
   }
 }
 
-window.customElements.define('share-target-reddit', RedditShareTarget);
+customElements.define('share-target-reddit', RedditShareTarget);
 
 declare global {
   interface HTMLElementTagNameMap {
