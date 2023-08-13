@@ -2,6 +2,7 @@ export interface ShareMenuParams {
   text?: string;
   title?: string;
   url?: string;
+  image?: string;
 }
 
 export interface ShareTarget extends HTMLElement {
@@ -49,7 +50,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - Email
  * - Evernote - _URL and title only_
  * - Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript) or not providing a Facebook App ID_
- * - FlipBoard - _URL and title only_
+ * - Flipboard - _URL and title only_
  * - Gmail
  * - Google Translate - _Only translates the page at the given URL_
  * - Hacker News - _URL and title only_
@@ -211,6 +212,19 @@ export class ShareMenu extends HTMLElement {
   }
 
   /**
+   * The URL of the image you want to share.
+   *
+   * @return {string}
+   */
+  public get image(): string {
+    return this.getAttribute('image');
+  }
+
+  public set image(val: string) {
+    this.setAttribute('image', val);
+  }
+
+  /**
    * Set to true if you want to hide the fallback dialog backdrop.
    *
    * @return {boolean}
@@ -259,6 +273,7 @@ export class ShareMenu extends HTMLElement {
     'text',
     'title',
     'url',
+    'image',
     'no-backdrop',
     'handle',
   ];
@@ -276,8 +291,10 @@ export class ShareMenu extends HTMLElement {
   private _dialogTitleRef: HTMLHeadingElement;
   private _copyHintRef: HTMLDivElement;
   private _targetsContainerRef: HTMLDivElement;
-  private _clipboardPreviewRef: HTMLParagraphElement;
+  private _clipboardImagePreviewRef: HTMLImageElement;
+  private _clipboardPreviewRef: HTMLPreElement;
   private _targets: ShareTarget[] = [];
+  private _filePromise: Promise<File> = Promise.resolve<File>(undefined);
 
   public constructor() {
     super();
@@ -385,19 +402,35 @@ export class ShareMenu extends HTMLElement {
       }
 
       #clipboard-container {
-        display: grid;
-        grid-template: 72px / 1fr 72px;
+        display: flex;
+        min-height: 72px;
+        max-height: 192px;
         align-items: center;
         padding: 24px 12px 24px 24px;
+        gap: 12px;
       }
 
-      #clipboard-container > p {
+      #clipboard-container > img {
+        flex: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 288px;
+        max-height: 144px;
+      }
+
+      #clipboard-container > pre {
+        flex: 1;
+        font-family: inherit;
         color: var(--preview-color, rgba(0, 0, 0, .6));
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+      }
+
+      #clipboard-container > button {
+        flex: 0 0 72px;
       }
 
       #targets-container {
@@ -510,7 +543,8 @@ export class ShareMenu extends HTMLElement {
         <div id="handle"></div>
         <h2 id="title" part="title"></h2>
         <div id="clipboard-container">
-          <p id="clipboard-preview"></p>
+          <img id="clipboard-image-preview">
+          <pre id="clipboard-preview"></pre>
           <button class="target" id="clipboard">
             <div class="clipboard-icon">
               <svg viewBox="0 0 256 256">
@@ -549,38 +583,40 @@ export class ShareMenu extends HTMLElement {
    * @param {{ text: string, title: string, url: string }=} props An object containing `text`, `title`, and `url`, that will override the element attributes/properties.
    * @return {Promise<void>} A promise that resolves when the user selects a share target.
    */
-  public share({
+  public async share({
     text = this.text,
     title = this.title,
     url = this.url,
+    image = this.image,
   }: ShareMenuParams = {}) {
     this.text = text;
     this.title = title;
     this.url = url;
-    if (navigator.share) {
-      return navigator
-        .share({
-          text: this.text,
-          title: this.title,
-          url: this.url,
-        })
-        .then(() => {
-          this.opened = false;
-          ['share', 'close'].forEach((event) =>
-            this._emitCustomEvent(event, { origin: 'native' }),
-          );
-        })
-        .catch(({ name }) => {
-          // Safari throws an AbortError if user changes its mind and decides
-          // not to share anything using the native share menu.
-          // In that case, we don't want to show our fallback share menu.
-          if (name !== 'AbortError') {
-            return this._showFallbackShare();
-          }
-          this._emitCustomEvent('close', { origin: 'native' });
-        });
+    this.image = image;
+    if (!navigator.share) {
+      return this._showFallbackShare();
     }
-    return this._showFallbackShare();
+    try {
+      const file = await this._filePromise;
+      await navigator.share({
+        text: this.text || undefined,
+        title: this.title || undefined,
+        url: this.url || undefined,
+        files: file ? [file] : undefined,
+      });
+      this.opened = false;
+      ['share', 'close'].forEach((event) =>
+        this._emitCustomEvent(event, { origin: 'native' }),
+      );
+    } catch (error) {
+      // The browser throws an AbortError if user changes their mind and decides
+      // not to share anything using the native share menu.
+      // In that case, we don't want to show our fallback share menu.
+      if ((error as Error).name !== 'AbortError') {
+        return this._showFallbackShare();
+      }
+      this._emitCustomEvent('close', { origin: 'native' });
+    }
   }
 
   /** @private */
@@ -627,31 +663,40 @@ export class ShareMenu extends HTMLElement {
       this.shadowRoot.querySelector<HTMLDivElement>('#copy-hint');
     this._copyHintRef.textContent = this.copyHint;
 
+    this._clipboardImagePreviewRef =
+      this.shadowRoot.querySelector<HTMLImageElement>(
+        '#clipboard-image-preview',
+      );
     this._clipboardPreviewRef =
-      this.shadowRoot.querySelector<HTMLParagraphElement>('#clipboard-preview');
+      this.shadowRoot.querySelector<HTMLPreElement>('#clipboard-preview');
 
-    this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
+    this._clipboardPreviewRef.innerHTML = `${this.title}\n${this.text}\n${this.url}`;
 
     if (navigator.clipboard) {
       const cliboardButtonRef =
         this.shadowRoot.querySelector<HTMLButtonElement>('#clipboard');
 
-      cliboardButtonRef.addEventListener('click', () => {
-        navigator.clipboard
-          ?.writeText(`${this.title}\n\n${this.text}\n\n${this.url}`)
-          .catch((error) =>
-            this.dispatchEvent(
-              new ErrorEvent('error', {
-                message: 'Unable to copy to clipboard',
-                error,
-              }),
-            ),
+      cliboardButtonRef.addEventListener('click', async () => {
+        const textToCopy = [
+          ...(this.title ? [this.title] : []),
+          ...(this.text ? [this.text] : []),
+          ...(this.url ? [this.url] : []),
+        ].join('\n\n');
+        try {
+          const file = await this._filePromise;
+          await this._copyToClipboard(textToCopy, file);
+          this._emitCustomEvent('share', {
+            target: 'clipboard',
+            origin: 'fallback',
+          });
+        } catch (error) {
+          this.dispatchEvent(
+            new ErrorEvent('error', {
+              message: 'Unable to copy to clipboard',
+              error,
+            }),
           );
-
-        this._emitCustomEvent('share', {
-          target: 'clipboard',
-          origin: 'fallback',
-        });
+        }
         this._close();
       });
 
@@ -722,7 +767,45 @@ export class ShareMenu extends HTMLElement {
           this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
         }
         break;
+      case 'image':
+        // Instantiate an URL, so that we can handle errors before
+        // trying to fetch the image if the URL is invalid
+        try {
+          const url = new URL(newValue);
+          if (this._clipboardImagePreviewRef) {
+            this._clipboardImagePreviewRef.src = url.href;
+          }
+          this._filePromise = this._extractFileFromUrl(url).catch(
+            () => undefined,
+          );
+        } catch {}
+        break;
     }
+  }
+
+  /** @private */
+  private _copyToClipboard(text?: string, blob?: Blob): Promise<void> {
+    // Firefox supports writeText but not write
+    if (!navigator.clipboard.write) {
+      return navigator.clipboard.writeText(text);
+    }
+    return navigator.clipboard.write([
+      new ClipboardItem({
+        ...(text && {
+          'text/plain': new Blob([text], {
+            type: 'text/plain',
+          }),
+        }),
+        ...(blob && { [blob.type]: blob }),
+      }),
+    ]);
+  }
+
+  /** @private */
+  private async _extractFileFromUrl(url: URL): Promise<File> {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    return new File([blob], url.pathname.split('/').pop(), { type: blob.type });
   }
 
   /** @private */

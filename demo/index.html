@@ -121,6 +121,7 @@
             title: { type: String },
             text: { type: String },
             url: { type: String },
+            image: { type: String },
             hideBackdrop: { type: Boolean },
           };
         }
@@ -206,19 +207,20 @@
               <md-outlined-text-field id="title" label="Title" @input="\${e => this.title = e.target.value}"></md-outlined-text-field>
               <md-outlined-text-field type="textarea" id="text" label="Text" @input="\${e => this.text = e.target.value}"></md-outlined-text-field>
               <md-outlined-text-field id="url" type="url" label="URL" @input="\${e => this.url = e.target.value}"></md-outlined-text-field>
+              <md-outlined-text-field id="image" type="url" label="Image" @input="\${e => this.image = e.target.value}"></md-outlined-text-field>
               <div class="toggle-container">
                 <label for="backdrop">Hide backdrop</label>
                 <md-switch id="backdrop" @click="\${e => this.hideBackdrop = e.target.selected}"></md-switch>
               </div>
               <div class="actions-container">
-                <md-filled-button ?disabled="\${!this.title || !this.text || !this.url}" @click="\${() => this.shareMenu.share()}">
+                <md-filled-button ?disabled="\${!this.title && !this.text && !this.url && !this.image}" @click="\${() => this.shareMenu.share()}">
                   Share
                   <md-icon slot="icon">share</md-icon>
                 </md-filled-button>
               </div>
             </div>
 
-            <share-menu title="\${this.title}" text="\${this.text}" url="\${this.url}" ?no-backdrop="\${this.hideBackdrop}">
+            <share-menu title="\${this.title}" text="\${this.text}" url="\${this.url}" image="\${this.image}" ?no-backdrop="\${this.hideBackdrop}">
               <share-target-preset-all></share-target-preset-all>
             </share-menu>
 
@@ -234,6 +236,7 @@
           this.title = '';
           this.text = '';
           this.url = '';
+          this.image = '';
           this.hideBackdrop = false;
           const mql = window.matchMedia('(prefers-color-scheme: dark)');
           const updatePrismTheme = async () => {
@@ -258,12 +261,13 @@
               <md-outlined-text-field id="title" label="Title" @input="${e => this.title = e.target.value}"></md-outlined-text-field>
               <md-outlined-text-field type="textarea" id="text" label="Text" @input="${e => this.text = e.target.value}"></md-outlined-text-field>
               <md-outlined-text-field id="url" type="url" label="URL" @input="${e => this.url = e.target.value}"></md-outlined-text-field>
+              <md-outlined-text-field id="image" type="url" label="Image" @input="${e => this.image = e.target.value}"></md-outlined-text-field>
               <div class="toggle-container">
                 <label for="backdrop">Hide backdrop</label>
                 <md-switch id="backdrop" @click="${e => this.hideBackdrop = e.target.selected}"></md-switch>
               </div>
               <div class="actions-container">
-                <md-filled-button ?disabled="${!this.title || !this.text || !this.url}" @click="${() => this.shareMenu.share()}">
+                <md-filled-button ?disabled="${!this.title && !this.text && !this.url && !this.image}" @click="${() => this.shareMenu.share()}">
                   Share
                   <md-icon slot="icon">share</md-icon>
                 </md-filled-button>
@@ -273,7 +277,7 @@
               </pre>
             </div>
 
-            <share-menu title="${this.title}" text="${this.text}" url="${this.url}" ?no-backdrop="${this.hideBackdrop}">
+            <share-menu title="${this.title}" text="${this.text}" url="${this.url}" image="${this.image}" ?no-backdrop="${this.hideBackdrop}">
               <share-target-preset-all></share-target-preset-all>
             </share-menu>
           `;
