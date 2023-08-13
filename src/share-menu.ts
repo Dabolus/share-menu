@@ -816,6 +816,7 @@ export class ShareMenu extends HTMLElement {
     this._targetsContainerRef.innerHTML = '';
     this._targets.forEach((shareTarget, index) => {
       const { nodeName, color, outline, icon, displayName, hint } = shareTarget;
+      const logoColor = this._computeContrastColor(outline || color);
 
       const target = nodeName.slice(13).toLowerCase();
       const targetButton: HTMLButtonElement = document.createElement('button');
@@ -831,7 +832,7 @@ export class ShareMenu extends HTMLElement {
 
       const targetIcon: HTMLDivElement = document.createElement('div');
       targetIcon.className = 'icon';
-      targetIcon.innerHTML = `<svg viewBox="0 0 256 256"${
+      targetIcon.innerHTML = `<svg viewBox="0 0 256 256" fill="#${logoColor}" ${
         outline
           ? `stroke="#${outline}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"`
           : ''
@@ -894,6 +895,13 @@ export class ShareMenu extends HTMLElement {
         screen.width / 4
       },top=${screen.height / 4},menubar=0,status=0,titlebar=0,toolbar=0`,
     );
+  }
+
+  /** @private */
+  private _computeContrastColor(hex: string): string {
+    const fullHex = hex.length === 3 ? hex.repeat(2) : hex;
+    const [r, g, b] = fullHex.match(/.{2}/g).map((c) => parseInt(c, 16));
+    return r * 0.299 + g * 0.587 + b * 0.114 <= 186 ? 'fff' : '000';
   }
 
   /** @private */
