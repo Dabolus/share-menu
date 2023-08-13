@@ -1,11 +1,11 @@
 import '../print.js';
 import '../google-translate.js';
 import '../facebook.js';
+import '../messenger.js';
 import '../telegram.js';
 import '../whatsapp.js';
 import '../reddit.js';
 import '../twitter.js';
-import '../messenger.js';
 import '../linkedin.js';
 import '../tumblr.js';
 import '../pinterest.js';
@@ -32,8 +32,29 @@ import '../yahoo.js';
 import '../substack.js';
 import '../email.js';
 import '../sms.js';
+import type { FacebookShareTarget } from '../facebook.js';
+import type { MessengerShareTarget } from '../messenger.js';
 
 export class AllShareTargetPreset extends HTMLElement {
+  private _facebookRef: FacebookShareTarget;
+  private _messengerRef?: MessengerShareTarget;
+
+  /**
+   * The Facebook App ID. Must be specified for the
+   * Messenger share button to be displayed
+   *
+   * @return {string}
+   */
+  public get facebookAppId(): string {
+    return this.getAttribute('facebook-app-id');
+  }
+
+  public set facebookAppId(val: string) {
+    this.setAttribute('facebook-app-id', val);
+  }
+
+  public static readonly observedAttributes = ['facebook-app-id'];
+
   public constructor() {
     super();
 
@@ -46,7 +67,6 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-whatsapp></share-target-whatsapp>
       <share-target-reddit></share-target-reddit>
       <share-target-twitter></share-target-twitter>
-      <share-target-messenger></share-target-messenger>
       <share-target-linkedin></share-target-linkedin>
       <share-target-tumblr></share-target-tumblr>
       <share-target-pinterest></share-target-pinterest>
@@ -76,6 +96,47 @@ export class AllShareTargetPreset extends HTMLElement {
     `;
 
     this.appendChild(template.content.cloneNode(true));
+  }
+
+  /** @private */
+  private connectedCallback() {
+    this._facebookRef = this.querySelector('share-target-facebook');
+  }
+
+  /** @private */
+  private attributeChangedCallback(
+    name: string,
+    oldValue: string,
+    newValue: string,
+  ) {
+    if (oldValue === newValue) {
+      return;
+    }
+    switch (name) {
+      case 'facebook-app-id':
+        if (newValue) {
+          if (!this._messengerRef) {
+            this._messengerRef = document.createElement(
+              'share-target-messenger',
+            );
+            this._facebookRef.insertAdjacentElement(
+              'afterend',
+              this._messengerRef,
+            );
+          }
+          this._facebookRef.setAttribute('app-id', newValue);
+          this._messengerRef.setAttribute('app-id', newValue);
+        } else {
+          this._facebookRef.removeAttribute('app-id');
+          this._messengerRef.remove();
+          this._messengerRef = null;
+        }
+        break;
+    }
+    // Notify the parent share menu that something has changed
+    this.parentElement.shadowRoot
+      .querySelector('slot')
+      .dispatchEvent(new Event('slotchange'));
   }
 }
 
