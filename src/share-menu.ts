@@ -764,7 +764,7 @@ export class ShareMenu extends HTMLElement {
       case 'title':
       case 'url':
         if (this._clipboardPreviewRef) {
-          this._clipboardPreviewRef.innerHTML = `${this.title}<br>${this.text}<br>${this.url}`;
+          this._clipboardPreviewRef.innerHTML = `${this.title}\n${this.text}\n${this.url}`;
         }
         break;
       case 'image':
