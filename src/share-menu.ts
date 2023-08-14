@@ -453,6 +453,7 @@ export class ShareMenu extends HTMLElement {
         border: none;
         outline: none;
         background: transparent;
+        font-family: inherit;
         will-change: transform;
         transition: .3s transform;
       }
