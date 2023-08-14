@@ -542,6 +542,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esm-bundle/chai-as-promised@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@esm-bundle/chai-as-promised@npm:7.1.1"
+  checksum: ae623f361ab1870a985566d0a8959dc88f978d212e9e5f17d9461ca76dc3a6cceb0b8e36ad2f9953c7c560723524f841608c5ae4caa7527388c9c233e63395c2
+  languageName: node
+  linkType: hard
+
 "@esm-bundle/chai@npm:^4.3.4-fix.0":
   version: 4.3.4
   resolution: "@esm-bundle/chai@npm:4.3.4"
@@ -1079,6 +1086,15 @@ __metadata:
     "@types/connect": "*"
     "@types/node": "*"
   checksum: e17840c7d747a549f00aebe72c89313d09fbc4b632b949b2470c5cb3b1cb73863901ae84d9335b567a79ec5efcfb8a28ff8e3f36bc8748a9686756b6d5681f40
+  languageName: node
+  linkType: hard
+
+"@types/chai-as-promised@npm:^7.1.5":
+  version: 7.1.5
+  resolution: "@types/chai-as-promised@npm:7.1.5"
+  dependencies:
+    "@types/chai": "*"
+  checksum: 7c1345c6e32513d52d8e562ec173c23161648d6b792046525f18803a9932d7b3ad3dca8f0181e3c529ec42b106099f174e34edeb184d61dc93e32c98b5132fd4
   languageName: node
   linkType: hard
 
@@ -6442,8 +6458,10 @@ __metadata:
   resolution: "share-menu@workspace:."
   dependencies:
     "@babel/preset-typescript": ^7.22.5
+    "@esm-bundle/chai-as-promised": ^7.1.1
     "@open-wc/testing": ^3.2.0
     "@rollup/plugin-typescript": ^11.1.2
+    "@types/chai-as-promised": ^7.1.5
     "@types/facebook-js-sdk": ^3.3.6
     "@types/glob": ^8.1.0
     "@typescript-eslint/eslint-plugin": ^6.2.1
