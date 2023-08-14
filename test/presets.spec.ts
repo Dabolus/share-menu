@@ -39,6 +39,7 @@ import { EmailShareTarget } from '../src/targets/email.js';
 import { SMSShareTarget } from '../src/targets/sms.js';
 import '../src/share-menu.js';
 import '../src/targets/presets/all.js';
+import '../src/targets/presets/top15-worldwide.js';
 
 chai.use(chaiAsPromised);
 
@@ -162,6 +163,120 @@ describe('share menu presets', async () => {
           </share-menu>
         `);
         const allPreset = shareMenu.querySelector('share-target-preset-all');
+        const facebookTarget = shareMenu.querySelector('share-target-facebook');
+        expect(facebookTarget.appId).to.be.null;
+        expect(shareMenu.querySelector('share-target-messenger')).to.be.null;
+        allPreset.facebookAppId = facebookAppId;
+        expect(facebookTarget.appId).to.equal(facebookAppId);
+        expect(
+          shareMenu.querySelector('share-target-messenger').appId,
+        ).to.equal(facebookAppId);
+      });
+    });
+  });
+
+  describe('top 15 worldwide', () => {
+    const top15WorldwideTargets = [
+      FacebookShareTarget,
+      MessengerShareTarget,
+      WhatsAppShareTarget,
+      WeiboShareTarget,
+      TelegramShareTarget,
+      SnapchatShareTarget,
+      QZoneShareTarget,
+      PinterestShareTarget,
+      TwitterShareTarget,
+      RedditShareTarget,
+      LinkedInShareTarget,
+      TumblrShareTarget,
+      DoubanShareTarget,
+      VKShareTarget,
+      OKShareTarget,
+    ];
+
+    describe('without Facebook App ID', () => {
+      it('adds the top 14 worldwide targets excluding messenger', async () => {
+        const shareMenu = await fixture<ShareMenu>(html`
+          <share-menu url="https://www.example.com">
+            <share-target-preset-top15-worldwide></share-target-preset-top15-worldwide>
+          </share-menu>
+        `);
+        const targetsWithoutMessenger = top15WorldwideTargets.filter(
+          (target) => target !== MessengerShareTarget,
+        );
+        expect(shareMenu.targets.length).to.equal(
+          targetsWithoutMessenger.length,
+        );
+        shareMenu.targets.forEach((target, index) => {
+          expect(target).to.be.instanceOf(targetsWithoutMessenger[index]);
+        });
+      });
+
+      it('updates socials when Facebook App ID is removed', async () => {
+        const facebookAppId = 'test';
+        const shareMenu = await fixture<ShareMenu>(html`
+          <share-menu url="https://www.example.com">
+            <share-target-preset-top15-worldwide
+              facebook-app-id="${facebookAppId}"
+            ></share-target-preset-top15-worldwide>
+          </share-menu>
+        `);
+        const allPreset = shareMenu.querySelector(
+          'share-target-preset-top15-worldwide',
+        );
+        const facebookTarget = shareMenu.querySelector('share-target-facebook');
+        expect(facebookTarget.appId).to.equal(facebookAppId);
+        expect(
+          shareMenu.querySelector('share-target-messenger').appId,
+        ).to.equal(facebookAppId);
+        allPreset.facebookAppId = '';
+        expect(facebookTarget.appId).to.be.null;
+        expect(shareMenu.querySelector('share-target-messenger')).to.be.null;
+      });
+    });
+
+    describe('with Facebook App ID', () => {
+      it('adds the top 15 worldwide targets', async () => {
+        const shareMenu = await fixture<ShareMenu>(html`
+          <share-menu url="https://www.example.com">
+            <share-target-preset-top15-worldwide
+              facebook-app-id="test"
+            ></share-target-preset-top15-worldwide>
+          </share-menu>
+        `);
+        expect(shareMenu.targets.length).to.equal(top15WorldwideTargets.length);
+        shareMenu.targets.forEach((target, index) => {
+          expect(target).to.be.instanceOf(top15WorldwideTargets[index]);
+        });
+      });
+
+      it('proxies Facebook App ID to socials that need it', async () => {
+        const facebookAppId = 'test';
+        const shareMenu = await fixture<ShareMenu>(html`
+          <share-menu url="https://www.example.com">
+            <share-target-preset-top15-worldwide
+              facebook-app-id="${facebookAppId}"
+            ></share-target-preset-top15-worldwide>
+          </share-menu>
+        `);
+        const facebookTarget = shareMenu.querySelector('share-target-facebook');
+        const messengerTarget = shareMenu.querySelector(
+          'share-target-messenger',
+        );
+        expect(facebookTarget.appId).to.equal(facebookAppId);
+        expect(messengerTarget.appId).to.equal(facebookAppId);
+      });
+
+      it('updates socials when Facebook App ID is added', async () => {
+        const facebookAppId = 'test';
+        const shareMenu = await fixture<ShareMenu>(html`
+          <share-menu url="https://www.example.com">
+            <share-target-preset-top15-worldwide></share-target-preset-top15-worldwide>
+          </share-menu>
+        `);
+        const allPreset = shareMenu.querySelector(
+          'share-target-preset-top15-worldwide',
+        );
         const facebookTarget = shareMenu.querySelector('share-target-facebook');
         expect(facebookTarget.appId).to.be.null;
         expect(shareMenu.querySelector('share-target-messenger')).to.be.null;
