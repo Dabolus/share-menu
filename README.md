@@ -178,22 +178,22 @@ See [any of the built-in targets](./src/targets/) for a practical example on how
 
 The following custom properties and shadow parts are available for styling:
 
-| Property             | Description                                      | Default              |
-| -------------------- | ------------------------------------------------ | -------------------- |
-| `--backdrop-color`   | The color of the backdrop                        | `#000`               |
-| `--background-color` | The background color                             | `#fff`               |
-| `--title-color`      | The color of the title                           | `rgba(0, 0, 0, .6)`  |
-| `--ripple-color`     | The color of the ripple effect                   | `#000`               |
-| `--labels-color`     | The color of the social labels                   | `rgba(0, 0, 0, .87)` |
-| `--hint-color`       | The color of the hint labels                     | `rgba(0, 0, 0, .6)`  |
-| `--handle-color`     | The color of the handle on top of the dialog     | `rgba(0, 0, 0, .6)`  |
-| `--divider-color`    | The color of the dividers                        | `rgba(0, 0, 0, .12)` |
-| `--preview-color`    | The color of the preview of what is being shared | `rgba(0, 0, 0, .6)`  |
-| `dialog`             | The part assigned to the dialog                  | -                    |
-| `backdrop`           | The part assigned to the backdrop                | -                    |
-| `title`              | The part assigned to the title                   | -                    |
-| `social-button`      | The part assigned to each social button          | -                    |
-| `social-icon`        | The part assigned to each social icon            | -                    |
-| `social-label`       | The part assigned to each social label           | -                    |
+| Property                | Description                                      | Default              |
+| ----------------------- | ------------------------------------------------ | -------------------- |
+| `--sm-backdrop-color`   | The color of the backdrop                        | `#000`               |
+| `--sm-background-color` | The background color                             | `#fff`               |
+| `--sm-title-color`      | The color of the title                           | `rgba(0, 0, 0, .6)`  |
+| `--sm-ripple-color`     | The color of the ripple effect                   | `#000`               |
+| `--sm-labels-color`     | The color of the social labels                   | `rgba(0, 0, 0, .87)` |
+| `--sm-hint-color`       | The color of the hint labels                     | `rgba(0, 0, 0, .6)`  |
+| `--sm-handle-color`     | The color of the handle on top of the dialog     | `rgba(0, 0, 0, .6)`  |
+| `--sm-divider-color`    | The color of the dividers                        | `rgba(0, 0, 0, .12)` |
+| `--sm-preview-color`    | The color of the preview of what is being shared | `rgba(0, 0, 0, .6)`  |
+| `dialog`                | The part assigned to the dialog                  | -                    |
+| `backdrop`              | The part assigned to the backdrop                | -                    |
+| `title`                 | The part assigned to the title                   | -                    |
+| `social-button`         | The part assigned to each social button          | -                    |
+| `social-icon`           | The part assigned to each social icon            | -                    |
+| `social-label`          | The part assigned to each social label           | -                    |
 
 _Note: for obvious reasons, these custom properties and shadow parts are not available when using the native share menu._

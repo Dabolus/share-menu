@@ -332,7 +332,7 @@ export class ShareMenu extends HTMLElement {
         width: 100%;
         height: 100%;
         opacity: 0;
-        background: var(--backdrop-color, #000);
+        background: var(--sm-backdrop-color, #000);
         will-change: opacity;
         transition: .3s opacity cubic-bezier(.4, 0, 1, 1);
         cursor: pointer;
@@ -350,7 +350,7 @@ export class ShareMenu extends HTMLElement {
 
       #dialog {
         margin: 100vh auto 0 auto;
-        background: var(--background-color, #fff);
+        background: var(--sm-background-color, #fff);
         width: 100%;
         max-width: 640px;
         will-change: transform;
@@ -384,17 +384,17 @@ export class ShareMenu extends HTMLElement {
         width: 24px;
         height: 4px;
         border-radius: 2px;
-        background: var(--handle-color, rgba(0, 0, 0, .6));
+        background: var(--sm-handle-color, rgba(0, 0, 0, .6));
         margin: auto;
       }
 
       hr {
         margin: 0;
-        border: 1px solid var(--divider-color, rgba(0, 0, 0, .12));
+        border: 1px solid var(--sm-divider-color, rgba(0, 0, 0, .12));
       }
 
       #title {
-        color: var(--title-color, rgba(0, 0, 0, .6));
+        color: var(--sm-title-color, rgba(0, 0, 0, .6));
         font-weight: 500;
         font-size: 18px;
         margin: 0;
@@ -422,7 +422,7 @@ export class ShareMenu extends HTMLElement {
       #clipboard-container > pre {
         flex: 1;
         font-family: inherit;
-        color: var(--preview-color, rgba(0, 0, 0, .6));
+        color: var(--sm-preview-color, rgba(0, 0, 0, .6));
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -477,7 +477,7 @@ export class ShareMenu extends HTMLElement {
         height: 36px;
         padding: 7px;
         margin: -5px;
-        fill: var(--hint-color, rgba(0, 0, 0, .6));
+        fill: var(--sm-hint-color, rgba(0, 0, 0, .6));
       }
 
       .icon::before, .icon::after, .clipboard-icon::before, .clipboard-icon::after {
@@ -488,7 +488,7 @@ export class ShareMenu extends HTMLElement {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: var(--ripple-color, #fff);
+        background: var(--sm-ripple-color, #fff);
         opacity: .3;
         will-change: transform;
         transition: .3s transform;
@@ -517,13 +517,13 @@ export class ShareMenu extends HTMLElement {
 
       .label {
         padding-top: 10px;
-        color: var(--labels-color, rgba(0, 0, 0, .87));
+        color: var(--sm-labels-color, rgba(0, 0, 0, .87));
         font-size: 14px;
       }
 
       .hint {
         padding-top: 4px;
-        color: var(--hint-color, rgba(0, 0, 0, .6));
+        color: var(--sm-hint-color, rgba(0, 0, 0, .6));
         font-size: 12px;
       }
 
