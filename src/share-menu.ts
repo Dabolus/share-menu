@@ -70,6 +70,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - SMS
  * - Snapchat - _URL only_
  * - Substack Notes
+ * - KakaoTalk - _URL only_
  * - Telegram
  * - Tumblr
  * - Twitter

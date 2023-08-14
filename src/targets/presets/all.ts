@@ -30,6 +30,7 @@ import '../line.js';
 import '../gmail.js';
 import '../yahoo.js';
 import '../substack.js';
+import '../kakaotalk.js';
 import '../email.js';
 import '../sms.js';
 import type { FacebookShareTarget } from '../facebook.js';
@@ -97,6 +98,7 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-gmail></share-target-gmail>
       <share-target-yahoo></share-target-yahoo>
       <share-target-substack></share-target-substack>
+      <share-target-kakaotalk></share-target-kakaotalk>
       <share-target-email></share-target-email>
       <share-target-sms></share-target-sms>
     `;
