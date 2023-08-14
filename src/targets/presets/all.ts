@@ -109,7 +109,7 @@ export class AllShareTargetPreset extends HTMLElement {
     oldValue: string,
     newValue: string,
   ) {
-    if (oldValue === newValue) {
+    if (oldValue === newValue || !this._facebookRef) {
       return;
     }
     switch (name) {
