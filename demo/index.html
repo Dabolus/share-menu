@@ -113,81 +113,87 @@
 
       import { LitElement, css, html } from 'https://unpkg.com/lit@2.8.0?module';
 
-      class ShareMenuDemo extends LitElement {
-        _prismStyles = '';
+      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      const getPrismStyles = async dark => {
+        const res = await fetch(`https://unpkg.com/prism-themes@1.9.0/themes/prism-coldark-${mql.matches ? 'dark' : 'cold'}.min.css`);
+        return res.text();
+      };
 
-        static get properties() {
-          return {
-            title: { type: String },
-            text: { type: String },
-            url: { type: String },
-            image: { type: String },
-            hideBackdrop: { type: Boolean },
-          };
-        }
+      getPrismStyles().then(initialPrismStyles => {
+        class ShareMenuDemo extends LitElement {
+          _prismStyles = '';
 
-        static get styles() {
-          return [
-            css`
-              share-menu {
-                --backdrop-color: var(--md-sys-color-scrim);
-                --background-color: var(--md-sys-color-surface-container-high);
-                --title-color: var(--md-sys-color-on-surface);
-                --ripple-color: var(--md-sys-color-on-surface);
-                --labels-color: var(--md-sys-color-on-surface-variant);
-                --hint-color: var(--md-sys-color-on-surface-variant);
-                --handle-color: var(--md-sys-color-on-surface-variant);
-                --divider-color: var(--md-sys-color-outline-variant);
-                --preview-color: var(--md-sys-color-on-surface-variant);
-              }
+          static get properties() {
+            return {
+              title: { type: String },
+              text: { type: String },
+              url: { type: String },
+              image: { type: String },
+              hideBackdrop: { type: Boolean },
+            };
+          }
 
-              .container {
-                max-width: 600px;
-                margin: 16px auto;
-                padding: 16px;
-                border-radius: 12px;
-                background: var(--md-sys-color-surface-container);
-                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-              }
+          static get styles() {
+            return [
+              css`
+                share-menu {
+                  --backdrop-color: var(--md-sys-color-scrim);
+                  --background-color: var(--md-sys-color-surface-container-high);
+                  --title-color: var(--md-sys-color-on-surface);
+                  --ripple-color: var(--md-sys-color-on-surface);
+                  --labels-color: var(--md-sys-color-on-surface-variant);
+                  --hint-color: var(--md-sys-color-on-surface-variant);
+                  --handle-color: var(--md-sys-color-on-surface-variant);
+                  --divider-color: var(--md-sys-color-outline-variant);
+                  --preview-color: var(--md-sys-color-on-surface-variant);
+                }
 
-              .container > :not(:last-child) {
-                width: 100%;
-                margin: 12px 0;
-              }
+                .container {
+                  max-width: 600px;
+                  margin: 16px auto;
+                  padding: 16px;
+                  border-radius: 12px;
+                  background: var(--md-sys-color-surface-container);
+                  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+                }
 
-              .toggle-container {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-              }
+                .container > :not(:last-child) {
+                  width: 100%;
+                  margin: 12px 0;
+                }
 
-              .toggle-container > label {
-                line-height: 2;
-                flex: 1;
-                cursor: pointer;
-              }
+                .toggle-container {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                }
 
-              pre {
-                border-radius: 12px;
-                border: 1px solid var(--mdc-text-field-outlined-idle-border-color);
-              }
+                .toggle-container > label {
+                  line-height: 2;
+                  flex: 1;
+                  cursor: pointer;
+                }
 
-              pre.language-html {
-                background: var(--md-sys-color-surface-container-high);
-                padding-top: 0;
-                padding-bottom: 0;
-              }
+                pre {
+                  border-radius: 12px;
+                  border: 1px solid var(--mdc-text-field-outlined-idle-border-color);
+                }
 
-              code.language-html {
-                background: var(--md-sys-color-surface-container-high);
-                font-family: 'Google Sans Mono', monospace;
-              }
-            `,
-          ];
-        }
+                pre.language-html {
+                  background: var(--md-sys-color-surface-container-high);
+                  padding-top: 0;
+                  padding-bottom: 0;
+                }
 
-        static get demoSnippet() {
-          return `
+                code.language-html {
+                  background: var(--md-sys-color-surface-container-high);
+                  font-family: 'Google Sans Mono', monospace;
+                }
+              `,
+            ];
+          }
+
+          static demoSnippet = `
             <style>
               /**
                * Style the fallback share menu according to the theme
@@ -229,62 +235,60 @@
               import 'https://unpkg.com/share-menu@5.0.0/targets/presets/all.js';
             <\/script>
           `.replace(/ {12}/g, '');
-        }
 
-        constructor() {
-          super();
-          this.title = '';
-          this.text = '';
-          this.url = '';
-          this.image = '';
-          this.hideBackdrop = false;
-          const mql = window.matchMedia('(prefers-color-scheme: dark)');
-          const updatePrismTheme = async () => {
-            const res = await fetch(`https://unpkg.com/prism-themes@1.9.0/themes/prism-coldark-${mql.matches ? 'dark' : 'cold'}.min.css`);
-            this._prismStyles = await res.text();
-            this.requestUpdate();
-          };
-          mql.addEventListener('change', updatePrismTheme);
-          updatePrismTheme();
-        }
+          constructor() {
+            super();
+            this.title = '';
+            this.text = '';
+            this.url = '';
+            this.image = '';
+            this.hideBackdrop = false;
+            this._prismStyles = initialPrismStyles;
+            mql.addEventListener('change', async () => {
+              const prismStyles = await getPrismStyles();
+              this._prismStyles = prismStyles;
+              this.requestUpdate();
+            });
+          }
 
-        firstUpdated() {
-          this.shareMenu = this.shadowRoot.querySelector('share-menu');
-          Prism.highlightAllUnder(this.shadowRoot.querySelector('pre'));
-        }
+          firstUpdated() {
+            this.shareMenu = this.shadowRoot.querySelector('share-menu');
+            Prism.highlightAllUnder(this.shadowRoot.querySelector('pre'));
+          }
 
-        render() {
-          return html`
-            <style>${this._prismStyles}</style>
-            <div class="container">
-              <h3>&lt;share-menu&gt; demo</h3>
-              <md-outlined-text-field id="title" label="Title" @input="${e => this.title = e.target.value}"></md-outlined-text-field>
-              <md-outlined-text-field type="textarea" id="text" label="Text" @input="${e => this.text = e.target.value}"></md-outlined-text-field>
-              <md-outlined-text-field id="url" type="url" label="URL" @input="${e => this.url = e.target.value}"></md-outlined-text-field>
-              <md-outlined-text-field id="image" type="url" label="Image" @input="${e => this.image = e.target.value}"></md-outlined-text-field>
-              <div class="toggle-container">
-                <label for="backdrop">Hide backdrop</label>
-                <md-switch id="backdrop" @click="${e => this.hideBackdrop = e.target.selected}"></md-switch>
+          render() {
+            return html`
+              <style>${this._prismStyles}</style>
+              <div class="container">
+                <h3>&lt;share-menu&gt; demo</h3>
+                <md-outlined-text-field id="title" label="Title" @input="${e => this.title = e.target.value}"></md-outlined-text-field>
+                <md-outlined-text-field type="textarea" id="text" label="Text" @input="${e => this.text = e.target.value}"></md-outlined-text-field>
+                <md-outlined-text-field id="url" type="url" label="URL" @input="${e => this.url = e.target.value}"></md-outlined-text-field>
+                <md-outlined-text-field id="image" type="url" label="Image" @input="${e => this.image = e.target.value}"></md-outlined-text-field>
+                <div class="toggle-container">
+                  <label for="backdrop">Hide backdrop</label>
+                  <md-switch id="backdrop" @click="${e => this.hideBackdrop = e.target.selected}"></md-switch>
+                </div>
+                <div class="actions-container">
+                  <md-filled-button ?disabled="${!this.title && !this.text && !this.url && !this.image}" @click="${() => this.shareMenu.share()}">
+                    Share
+                    <md-icon slot="icon">share</md-icon>
+                  </md-filled-button>
+                </div>
+                <pre>
+                  <code class="language-html">${ShareMenuDemo.demoSnippet}</code>
+                </pre>
               </div>
-              <div class="actions-container">
-                <md-filled-button ?disabled="${!this.title && !this.text && !this.url && !this.image}" @click="${() => this.shareMenu.share()}">
-                  Share
-                  <md-icon slot="icon">share</md-icon>
-                </md-filled-button>
-              </div>
-              <pre>
-                <code class="language-html">${ShareMenuDemo.demoSnippet}</code>
-              </pre>
-            </div>
 
-            <share-menu title="${this.title}" text="${this.text}" url="${this.url}" image="${this.image}" ?no-backdrop="${this.hideBackdrop}">
-              <share-target-preset-all></share-target-preset-all>
-            </share-menu>
-          `;
+              <share-menu title="${this.title}" text="${this.text}" url="${this.url}" image="${this.image}" ?no-backdrop="${this.hideBackdrop}">
+                <share-target-preset-all></share-target-preset-all>
+              </share-menu>
+            `;
+          }
         }
-      }
 
-      customElements.define('share-menu-demo', ShareMenuDemo);
+        customElements.define('share-menu-demo', ShareMenuDemo);
+      });
     </script>
   </head>
   <body>
