@@ -60,6 +60,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - LiveJournal
  * - Mastodon
  * - Messenger - _URL only, requires a Facebook App ID_
+ * - Mix - _URL only_
  * - Odnoklassniki (OK.ru)
  * - Pinterest
  * - Pocket - _URL only_

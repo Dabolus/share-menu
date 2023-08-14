@@ -34,6 +34,7 @@ import { GmailShareTarget } from '../src/targets/gmail.js';
 import { YahooShareTarget } from '../src/targets/yahoo.js';
 import { SubstackShareTarget } from '../src/targets/substack.js';
 import { KakaoTalkShareTarget } from '../src/targets/kakaotalk.js';
+import { MixShareTarget } from '../src/targets/mix.js';
 import { EmailShareTarget } from '../src/targets/email.js';
 import { SMSShareTarget } from '../src/targets/sms.js';
 import '../src/share-menu.js';
@@ -77,6 +78,7 @@ describe('share menu presets', async () => {
       YahooShareTarget,
       SubstackShareTarget,
       KakaoTalkShareTarget,
+      MixShareTarget,
       EmailShareTarget,
       SMSShareTarget,
     ];

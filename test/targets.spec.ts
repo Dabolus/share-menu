@@ -473,4 +473,10 @@ describe('share menu targets', async () => {
       await openTargetAndCheckWindow('kakaotalk', 'kakao');
     });
   });
+
+  describe('mix', () => {
+    it('opens a window with Mix share screen', async () => {
+      await openTargetAndCheckWindow('mix');
+    });
+  });
 });
