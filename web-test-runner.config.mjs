@@ -2,9 +2,17 @@ import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 
 export default {
-  concurrency: 1,
   nodeResolve: true,
-  files: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+  files: ['test/**/*.test.ts', 'test/**/*.spec.ts'],
   plugins: [esbuildPlugin({ ts: true })],
   browsers: [playwrightLauncher({ product: 'chromium' })],
+  coverageConfig: {
+    include: ['src/**/*.ts'],
+    threshold: {
+      statements: 95,
+      branches: 95,
+      functions: 95,
+      lines: 95,
+    },
+  },
 };
