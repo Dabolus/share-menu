@@ -55,14 +55,18 @@ export class AllShareTargetPreset extends HTMLElement {
 
   public static readonly observedAttributes = ['facebook-app-id'];
 
-  public constructor() {
-    super();
-
+  /** @private */
+  private connectedCallback() {
     const template = document.createElement('template');
     template.innerHTML = `<!-- html -->
       <share-target-print></share-target-print>
       <share-target-google-translate></share-target-google-translate>
       <share-target-facebook></share-target-facebook>
+      ${
+        this.facebookAppId
+          ? '<share-target-messenger></share-target-messenger>'
+          : ''
+      }
       <share-target-telegram></share-target-telegram>
       <share-target-whatsapp></share-target-whatsapp>
       <share-target-reddit></share-target-reddit>
@@ -91,16 +95,22 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-gmail></share-target-gmail>
       <share-target-yahoo></share-target-yahoo>
       <share-target-substack></share-target-substack>
+      <share-target-kakaotalk></share-target-kakaotalk>
       <share-target-email></share-target-email>
       <share-target-sms></share-target-sms>
     `;
 
     this.appendChild(template.content.cloneNode(true));
-  }
 
-  /** @private */
-  private connectedCallback() {
     this._facebookRef = this.querySelector('share-target-facebook');
+
+    if (!this.facebookAppId) {
+      return;
+    }
+
+    this._messengerRef = this.querySelector('share-target-messenger');
+    this._facebookRef.setAttribute('app-id', this.facebookAppId);
+    this._messengerRef.setAttribute('app-id', this.facebookAppId);
   }
 
   /** @private */
