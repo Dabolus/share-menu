@@ -920,15 +920,10 @@ export class ShareMenu extends HTMLElement {
 
   /** @private */
   private _showFallbackShare() {
-    return new Promise<void>((resolve) => {
-      function shareListener(this: ShareMenu) {
-        this.removeEventListener('share', shareListener);
-        resolve();
-      }
-
+    return new Promise<void>((resolve, reject) => {
       this._previousFocus = document.activeElement as HTMLElement;
       this.style.display = 'block';
-      this._firstFocusableElRef.focus();
+      this._firstFocusableElRef?.focus();
       this.scrollTop = Math.max(
         window.innerHeight / 2,
         window.innerHeight - this._dialogRef.offsetHeight,
@@ -937,7 +932,8 @@ export class ShareMenu extends HTMLElement {
       this._backdropRef.addEventListener('click', this._close.bind(this));
       this.addEventListener('scroll', this._handleScroll.bind(this));
       this.addEventListener('keydown', this._handleKeyDown.bind(this));
-      this.addEventListener('share', shareListener.bind(this));
+      this.addEventListener('share', () => resolve(), { once: true });
+      this.addEventListener('error', () => reject(), { once: true });
     });
   }
 
