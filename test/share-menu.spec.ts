@@ -462,6 +462,28 @@ describe('share menu', () => {
   describe('open window helper', () => {
     const openBackup = window.open;
 
+    it('correctly encodes the provided query params', async () => {
+      const shareMenu = await fixture<ShareMenu>(
+        html`<share-menu></share-menu>`,
+      );
+      const urlToOpen = 'https://example.com';
+      const fakeOpen = fake((url: string | URL) => {
+        expect(url).to.equal(
+          `${urlToOpen}?test1=abc&test2=123&test3=true&test4=null`,
+        );
+        return window;
+      });
+      window.open = fakeOpen;
+      shareMenu.openWindow(urlToOpen, {
+        test1: 'abc',
+        test2: 123,
+        test3: true,
+        test4: null,
+        test5: undefined,
+      });
+      window.open = openBackup;
+    });
+
     it('opens the given URL in a new window if replace param is falsy', async () => {
       const shareMenu = await fixture<ShareMenu>(
         html`<share-menu></share-menu>`,

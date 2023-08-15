@@ -877,23 +877,21 @@ export class ShareMenu extends HTMLElement {
   ) {
     const queryEntries = Object.entries(query);
     return window.open(
-      query
-        ? `${url}${
-            queryEntries.length > 0
-              ? `?${new URLSearchParams(
-                  queryEntries.reduce(
-                    (newQuery, [key, value]) => ({
-                      ...newQuery,
-                      ...(typeof value !== 'undefined' && {
-                        [key]: `${value}`,
-                      }),
-                    }),
-                    {},
-                  ),
-                ).toString()}`
-              : ''
-          }`
-        : url,
+      `${url}${
+        queryEntries.length > 0
+          ? `?${new URLSearchParams(
+              queryEntries.reduce(
+                (newQuery, [key, value]) => ({
+                  ...newQuery,
+                  ...(typeof value !== 'undefined' && {
+                    [key]: `${value}`,
+                  }),
+                }),
+                {},
+              ),
+            ).toString()}`
+          : ''
+      }`,
       replace ? '_self' : '_blank',
       `width=${screen.width / 2},height=${screen.height / 2},left=${
         screen.width / 4
