@@ -240,6 +240,44 @@ describe('share menu', () => {
       });
     });
 
+    describe('copy hint', async () => {
+      const shareMenu = await createShareMenu();
+
+      it('syncs copyHint property with copy-hint attribute', () => {
+        shareMenu.setAttribute('copy-hint', 'Test hint');
+        expect(shareMenu.copyHint).to.equal('Test hint');
+
+        shareMenu.copyHint = 'Another test hint';
+        expect(shareMenu.getAttribute('copy-hint')).to.equal(
+          'Another test hint',
+        );
+      });
+
+      it('updates the title in the HTML', () => {
+        shareMenu.copyHint = 'Test title';
+        expect(
+          shareMenu.shadowRoot?.querySelector<HTMLDivElement>('#copy-hint')
+            ?.textContent,
+        ).to.equal('Test title');
+      });
+
+      it('it correctly sets the copyHint property if initialized with the copy-hint attribute', async () => {
+        const copyHintShareMenu = await fixture<ShareMenu>(html`
+          <share-menu copy-hint="copyHint"></share-menu>
+        `);
+
+        expect(copyHintShareMenu.copyHint).to.equal('copyHint');
+      });
+
+      it('defaults to "Copy" if copy-hint attribute is not passed', async () => {
+        const noCopyHintShareMenu = await fixture<ShareMenu>(html`
+          <share-menu></share-menu>
+        `);
+
+        expect(noCopyHintShareMenu.copyHint).to.equal('Copy');
+      });
+    });
+
     describe('text', async () => {
       const shareMenu = await createShareMenu();
 
@@ -354,6 +392,56 @@ describe('share menu', () => {
       });
     });
 
+    describe('image', async () => {
+      const fetchBackup = window.fetch;
+      const shareMenu = await createShareMenu();
+
+      it('syncs image property with image attribute', () => {
+        shareMenu.setAttribute('image', 'Test image');
+        expect(shareMenu.image).to.equal('Test image');
+
+        shareMenu.image = 'Another test image';
+        expect(shareMenu.getAttribute('image')).to.equal('Another test image');
+      });
+
+      it('it correctly sets the image property if initialized with the image attribute', async () => {
+        const imageShareMenu = await fixture<ShareMenu>(html`
+          <share-menu image="image"></share-menu>
+        `);
+
+        expect(imageShareMenu.image).to.equal('image');
+      });
+
+      it('updates the src of the preview image in the HTML with the value of the property', async () => {
+        const imageShareMenu = await fixture<ShareMenu>(html`
+          <share-menu></share-menu>
+        `);
+        const image = 'https://www.example.com/';
+        imageShareMenu.image = image;
+        expect(
+          imageShareMenu.shadowRoot?.querySelector<HTMLImageElement>(
+            '#clipboard-image-preview',
+          )?.src,
+        ).to.equal(image);
+      });
+
+      it('uses the Web Share API', async () => {
+        const fakeFetch = fake(async () => ({
+          blob: () => ({}),
+        })) as unknown as typeof window.fetch;
+        window.fetch = fakeFetch;
+        const imageShareMenu = await fixture<ShareMenu>(html`
+          <share-menu></share-menu>
+        `);
+        const image = 'https://www.example.com/';
+        imageShareMenu.image = image;
+        expect(fakeFetch).to.have.been.calledWith(
+          new URL(image, window.location.href),
+        );
+        window.fetch = fetchBackup;
+      });
+    });
+
     describe('no backdrop', async () => {
       const shareMenu = await createShareMenu();
 
@@ -372,7 +460,7 @@ describe('share menu', () => {
   });
 
   describe('open window helper', () => {
-    const backupOpen = window.open;
+    const openBackup = window.open;
 
     it('opens the given URL in a new window if replace param is falsy', async () => {
       const shareMenu = await fixture<ShareMenu>(
@@ -386,7 +474,7 @@ describe('share menu', () => {
       });
       window.open = fakeOpen;
       shareMenu.openWindow(urlToOpen, {}, false);
-      window.open = backupOpen;
+      window.open = openBackup;
     });
 
     it('opens the given URL in the same window if replace param is truthy', async () => {
@@ -401,7 +489,7 @@ describe('share menu', () => {
       });
       window.open = fakeOpen;
       shareMenu.openWindow(urlToOpen, {}, true);
-      window.open = backupOpen;
+      window.open = openBackup;
     });
   });
 });

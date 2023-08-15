@@ -770,14 +770,19 @@ export class ShareMenu extends HTMLElement {
         // Instantiate an URL, so that we can handle errors before
         // trying to fetch the image if the URL is invalid
         try {
-          const url = new URL(newValue);
+          const url = new URL(newValue, window.location.href);
           if (this._clipboardImagePreviewRef) {
             this._clipboardImagePreviewRef.src = url.href;
           }
           this._filePromise = this._extractFileFromUrl(url).catch(
             () => undefined,
           );
-        } catch {}
+        } catch {
+          if (this._clipboardImagePreviewRef) {
+            this._clipboardImagePreviewRef.src = '';
+          }
+          this._filePromise = Promise.resolve<File>(undefined);
+        }
         break;
     }
   }
