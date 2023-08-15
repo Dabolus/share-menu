@@ -28,7 +28,7 @@ experience of the native one.
   (directly or through a polyfill). Unlike the native share menu, the fallback
   will also work on desktop browsers and insecure contexts, so you will be able
   to offer a much more coherent experience to your users;
-- Lightweight. The `share-menu` element itself weighs ~11.4 KB (~3.6 KB when
+- Lightweight. The `share-menu` element itself weighs ~11.7 KB (~3.7 KB when
   compressed), while each built-in share target weighs on average ~700B (less
   than half the size when compressed);
 - Thoroughly tested. Both the native and fallback behaviors are covered by tests,
