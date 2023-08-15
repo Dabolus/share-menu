@@ -1,15 +1,18 @@
-import '../print.js';
-import '../google-translate.js';
 import '../facebook.js';
 import '../messenger.js';
-import '../telegram.js';
 import '../whatsapp.js';
-import '../reddit.js';
+import '../weibo.js';
+import '../telegram.js';
+import '../snapchat.js';
+import '../qzone.js';
+import '../pinterest.js';
 import '../twitter.js';
+import '../reddit.js';
 import '../linkedin.js';
 import '../tumblr.js';
-import '../pinterest.js';
-import '../snapchat.js';
+import '../douban.js';
+import '../vk.js';
+import '../ok.js';
 import '../mastodon.js';
 import '../blogger.js';
 import '../livejournal.js';
@@ -19,21 +22,18 @@ import '../hacker-news.js';
 import '../flipboard.js';
 import '../instapaper.js';
 import '../diaspora.js';
-import '../qzone.js';
-import '../weibo.js';
-import '../vk.js';
-import '../ok.js';
-import '../douban.js';
 import '../xing.js';
 import '../skype.js';
 import '../line.js';
-import '../gmail.js';
-import '../yahoo.js';
 import '../substack.js';
 import '../kakaotalk.js';
 import '../mix.js';
+import '../gmail.js';
+import '../yahoo.js';
 import '../email.js';
 import '../sms.js';
+import '../google-translate.js';
+import '../print.js';
 import type { FacebookShareTarget } from '../facebook.js';
 import type { MessengerShareTarget } from '../messenger.js';
 
@@ -61,8 +61,6 @@ export class AllShareTargetPreset extends HTMLElement {
   private connectedCallback() {
     const template = document.createElement('template');
     template.innerHTML = `<!-- html -->
-      <share-target-print></share-target-print>
-      <share-target-google-translate></share-target-google-translate>
       ${
         this.facebookAppId
           ? `<!-- html -->
@@ -71,14 +69,19 @@ export class AllShareTargetPreset extends HTMLElement {
           `
           : '<share-target-facebook></share-target-facebook>'
       }
-      <share-target-telegram></share-target-telegram>
       <share-target-whatsapp></share-target-whatsapp>
-      <share-target-reddit></share-target-reddit>
+      <share-target-weibo></share-target-weibo>
+      <share-target-telegram></share-target-telegram>
+      <share-target-snapchat></share-target-snapchat>
+      <share-target-qzone></share-target-qzone>
+      <share-target-pinterest></share-target-pinterest>
       <share-target-twitter></share-target-twitter>
+      <share-target-reddit></share-target-reddit>
       <share-target-linkedin></share-target-linkedin>
       <share-target-tumblr></share-target-tumblr>
-      <share-target-pinterest></share-target-pinterest>
-      <share-target-snapchat></share-target-snapchat>
+      <share-target-douban></share-target-douban>
+      <share-target-vk></share-target-vk>
+      <share-target-ok></share-target-ok>
       <share-target-mastodon></share-target-mastodon>
       <share-target-blogger></share-target-blogger>
       <share-target-livejournal></share-target-livejournal>
@@ -88,21 +91,18 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-flipboard></share-target-flipboard>
       <share-target-instapaper></share-target-instapaper>
       <share-target-diaspora></share-target-diaspora>
-      <share-target-qzone></share-target-qzone>
-      <share-target-weibo></share-target-weibo>
-      <share-target-vk></share-target-vk>
-      <share-target-ok></share-target-ok>
-      <share-target-douban></share-target-douban>
       <share-target-xing></share-target-xing>
       <share-target-skype></share-target-skype>
       <share-target-line></share-target-line>
-      <share-target-gmail></share-target-gmail>
-      <share-target-yahoo></share-target-yahoo>
       <share-target-substack></share-target-substack>
       <share-target-kakaotalk></share-target-kakaotalk>
       <share-target-mix></share-target-mix>
+      <share-target-gmail></share-target-gmail>
+      <share-target-yahoo></share-target-yahoo>
       <share-target-email></share-target-email>
       <share-target-sms></share-target-sms>
+      <share-target-google-translate></share-target-google-translate>
+      <share-target-print></share-target-print>
     `;
 
     this.appendChild(template.content.cloneNode(true));

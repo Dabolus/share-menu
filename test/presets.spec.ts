@@ -1,42 +1,42 @@
 import { expect, fixture, html, chai } from '@open-wc/testing';
 import chaiAsPromised from '@esm-bundle/chai-as-promised';
 import { ShareMenu } from '../src/share-menu.js';
-import { PrintShareTarget } from '../src/targets/print.js';
-import { GoogleTranslateShareTarget } from '../src/targets/google-translate.js';
 import { FacebookShareTarget } from '../src/targets/facebook.js';
 import { MessengerShareTarget } from '../src/targets/messenger.js';
-import { TelegramShareTarget } from '../src/targets/telegram.js';
 import { WhatsAppShareTarget } from '../src/targets/whatsapp.js';
-import { RedditShareTarget } from '../src/targets/reddit.js';
+import { WeiboShareTarget } from '../src/targets/weibo.js';
+import { TelegramShareTarget } from '../src/targets/telegram.js';
+import { SnapchatShareTarget } from '../src/targets/snapchat.js';
+import { QZoneShareTarget } from '../src/targets/qzone.js';
+import { PinterestShareTarget } from '../src/targets/pinterest.js';
 import { TwitterShareTarget } from '../src/targets/twitter.js';
+import { RedditShareTarget } from '../src/targets/reddit.js';
 import { LinkedInShareTarget } from '../src/targets/linkedin.js';
 import { TumblrShareTarget } from '../src/targets/tumblr.js';
-import { PinterestShareTarget } from '../src/targets/pinterest.js';
-import { SnapchatShareTarget } from '../src/targets/snapchat.js';
+import { DoubanShareTarget } from '../src/targets/douban.js';
+import { VKShareTarget } from '../src/targets/vk.js';
+import { OKShareTarget } from '../src/targets/ok.js';
 import { MastodonShareTarget } from '../src/targets/mastodon.js';
 import { BloggerShareTarget } from '../src/targets/blogger.js';
 import { LiveJournalShareTarget } from '../src/targets/livejournal.js';
-import { EverNoteShareTarget } from '../src/targets/evernote.js';
+import { EvernoteShareTarget } from '../src/targets/evernote.js';
 import { PocketShareTarget } from '../src/targets/pocket.js';
 import { HackerNewsShareTarget } from '../src/targets/hacker-news.js';
 import { FlipboardShareTarget } from '../src/targets/flipboard.js';
 import { InstapaperShareTarget } from '../src/targets/instapaper.js';
 import { DiasporaShareTarget } from '../src/targets/diaspora.js';
-import { QZoneShareTarget } from '../src/targets/qzone.js';
-import { WeiboShareTarget } from '../src/targets/weibo.js';
-import { VKShareTarget } from '../src/targets/vk.js';
-import { OKShareTarget } from '../src/targets/ok.js';
-import { DoubanShareTarget } from '../src/targets/douban.js';
 import { XINGShareTarget } from '../src/targets/xing.js';
 import { SkypeShareTarget } from '../src/targets/skype.js';
 import { LINEShareTarget } from '../src/targets/line.js';
-import { GmailShareTarget } from '../src/targets/gmail.js';
-import { YahooShareTarget } from '../src/targets/yahoo.js';
 import { SubstackShareTarget } from '../src/targets/substack.js';
 import { KakaoTalkShareTarget } from '../src/targets/kakaotalk.js';
 import { MixShareTarget } from '../src/targets/mix.js';
+import { GmailShareTarget } from '../src/targets/gmail.js';
+import { YahooShareTarget } from '../src/targets/yahoo.js';
 import { EmailShareTarget } from '../src/targets/email.js';
 import { SMSShareTarget } from '../src/targets/sms.js';
+import { GoogleTranslateShareTarget } from '../src/targets/google-translate.js';
+import { PrintShareTarget } from '../src/targets/print.js';
 import '../src/share-menu.js';
 import '../src/targets/presets/all.js';
 import '../src/targets/presets/top15-worldwide.js';
@@ -46,42 +46,42 @@ chai.use(chaiAsPromised);
 describe('share menu presets', async () => {
   describe('all', () => {
     const allTargets = [
-      PrintShareTarget,
-      GoogleTranslateShareTarget,
       FacebookShareTarget,
       MessengerShareTarget,
-      TelegramShareTarget,
       WhatsAppShareTarget,
-      RedditShareTarget,
+      WeiboShareTarget,
+      TelegramShareTarget,
+      SnapchatShareTarget,
+      QZoneShareTarget,
+      PinterestShareTarget,
       TwitterShareTarget,
+      RedditShareTarget,
       LinkedInShareTarget,
       TumblrShareTarget,
-      PinterestShareTarget,
-      SnapchatShareTarget,
+      DoubanShareTarget,
+      VKShareTarget,
+      OKShareTarget,
       MastodonShareTarget,
       BloggerShareTarget,
       LiveJournalShareTarget,
-      EverNoteShareTarget,
+      EvernoteShareTarget,
       PocketShareTarget,
       HackerNewsShareTarget,
       FlipboardShareTarget,
       InstapaperShareTarget,
       DiasporaShareTarget,
-      QZoneShareTarget,
-      WeiboShareTarget,
-      VKShareTarget,
-      OKShareTarget,
-      DoubanShareTarget,
       XINGShareTarget,
       SkypeShareTarget,
       LINEShareTarget,
-      GmailShareTarget,
-      YahooShareTarget,
       SubstackShareTarget,
       KakaoTalkShareTarget,
       MixShareTarget,
+      GmailShareTarget,
+      YahooShareTarget,
       EmailShareTarget,
       SMSShareTarget,
+      GoogleTranslateShareTarget,
+      PrintShareTarget,
     ];
 
     describe('without Facebook App ID', () => {
