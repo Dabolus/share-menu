@@ -3,6 +3,7 @@
 [![Build status](https://github.com/Dabolus/share-menu/workflows/Lint%2C%20test%20and%20build/badge.svg)](https://github.com/Dabolus/share-menu/actions?query=workflow%3A%22Lint%2C+test+and+build%22)
 [![Code quality](https://app.codacy.com/project/badge/Grade/6d329cda2e744d94b4dfaa9d99848b1b)](https://app.codacy.com/gh/Dabolus/share-menu/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Code coverage](https://app.codacy.com/project/badge/Coverage/6d329cda2e744d94b4dfaa9d99848b1b)](https://app.codacy.com/gh/Dabolus/share-menu/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
+
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/share-menu)
 [![Release](https://img.shields.io/github/release/Dabolus/share-menu/all.svg)](https://github.com/Dabolus/share-menu)
 [![Minzipped size](https://img.shields.io/bundlephobia/minzip/share-menu.svg)](https://bundlephobia.com/result?p=share-menu)
