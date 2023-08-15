@@ -70,7 +70,7 @@ Try copy-pasting this code on your browser's console in any website:
 var a = document.createElement('script');
 a.type = 'module';
 a.textContent =
-  'import"https://unpkg.com/share-menu@5.0.0?module";import"https://unpkg.com/share-menu@5.0.0/targets/presets/all.js?module";var a=document.createElement("share-menu"),b=document.createElement("share-target-preset-all");a.appendChild(b),document.body.appendChild(a),a.share();';
+  'import"https://unpkg.com/share-menu@5.0.0?module";import"https://unpkg.com/share-menu@5.0.0/targets/presets/all.js?module";var b=document.createElement("share-menu"),c=document.createElement("share-target-preset-all");b.appendChild(c),document.body.appendChild(b),b.share();';
 document.head.appendChild(a);
 ```
 
