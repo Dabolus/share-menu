@@ -1,4 +1,5 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import { updateStringAttribute } from '../helpers.js';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class FacebookShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'Facebook';
@@ -11,27 +12,27 @@ export class FacebookShareTarget extends HTMLElement implements ShareTarget {
    * is specified, then the Facebook share dialog will be used instead of the sharer
    * API to make it possible to also share the text and title together with the URL.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get appId(): string {
+  public get appId(): string | null {
     return this.getAttribute('app-id');
   }
 
-  public set appId(val: string) {
-    this.setAttribute('app-id', val);
+  public set appId(val: string | null | undefined) {
+    updateStringAttribute(this, 'app-id', val);
   }
 
   /**
-   * A URL to redirect to after the share has been completed
+   * A URL to redirect to after the share has been completed.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get redirectUri(): string {
+  public get redirectUri(): string | null {
     return this.getAttribute('redirect-uri');
   }
 
-  public set redirectUri(val: string) {
-    this.setAttribute('redirect-uri', val);
+  public set redirectUri(val: string | null | undefined) {
+    updateStringAttribute(this, 'redirect-uri', val);
   }
 
   public share(shareMenu: ShareMenu) {

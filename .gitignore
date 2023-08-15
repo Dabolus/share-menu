@@ -1,6 +1,7 @@
 .idea/
 node_modules/
 .rpt2_cache/
+/helpers.*
 /share-menu.*
 /targets/*
 *.log

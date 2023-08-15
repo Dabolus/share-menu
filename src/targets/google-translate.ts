@@ -1,4 +1,5 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import { updateStringAttribute } from '../helpers.js';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class GoogleTranslateShareTarget
   extends HTMLElement
@@ -13,44 +14,44 @@ export class GoogleTranslateShareTarget
    * The source language to translate from.
    * Defaults to 'auto' (automatically detected by Google Translate).
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get sourceLanguage(): string {
+  public get sourceLanguage(): string | null {
     return this.getAttribute('source-language') || 'auto';
   }
 
-  public set sourceLanguage(val: string) {
-    this.setAttribute('source-language', val);
+  public set sourceLanguage(val: string | null | undefined) {
+    updateStringAttribute(this, 'source-language', val);
   }
 
   /**
    * The target language to translate to.
    * Defaults to current user language.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get targetLanguage(): string {
+  public get targetLanguage(): string | null {
     return (
       this.getAttribute('target-language') || navigator.language.slice(0, 2)
     );
   }
 
-  public set targetLanguage(val: string) {
-    this.setAttribute('target-language', val);
+  public set targetLanguage(val: string | null | undefined) {
+    updateStringAttribute(this, 'target-language', val);
   }
 
   /**
    * The interface language for Google Translate.
    * Defaults to the target language.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get interfaceLanguage(): string {
+  public get interfaceLanguage(): string | null {
     return this.getAttribute('interface-language') || this.targetLanguage;
   }
 
-  public set interfaceLanguage(val: string) {
-    this.setAttribute('interface-language', val);
+  public set interfaceLanguage(val: string | null | undefined) {
+    updateStringAttribute(this, 'interface-language', val);
   }
 
   public share(shareMenu: ShareMenu) {

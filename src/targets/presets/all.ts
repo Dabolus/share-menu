@@ -43,15 +43,15 @@ export class AllShareTargetPreset extends HTMLElement {
 
   /**
    * The Facebook App ID. Must be specified for the
-   * Messenger share button to be displayed
+   * Messenger share button to be displayed.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get facebookAppId(): string {
+  public get facebookAppId(): string | null {
     return this.getAttribute('facebook-app-id');
   }
 
-  public set facebookAppId(val: string) {
+  public set facebookAppId(val: string | null | undefined) {
     this.setAttribute('facebook-app-id', val);
   }
 

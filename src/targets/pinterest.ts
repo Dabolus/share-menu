@@ -1,4 +1,4 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class PinterestShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'Pinterest';

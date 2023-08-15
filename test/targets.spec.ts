@@ -1,7 +1,7 @@
 import { expect, fixture, html, chai } from '@open-wc/testing';
 import { fake } from 'sinon';
 import chaiAsPromised from '@esm-bundle/chai-as-promised';
-import { createShareMenu, createTargetOpener } from './helpers.js';
+import { createShareMenu, createTargetOpener } from './test-helpers.js';
 import { ShareMenu } from '../src/share-menu.js';
 import { PrintShareTarget } from '../src/targets/print.js';
 import { GoogleTranslateShareTarget } from '../src/targets/google-translate.js';

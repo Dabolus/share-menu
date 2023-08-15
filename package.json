@@ -70,6 +70,9 @@
   "files": [
     "LICENSE",
     "demo",
+    "helpers.d.ts",
+    "helpers.js",
+    "helpers.js.map",
     "share-menu.d.ts",
     "share-menu.js",
     "share-menu.js.map",

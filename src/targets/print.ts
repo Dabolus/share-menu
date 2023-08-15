@@ -1,4 +1,4 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class PrintShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'Print';

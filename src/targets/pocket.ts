@@ -1,4 +1,4 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class PocketShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'Pocket';

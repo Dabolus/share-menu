@@ -1,4 +1,4 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class SnapchatShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'Snapchat';

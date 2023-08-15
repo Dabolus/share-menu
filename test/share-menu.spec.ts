@@ -2,7 +2,7 @@ import { html, fixture, expect, chai } from '@open-wc/testing';
 import chaiAsPromised from '@esm-bundle/chai-as-promised';
 import { sendKeys } from '@web/test-runner-commands';
 import { fake } from 'sinon';
-import { createShareMenu, createTargetOpener } from './helpers.js';
+import { createShareMenu, createTargetOpener } from './test-helpers.js';
 import { ShareMenu, ShareMenuShareEvent } from '../src/share-menu.js';
 import '../src/share-menu.js';
 import '../src/targets/presets/all.js';

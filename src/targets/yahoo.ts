@@ -1,4 +1,4 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class YahooShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'Yahoo!';

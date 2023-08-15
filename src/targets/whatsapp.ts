@@ -1,4 +1,4 @@
-import type { ShareMenu, ShareTarget } from '../share-menu';
+import type { ShareMenu, ShareTarget } from '../share-menu.js';
 
 export class WhatsAppShareTarget extends HTMLElement implements ShareTarget {
   public readonly displayName = 'WhatsApp';

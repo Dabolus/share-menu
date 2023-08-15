@@ -1,3 +1,5 @@
+import { updateBooleanAttribute, updateStringAttribute } from './helpers.js';
+
 export interface ShareMenuParams {
   text?: string;
   title?: string;
@@ -136,94 +138,90 @@ export class ShareMenu extends HTMLElement {
   }
 
   public set opened(val: boolean) {
-    if (val) {
-      this.setAttribute('opened', '');
-    } else {
-      this.removeAttribute('opened');
-    }
+    updateBooleanAttribute(this, 'opened', val);
   }
 
   /**
    * The title of the dialog displayed if the user browser does not support the Web Share API.
    * Defaults to "Share".
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get dialogTitle(): string {
+  public get dialogTitle(): string | null {
     return this.getAttribute('dialog-title');
   }
 
-  public set dialogTitle(val: string) {
-    this.setAttribute('dialog-title', val);
+  public set dialogTitle(val: string | null | undefined) {
+    updateStringAttribute(this, 'dialog-title', val);
   }
 
   /**
    * The hint to show below the copy to clipboard button.
    * Defaults to "Copy".
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get copyHint(): string {
+  public get copyHint(): string | null {
     return this.getAttribute('copy-hint');
   }
 
-  public set copyHint(val: string) {
-    this.setAttribute('copy-hint', val);
+  public set copyHint(val: string | null | undefined) {
+    updateStringAttribute(this, 'copy-hint', val);
   }
 
   /**
    * The body of the content you want to share.
    * Defaults to your description meta tag.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get text(): string {
+  public get text(): string | null {
     return this.getAttribute('text');
   }
 
-  public set text(val: string) {
-    this.setAttribute('text', val);
+  public set text(val: string | null | undefined) {
+    updateStringAttribute(this, 'text', val);
   }
 
   /**
    * The title of the content you want to share.
    * Defaults to your page title.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get title(): string {
+  public get title(): string | null {
     return this.getAttribute('title');
   }
 
-  public set title(val: string) {
-    this.setAttribute('title', val);
+  public set title(val: string | null | undefined) {
+    updateStringAttribute(this, 'title', val);
   }
 
   /**
    * The URL of the content you want to share.
    * Defaults to your canonical URL if available, otherwise to your page `window.location.href`.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get url(): string {
+  public get url(): string | null {
     return this.getAttribute('url');
   }
 
-  public set url(val: string) {
-    this.setAttribute('url', val);
+  public set url(val: string | null | undefined) {
+    updateStringAttribute(this, 'url', val);
   }
 
   /**
    * The URL of the image you want to share.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get image(): string {
+  public get image(): string | null {
     return this.getAttribute('image');
   }
 
-  public set image(val: string) {
-    this.setAttribute('image', val);
+  public set image(val: string | null | undefined) {
+    updateStringAttribute(this, 'image', val);
   }
 
   /**
@@ -236,11 +234,7 @@ export class ShareMenu extends HTMLElement {
   }
 
   public set noBackdrop(val: boolean) {
-    if (val) {
-      this.setAttribute('no-backdrop', '');
-    } else {
-      this.removeAttribute('no-backdrop');
-    }
+    updateBooleanAttribute(this, 'opened', val);
   }
 
   /**
@@ -251,20 +245,22 @@ export class ShareMenu extends HTMLElement {
    * - "always" - always show the handle;
    * - "never" - never show the handle.
    *
-   * @return {string}
+   * @return {string | null}
    */
-  public get handle(): string {
+  public get handle(): string | null {
     return this.getAttribute('handle');
   }
 
-  public set handle(val: string) {
-    this.setAttribute('handle', val);
+  public set handle(val: string | null | undefined) {
+    updateStringAttribute(this, 'handle', val);
   }
 
   /**
    * The list of share targets displayed in the fallback dialog.
+   *
+   * @return {ShareTarget[]}
    */
-  public get targets() {
+  public get targets(): ShareTarget[] {
     return this._targets;
   }
 
