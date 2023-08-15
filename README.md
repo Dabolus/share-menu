@@ -49,16 +49,16 @@ If you just want to directly include the script without installing it as a depen
 
 ```html
 <!-- Main component -->
-<script type="module" src="https://unpkg.com/share-menu@5.0.0?module"></script>
+<script type="module" src="https://unpkg.com/share-menu@5.0.1?module"></script>
 <!-- Single share target -->
 <script
   type="module"
-  src="https://unpkg.com/share-menu@5.0.0/targets/email.js?module"
+  src="https://unpkg.com/share-menu@5.0.1/targets/email.js?module"
 ></script>
 <!-- Share target preset -->
 <script
   type="module"
-  src="https://unpkg.com/share-menu@5.0.0/targets/presets/all.js?module"
+  src="https://unpkg.com/share-menu@5.0.1/targets/presets/all.js?module"
 ></script>
 ```
 
@@ -70,7 +70,7 @@ Try copy-pasting this code on your browser's console in any website:
 var a = document.createElement('script');
 a.type = 'module';
 a.textContent =
-  'import"https://unpkg.com/share-menu@5.0.0?module";import"https://unpkg.com/share-menu@5.0.0/targets/presets/all.js?module";var b=document.createElement("share-menu"),c=document.createElement("share-target-preset-all");b.appendChild(c),document.body.appendChild(b),b.share();';
+  'import"https://unpkg.com/share-menu@5.0.1?module";import"https://unpkg.com/share-menu@5.0.1/targets/presets/all.js?module";var b=document.createElement("share-menu"),c=document.createElement("share-target-preset-all");b.appendChild(c),document.body.appendChild(b),b.share();';
 document.head.appendChild(a);
 ```
 
