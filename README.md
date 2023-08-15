@@ -16,46 +16,23 @@ experience of the native one.
 
 ## Features
 
-- Incredibly simple to use. Just set the `title`, `text`, and `url`
-  properties and call the `share()` method to make the magic happen.
+- Incredibly simple to use. Just set one of the `title`, `text`, `url`, or
+  `image` properties and call the `share()` method to make the magic happen;
 - Highly customizable. It offers a great material design UI by default, but
   it is also designed to be as much customizable as possible through CSS custom
-  properties and shadow parts.
-- Compatible with any major browser. The Web Share API is still quite young, but
-  the fallback dialog works on any browser supporting Custom Elements (directly
-  or through a polyfill). Unlike the native share menu, the fallback will also
-  work on desktop browsers and insecure contexts, so you will be able to offer
-  a much more coherent experience to your users.
-- Lightweight. If correctly minified (read the note about the bundle size below),
-  the `share-menu` element itself weighs 13.18 KB (4.34 KB gzipped, 3.76 KB brotli),
-  while the icons weigh 12.24 KB (5.66 KB gzipped, 4.9 KB brotli), for a total of
-  10 KB gzipped size and 8.66 KB brotli size.
-
-#### Note about the bundle size
-
-The share menu repetitively uses some private helpers to avoid code duplication.
-As a standard, these helpers always start with an underscore (\_), so you can easily
-drop the bundle size by telling your JS compiler to mangle all properties that start
-with an underscore (to be safe, I would suggest to only apply this rule to the share
-menu, but you might also get a smaller bundle size by applying this rule to any package,
-since a property starting with an underscore is generally considered private).
-For example, if you use Terser you might configure it in this way:
-
-```js
-{
-  mangle: {
-    properties: {
-      regex: /^_/,
-    },
-  },
-}
-```
-
-By simply applying this rule, the minified package goes from 14.92 KB
-(4.5 KB gzipped, 3.93 KB brotli) to 13.18 KB (4.34 KB gzipped, 3.76 KB brotli).
-Note that the provided minified version already applies these optimizations, so you can
-directly import it if you want to same some bytes without having to change your compiler
-configuration.
+  properties and shadow parts. It also offers lots of built-in share targets
+  and presets, with support for custom ones if needed;
+- Compatible with any major browser. The Web Share API is still quite young,
+  but the fallback dialog works on any browser supporting Custom Elements
+  (directly or through a polyfill). Unlike the native share menu, the fallback
+  will also work on desktop browsers and insecure contexts, so you will be able
+  to offer a much more coherent experience to your users;
+- Lightweight. The `share-menu` element itself weighs ~11.4 KB (~3.6 KB when
+  compressed), while each built-in share target weighs on average ~700B (less
+  than half the size when compressed);
+- Thoroughly tested. Both the native and fallback behaviors are covered by tests,
+  including each share target and preset. Minimum code coverage is set to 90% to
+  ensure that each new feature maintains a high level of quality.
 
 ## Installation
 
@@ -70,7 +47,18 @@ yarn add share-menu
 If you just want to directly include the script without installing it as a dependency, use the `unpkg` CDN:
 
 ```html
-<script type="module" src="https://unpkg.com/share-menu@5.0.0-rc.2"></script>
+<!-- Main component -->
+<script type="module" src="https://unpkg.com/share-menu@5.0.0?module"></script>
+<!-- Single share target -->
+<script
+  type="module"
+  src="https://unpkg.com/share-menu@5.0.0/targets/email.js?module"
+></script>
+<!-- Share target preset -->
+<script
+  type="module"
+  src="https://unpkg.com/share-menu@5.0.0/targets/presets/all.js?module"
+></script>
 ```
 
 ## Try it now!
@@ -81,7 +69,7 @@ Try copy-pasting this code on your browser's console in any website:
 var a = document.createElement('script');
 a.type = 'module';
 a.textContent =
-  "import'https://unpkg.com/share-menu@5.0.0-rc.2';var a=document.createElement('share-menu');document.body.appendChild(a),a.share()";
+  'import"https://unpkg.com/share-menu@5.0.0?module";import"https://unpkg.com/share-menu@5.0.0/targets/presets/all.js?module";var a=document.createElement("share-menu"),b=document.createElement("share-target-preset-all");a.appendChild(b),document.body.appendChild(a),a.share();';
 document.head.appendChild(a);
 ```
 
@@ -94,70 +82,115 @@ _**Note:** these scripts will not work if the website implements a strict CSP
 
 ```html
 <share-menu
-  id="shareMenu"
+  id="basicShareMenu"
   title="Ohai!"
   text="Just a test"
   url="https://www.example.com/"
-></share-menu>
+  image="https://www.example.com/image.png"
+>
+  <share-target-preset-all></share-target-preset-all>
+</share-menu>
 
-<button onclick="shareMenu.share()">Share!</button>
+<button onclick="basicShareMenu.share()">Share!</button>
 ```
 
-#### All the properties set
+#### With more configuration options and custom share targets
 
 ```html
 <share-menu
+  id="customShareMenu"
   title="Awesome!"
   text="More customized share menu"
   url="https://www.example.com/"
-  dialog-title="Share now!"
+  image="https://www.example.com/image.png"
+  dialog-title="Share now"
+  copy-hint="Copy to clipboard"
+  handle="always"
   no-backdrop
 >
+  <share-target-email></share-target-email>
+  <share-target-facebook></share-target-facebook>
+  <share-target-telegram></share-target-telegram>
 </share-menu>
+
+<button onclick="customShareMenu.share()">Share!</button>
 ```
 
-## Supported targets (in the fallback dialog)
+## Defining the share targets (for the fallback dialog)
 
-Here you can see the list of the supported targets, as well as the limitations
-that each one gives:
+### Built-in targets
 
-- Copy to clipboard
-- Blogger
-- Diaspora - _URL and title only_
-- Douban
-- Email
-- Evernote - _URL and title only_
-- Facebook - _URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript) or not providing a Facebook App ID_
-- FlipBoard - _URL and title only_
-- Gmail
-- Google Translate - _Only translates the page at the given URL_
-- Hacker News - _URL and title only_
-- Instapaper
-- LINE - _URL only_
-- LinkedIn - _URL only_
-- LiveJournal
-- Mastodon
-- Messenger - _URL only, requires a Facebook App ID_
-- Odnoklassniki (OK.ru)
-- Pinterest
-- Pocket - _URL only_
-- Print - _Only prints the page at the given URL_
-- QZone
-- Reddit - _Shares an URL if there is no text provided, otherwise a text with the URL appended at the end_
-- Skype
-- SMS
-- Snapchat - _URL only_
-- Substack Notes
-- Telegram
-- Tumblr
-- Twitter
-- VKontakte (VK)
-- Weibo
-- WhatsApp
-- XING - _URL only_
-- Yahoo Mail
+This component comes with a large number of built-in targets that can be used
+to share content to the most popular social networks and messaging apps. These
+targets can be found in the `targets` folder and can be imported as follows:
 
-## Custom share targets
+```js
+import 'share-menu/targets/<target>.js';
+```
+
+Here you can see the list of the built-in targets, as well as the capabilities
+and limitations of each of them:
+
+| Target                | Title | Text | URL | Image | Notes                                                                                                                       |
+| --------------------- | ----- | ---- | --- | ----- | --------------------------------------------------------------------------------------------------------------------------- |
+| Clipboard             | ✅    | ✅   | ✅  | ✅    | Copying images is not supported on Firefox                                                                                  |
+| Blogger               | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Diaspora              | ✅    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Douban                | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Email                 | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Evernote              | ✅    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Facebook              | ✅    | ✅   | ✅  | ❌    | URL only if not using [Facebook JS SDK](https://developers.facebook.com/docs/javascript) or not providing a Facebook App ID |
+| Flipboard             | ✅    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Gmail                 | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Google Translate      | ❌    | ❌   | ✅  | ❌    | Translates the page at the given URL                                                                                        |
+| Hacker News           | ✅    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Instapaper            | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| KakaoTalk             | ❌    | ❌   | ✅  | ❌    |                                                                                                                             |
+| LINE                  | ❌    | ❌   | ✅  | ❌    |                                                                                                                             |
+| LinkedIn              | ❌    | ❌   | ✅  | ❌    |                                                                                                                             |
+| LiveJournal           | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Mastodon              | ✅    | ✅   | ✅  | ❌    | Uses [toot](https://toot.kytta.dev/) to ask for the instance on which to share the content                                  |
+| Messenger             | ❌    | ❌   | ✅  | ❌    | Requires a Facebook App ID                                                                                                  |
+| Mix                   | ❌    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Odnoklassniki (OK.ru) | ✅    | ✅   | ✅  | ✅    |                                                                                                                             |
+| Pinterest             | ✅    | ✅   | ✅  | ✅    |                                                                                                                             |
+| Pocket                | ❌    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Print                 | ❌    | ❌   | ✅  | ❌    | Prints the page at the given URL                                                                                            |
+| QZone                 | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Reddit                | ✅    | ✅   | ✅  | ❌    | Shares an URL if there is no text provided, otherwise a text with the URL appended at the end                               |
+| Skype                 | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| SMS                   | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Snapchat              | ❌    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Substack Notes        | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Telegram              | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Tumblr                | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Twitter               | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| VKontakte (VK)        | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| Weibo                 | ✅    | ✅   | ✅  | ✅    |                                                                                                                             |
+| WhatsApp              | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| XING                  | ❌    | ❌   | ✅  | ❌    |                                                                                                                             |
+| Yahoo Mail            | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+
+### Presets
+
+Given the large number of built-in targets, it can be quite tedious to add them
+all to the share menu. For this reason, this component offers a few presets
+that can be used to add a collection of targets at once. Presets can be found
+in the `targets/presets` folder and can be imported as follows:
+
+```js
+import 'share-menu/targets/presets/<preset>.js';
+```
+
+Here is the list of the available presets, together with the targets included
+in each of them:
+
+| Preset           | Targets included                                                                                                              | Notes                                                  |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| All              | All the built-in targets                                                                                                      | Requires Facebook App ID for Messenger to be displayed |
+| Top 15 Worldwide | Facebook, Messenger, WhatsApp, Weibo, Telegram, Snapchat, QZone, Pinterest, Twitter, Reddit, LinkedIn, Tumblr, Douban, VK, OK | Requires Facebook App ID for Messenger to be displayed |
+
+### Custom share targets
 
 Share targets in the fallback dialog are just simple HTML custom elements that
 implement the `ShareTarget` interface. More specifically, they must expose:
