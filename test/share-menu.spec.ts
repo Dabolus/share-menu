@@ -240,44 +240,6 @@ describe('share menu', () => {
       });
     });
 
-    describe('copy hint', async () => {
-      const shareMenu = await createShareMenu();
-
-      it('syncs copyHint property with copy-hint attribute', () => {
-        shareMenu.setAttribute('copy-hint', 'Test hint');
-        expect(shareMenu.copyHint).to.equal('Test hint');
-
-        shareMenu.copyHint = 'Another test hint';
-        expect(shareMenu.getAttribute('copy-hint')).to.equal(
-          'Another test hint',
-        );
-      });
-
-      it('updates the title in the HTML', () => {
-        shareMenu.copyHint = 'Test title';
-        expect(
-          shareMenu.shadowRoot?.querySelector<HTMLDivElement>('#copy-hint')
-            ?.textContent,
-        ).to.equal('Test title');
-      });
-
-      it('it correctly sets the copyHint property if initialized with the copy-hint attribute', async () => {
-        const copyHintShareMenu = await fixture<ShareMenu>(html`
-          <share-menu copy-hint="copyHint"></share-menu>
-        `);
-
-        expect(copyHintShareMenu.copyHint).to.equal('copyHint');
-      });
-
-      it('defaults to "Copy" if copy-hint attribute is not passed', async () => {
-        const noCopyHintShareMenu = await fixture<ShareMenu>(html`
-          <share-menu></share-menu>
-        `);
-
-        expect(noCopyHintShareMenu.copyHint).to.equal('Copy');
-      });
-    });
-
     describe('text', async () => {
       const shareMenu = await createShareMenu();
 

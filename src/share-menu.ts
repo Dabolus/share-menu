@@ -287,10 +287,10 @@ export class ShareMenu extends HTMLElement {
   private _backdropRef: HTMLDivElement;
   private _dialogRef: HTMLDivElement;
   private _dialogTitleRef: HTMLHeadingElement;
-  private _copyHintRef: HTMLDivElement;
   private _targetsContainerRef: HTMLDivElement;
   private _clipboardImagePreviewRef: HTMLImageElement;
   private _clipboardPreviewRef: HTMLPreElement;
+  private _clipboardButtonRef: HTMLButtonElement;
   private _targets: ShareTarget[] = [];
   private _filePromise: Promise<File> = Promise.resolve<File>(undefined);
 
@@ -347,7 +347,7 @@ export class ShareMenu extends HTMLElement {
 
       #dialog {
         margin: 100vh auto 0 auto;
-        background: var(--sm-background-color, #fff);
+        background: var(--sm-background-color, #ece6f0);
         width: 100%;
         max-width: 640px;
         will-change: transform;
@@ -362,7 +362,14 @@ export class ShareMenu extends HTMLElement {
       }
 
       #handle {
-        padding: 18px 0 4px;
+        position: sticky;
+        top: 0;
+        margin: 0 auto -20px auto;
+        padding: 8px 16px;
+        width: 96px;
+        border-radius: 0 0 8px 8px;
+        background: var(--sm-background-color, #ece6f0);
+        z-index: 1;
       }
 
       :host([handle='never']) #handle {
@@ -378,25 +385,24 @@ export class ShareMenu extends HTMLElement {
       #handle::after {
         content: '';
         display: block;
-        width: 24px;
+        width: 64px;
         height: 4px;
         border-radius: 2px;
-        background: var(--sm-handle-color, rgba(0, 0, 0, .6));
+        background: var(--sm-handle-color, #79747e);
         margin: auto;
       }
 
       hr {
-        margin: 0;
-        border: 1px solid var(--sm-divider-color, rgba(0, 0, 0, .12));
+        margin: 0 16px;
+        border: 1px solid var(--sm-divider-color, #c4c7c5);
       }
 
       #title {
-        color: var(--sm-title-color, rgba(0, 0, 0, .6));
+        color: var(--sm-title-color, #1c1b1f);
         font-weight: 500;
         font-size: 18px;
         margin: 0;
-        padding: 18px;
-        text-align: center;
+        padding: 16px 16px 0 16px;
       }
 
       #clipboard-container {
@@ -404,22 +410,25 @@ export class ShareMenu extends HTMLElement {
         min-height: 72px;
         max-height: 192px;
         align-items: center;
-        padding: 24px 12px 24px 24px;
-        gap: 12px;
+        margin: 16px;
+        padding: 12px 8px;
+        border-radius: 16px;
+        gap: 8px;
+        background: var(--sm-clipboard-background-color, #e6e0e9);
       }
 
       #clipboard-container > img {
         flex: 0;
         width: 100%;
         height: 100%;
-        max-width: 288px;
+        max-width: 192px;
         max-height: 144px;
       }
 
       #clipboard-container > pre {
         flex: 1;
         font-family: inherit;
-        color: var(--sm-preview-color, rgba(0, 0, 0, .6));
+        color: var(--sm-preview-color, #49454e);
         margin: 0;
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -427,8 +436,14 @@ export class ShareMenu extends HTMLElement {
         overflow: hidden;
       }
 
+      :host:not([title]):not([text]):not([url]) #clipboard-container > pre,
+      :host:not([image]) #clipboard-container > img {
+        display: none;
+      }
+
       #clipboard-container > button {
-        flex: 0 0 72px;
+        flex: 0;
+        padding: 0;
       }
 
       #targets-container {
@@ -473,9 +488,8 @@ export class ShareMenu extends HTMLElement {
       .clipboard-icon {
         width: 36px;
         height: 36px;
-        padding: 7px;
-        margin: -5px;
-        fill: var(--sm-hint-color, rgba(0, 0, 0, .6));
+        padding: 8px;
+        fill: var(--sm-preview-color, #49454e);
       }
 
       .icon::before, .icon::after, .clipboard-icon::before, .clipboard-icon::after {
@@ -515,13 +529,13 @@ export class ShareMenu extends HTMLElement {
 
       .label {
         padding-top: 10px;
-        color: var(--sm-labels-color, rgba(0, 0, 0, .87));
+        color: var(--sm-labels-color, #1c1b1f);
         font-size: 14px;
       }
 
       .hint {
         padding-top: 4px;
-        color: var(--sm-hint-color, rgba(0, 0, 0, .6));
+        color: var(--sm-hint-color, #49454e);
         font-size: 12px;
       }
 
@@ -544,13 +558,12 @@ export class ShareMenu extends HTMLElement {
         <div id="clipboard-container">
           <img id="clipboard-image-preview">
           <pre id="clipboard-preview"></pre>
-          <button class="target" id="clipboard">
+          <button class="target" id="clipboard" aria-label="Copy">
             <div class="clipboard-icon">
               <svg viewBox="0 0 256 256">
                 <path d="M180 233H41V70H17v164a23 23 0 0024 22h139zm36-24a23 23 0 0023-23V23v-1a23 23 0 00-24-22H87a23 23 0 00-23 23v163a23 23 0 0023 23h128zm-1-23H87V23h128z"/>
               </svg>
             </div>
-            <div class="hint" id="copy-hint"></div>
           </button>
         </div>
         <hr>
@@ -658,9 +671,6 @@ export class ShareMenu extends HTMLElement {
     this._dialogTitleRef.textContent = this.dialogTitle;
     this._targetsContainerRef =
       this.shadowRoot.querySelector<HTMLDivElement>('#targets-container');
-    this._copyHintRef =
-      this.shadowRoot.querySelector<HTMLDivElement>('#copy-hint');
-    this._copyHintRef.textContent = this.copyHint;
 
     this._clipboardImagePreviewRef =
       this.shadowRoot.querySelector<HTMLImageElement>(
@@ -668,19 +678,23 @@ export class ShareMenu extends HTMLElement {
       );
     this._clipboardPreviewRef =
       this.shadowRoot.querySelector<HTMLPreElement>('#clipboard-preview');
+    this._clipboardButtonRef =
+      this.shadowRoot.querySelector<HTMLButtonElement>('.target#clipboard');
 
-    this._clipboardPreviewRef.textContent = `${this.title}\n${this.text}\n${this.url}`;
+    const textToCopyArray = [
+      ...(this.title ? [this.title] : []),
+      ...(this.text ? [this.text] : []),
+      ...(this.url ? [this.url] : []),
+    ];
+
+    this._clipboardPreviewRef.textContent = textToCopyArray.join('\n');
 
     if (navigator.clipboard) {
       const cliboardButtonRef =
         this.shadowRoot.querySelector<HTMLButtonElement>('#clipboard');
 
       cliboardButtonRef.addEventListener('click', async () => {
-        const textToCopy = [
-          ...(this.title ? [this.title] : []),
-          ...(this.text ? [this.text] : []),
-          ...(this.url ? [this.url] : []),
-        ].join('\n\n');
+        const textToCopy = textToCopyArray.join('\n\n');
         try {
           const file = await this._filePromise;
           await this._copyToClipboard(textToCopy, file);
@@ -748,8 +762,8 @@ export class ShareMenu extends HTMLElement {
         }
         break;
       case 'copy-hint':
-        if (this._copyHintRef) {
-          this._copyHintRef.textContent = newValue;
+        if (this._clipboardButtonRef) {
+          this._clipboardButtonRef.setAttribute('aria-label', newValue);
         }
         break;
       case 'opened':
@@ -763,7 +777,11 @@ export class ShareMenu extends HTMLElement {
       case 'title':
       case 'url':
         if (this._clipboardPreviewRef) {
-          this._clipboardPreviewRef.textContent = `${this.title}\n${this.text}\n${this.url}`;
+          this._clipboardPreviewRef.textContent = [
+            ...(this.title ? [this.title] : []),
+            ...(this.text ? [this.text] : []),
+            ...(this.url ? [this.url] : []),
+          ].join('\n');
         }
         break;
       case 'image':
