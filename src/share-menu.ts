@@ -277,21 +277,36 @@ export class ShareMenu extends HTMLElement {
   ];
   public static stylesheet?: CSSStyleSheet;
 
+  /** @private */
   private static readonly _supportsAdoptingStyleSheets =
     typeof globalThis.CSSStyleSheet?.prototype.replace === 'function';
+  /** @private */
   private readonly _styles: string;
+  /** @private */
   private readonly _template: HTMLTemplateElement;
+  /** @private */
   private _previousFocus: HTMLElement;
+  /** @private */
   private _firstFocusableElRef: HTMLElement;
+  /** @private */
   private _lastFocusableElRef: HTMLElement;
+  /** @private */
   private _backdropRef: HTMLDivElement;
+  /** @private */
   private _dialogRef: HTMLDivElement;
+  /** @private */
   private _dialogTitleRef: HTMLHeadingElement;
+  /** @private */
   private _targetsContainerRef: HTMLDivElement;
+  /** @private */
   private _clipboardImagePreviewRef: HTMLImageElement;
+  /** @private */
   private _clipboardPreviewRef: HTMLPreElement;
+  /** @private */
   private _clipboardButtonRef: HTMLButtonElement;
+  /** @private */
   private _targets: ShareTarget[] = [];
+  /** @private */
   private _filePromise: Promise<File> = Promise.resolve<File>(undefined);
 
   public constructor() {
