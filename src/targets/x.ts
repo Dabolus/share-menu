@@ -41,7 +41,7 @@ export class XShareTarget extends HTMLElement implements ShareTarget {
     shareMenu.openWindow('https://x.com/intent/post', {
       text: `${shareMenu.title}\n${shareMenu.text}`,
       url: shareMenu.url,
-      via: this.via,
+      via: this.via ?? undefined,
       ...(this.hashtags.length > 0 && { hashtags: this.hashtags.join(',') }),
     });
   }
