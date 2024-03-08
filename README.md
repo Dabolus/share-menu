@@ -51,16 +51,16 @@ If you just want to directly include the script without installing it as a depen
 
 ```html
 <!-- Main component -->
-<script type="module" src="https://esm.run/share-menu@5.0.1"></script>
+<script type="module" src="https://esm.run/share-menu@5.1.0"></script>
 <!-- Single share target -->
 <script
   type="module"
-  src="https://esm.run/share-menu@5.0.1/targets/email.js"
+  src="https://esm.run/share-menu@5.1.0/targets/email.js"
 ></script>
 <!-- Share target preset -->
 <script
   type="module"
-  src="https://esm.run/share-menu@5.0.1/targets/presets/all.js"
+  src="https://esm.run/share-menu@5.1.0/targets/presets/all.js"
 ></script>
 ```
 
@@ -72,7 +72,7 @@ Try copy-pasting this code on your browser's console in any website:
 var a = document.createElement('script');
 a.type = 'module';
 a.textContent =
-  'import"https://esm.run/share-menu@5.0.1";import"https://esm.run/share-menu@5.0.1/targets/presets/all.js";var b=document.createElement("share-menu"),c=document.createElement("share-target-preset-all");b.appendChild(c),document.body.appendChild(b),b.share();';
+  'import"https://esm.run/share-menu@5.1.0";import"https://esm.run/share-menu@5.1.0/targets/presets/all.js";var b=document.createElement("share-menu"),c=document.createElement("share-target-preset-all");b.appendChild(c),document.body.appendChild(b),b.share();';
 document.head.appendChild(a);
 ```
 
