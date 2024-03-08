@@ -172,38 +172,34 @@ describe('share menu targets', async () => {
     });
   });
 
-  describe('twitter', () => {
-    it('opens a window with Twitter share screen', async () => {
-      await openTargetAndCheckWindow('twitter');
+  describe('x', () => {
+    it('opens a window with X share screen', async () => {
+      await openTargetAndCheckWindow('x');
     });
 
     xit('adds the via parameter if via is set', async () => {
-      const twitterShareTarget = shareMenu.querySelector(
-        'share-target-twitter',
-      )!;
-      const viaBackup = twitterShareTarget.via;
-      twitterShareTarget.via = 'via';
-      await openTargetAndCheckWindow('twitter', 'via=');
-      twitterShareTarget.via = viaBackup;
+      const xShareTarget = shareMenu.querySelector('share-target-x')!;
+      const viaBackup = xShareTarget.via;
+      xShareTarget.via = 'via';
+      await openTargetAndCheckWindow('x', 'via=');
+      xShareTarget.via = viaBackup;
     });
 
     xit("doesn't add the via parameter if via isn't set", async () => {
-      const twitterShareTarget = shareMenu.querySelector(
-        'share-target-twitter',
-      )!;
-      const viaBackup = twitterShareTarget.via;
-      twitterShareTarget.via = '';
+      const xShareTarget = shareMenu.querySelector('share-target-x')!;
+      const viaBackup = xShareTarget.via;
+      xShareTarget.via = '';
       const openWindowBackup = shareMenu.openWindow;
       const fakeOpenWindow = fake((url: string) => {
         expect(url).not.to.contain('via=');
         return null;
       });
       shareMenu.openWindow = fakeOpenWindow;
-      await openTarget('twitter');
+      await openTarget('x');
       expect(fakeOpenWindow.calledOnce).to.equal(true);
       shareMenu.openWindow = openWindowBackup;
 
-      twitterShareTarget.via = viaBackup;
+      xShareTarget.via = viaBackup;
     });
   });
 

@@ -9,7 +9,7 @@ import { TelegramShareTarget } from '../src/targets/telegram.js';
 import { SnapchatShareTarget } from '../src/targets/snapchat.js';
 import { QZoneShareTarget } from '../src/targets/qzone.js';
 import { PinterestShareTarget } from '../src/targets/pinterest.js';
-import { TwitterShareTarget } from '../src/targets/twitter.js';
+import { XShareTarget } from '../src/targets/x.js';
 import { RedditShareTarget } from '../src/targets/reddit.js';
 import { LinkedInShareTarget } from '../src/targets/linkedin.js';
 import { TumblrShareTarget } from '../src/targets/tumblr.js';
@@ -55,7 +55,7 @@ describe('share menu presets', async () => {
       SnapchatShareTarget,
       QZoneShareTarget,
       PinterestShareTarget,
-      TwitterShareTarget,
+      XShareTarget,
       RedditShareTarget,
       LinkedInShareTarget,
       TumblrShareTarget,
@@ -187,7 +187,7 @@ describe('share menu presets', async () => {
       SnapchatShareTarget,
       QZoneShareTarget,
       PinterestShareTarget,
-      TwitterShareTarget,
+      XShareTarget,
       RedditShareTarget,
       LinkedInShareTarget,
       TumblrShareTarget,

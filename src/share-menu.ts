@@ -77,7 +77,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  * - KakaoTalk - _URL only_
  * - Telegram
  * - Tumblr
- * - Twitter
+ * - X (Twitter)
  * - VKontakte (VK)
  * - Weibo
  * - WhatsApp

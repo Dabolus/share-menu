@@ -6,7 +6,7 @@ import '../telegram.js';
 import '../snapchat.js';
 import '../qzone.js';
 import '../pinterest.js';
-import '../twitter.js';
+import '../x.js';
 import '../reddit.js';
 import '../linkedin.js';
 import '../tumblr.js';
@@ -76,7 +76,7 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-snapchat></share-target-snapchat>
       <share-target-qzone></share-target-qzone>
       <share-target-pinterest></share-target-pinterest>
-      <share-target-twitter></share-target-twitter>
+      <share-target-x></share-target-x>
       <share-target-reddit></share-target-reddit>
       <share-target-linkedin></share-target-linkedin>
       <share-target-tumblr></share-target-tumblr>

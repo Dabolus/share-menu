@@ -166,7 +166,7 @@ and limitations of each of them:
 | Substack Notes        | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
 | Telegram              | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
 | Tumblr                | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
-| Twitter               | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
+| X (Twitter)           | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
 | VKontakte (VK)        | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
 | Weibo                 | ✅    | ✅   | ✅  | ✅    |                                                                                                                             |
 | WhatsApp              | ✅    | ✅   | ✅  | ❌    |                                                                                                                             |
@@ -187,10 +187,10 @@ import 'share-menu/targets/presets/<preset>.js';
 Here is the list of the available presets, together with the targets included
 in each of them:
 
-| Preset           | Targets included                                                                                                              | Notes                                                  |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| All              | All the built-in targets                                                                                                      | Requires Facebook App ID for Messenger to be displayed |
-| Top 15 Worldwide | Facebook, Messenger, WhatsApp, Weibo, Telegram, Snapchat, QZone, Pinterest, Twitter, Reddit, LinkedIn, Tumblr, Douban, VK, OK | Requires Facebook App ID for Messenger to be displayed |
+| Preset           | Targets included                                                                                                                  | Notes                                                  |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| All              | All the built-in targets                                                                                                          | Requires Facebook App ID for Messenger to be displayed |
+| Top 15 Worldwide | Facebook, Messenger, WhatsApp, Weibo, Telegram, Snapchat, QZone, Pinterest, X (Twitter), Reddit, LinkedIn, Tumblr, Douban, VK, OK | Requires Facebook App ID for Messenger to be displayed |
 
 ### Custom share targets
 
