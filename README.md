@@ -41,9 +41,11 @@ experience of the native one.
 npm i share-menu
 # or
 yarn add share-menu
+# or
+bun i share-menu
 ```
 
-## Without npm/yarn
+## Without npm/yarn/bun
 
 If you just want to directly include the script without installing it as a dependency, use the `unpkg` CDN:
 

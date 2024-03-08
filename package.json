@@ -8,25 +8,22 @@
   "types": "share-menu.d.ts",
   "type": "module",
   "scripts": {
-    "start": "run-p watch serve",
-    "watch": "rollup -w -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "serve": "wds --node-resolve --port 8080 --watch --app-index 'demo/index.html'",
-    "build": "NODE_ENV=production rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "lint:src": "eslint --ext .ts 'src/**/*.{js,ts}'",
-    "lint:test": "eslint --ext .ts 'test/**/*.{js,ts}' --config .eslintrc.test",
-    "lint": "run-p lint:src lint:test",
-    "format:src": "yarn lint:src -- --fix",
-    "format:test": "yarn lint:test -- --fix",
-    "format": "run-p format:src format:test",
-    "prepublishOnly": "yarn build",
-    "test": "wtr",
-    "test:watch": "yarn test --watch"
+    "start": "concurrently bun:watch bun:serve",
+    "watch": "bun run --bun rollup -w -c rollup.config.ts",
+    "serve": "bun run --bun wds --node-resolve --port 8080 --watch --app-index 'demo/index.html'",
+    "build": "NODE_ENV=production bun run --bun rollup -c rollup.config.ts",
+    "lint:src": "bun run eslint --ext .ts 'src/**/*.{js,ts}'",
+    "lint:test": "bun run eslint --ext .ts 'test/**/*.{js,ts}' --config .eslintrc.test",
+    "lint": "concurrently bun:lint:src bun:lint:test",
+    "format:src": "bun run lint:src -- --fix",
+    "format:test": "bun run lint:test -- --fix",
+    "format": "concurrently bun:format:src bun:format:test",
+    "prepublishOnly": "bun run build",
+    "test": "bun run --bun wtr"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.22.5",
     "@esm-bundle/chai-as-promised": "^7.1.1",
     "@open-wc/testing": "^3.2.0",
-    "@rollup/plugin-typescript": "^11.1.2",
     "@types/chai-as-promised": "^7.1.5",
     "@types/facebook-js-sdk": "^3.3.6",
     "@types/glob": "^8.1.0",
@@ -37,11 +34,11 @@
     "@web/test-runner": "^0.17.0",
     "@web/test-runner-commands": "^0.8.0",
     "@web/test-runner-playwright": "^0.10.1",
+    "concurrently": "^8.2.2",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "glob": "^10.3.3",
-    "npm-run-all": "^4.1.5",
     "prettier": "^3.0.1",
     "rollup": "^3.27.2",
     "rollup-plugin-filesize": "^10.0.0",
@@ -79,6 +76,5 @@
     "targets",
     "package.json",
     "README.md"
-  ],
-  "packageManager": "yarn@3.6.1"
+  ]
 }

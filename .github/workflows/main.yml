@@ -8,21 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run Static Code Analysis
         uses: codacy/codacy-analysis-cli-action@master
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
+      - name: Use Bun 1.0.30
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 18
+          bun-version: 1.0.30
       - name: Install deps
-        run: yarn install --immutable
+        run: |
+          bun install --frozen-lockfile
+          bun x playwright install
       - name: Lint
-        run: yarn lint
+        run: bun run lint
       - name: Build
-        run: yarn build
+        run: bun run build
       - name: Test
-        run: yarn test --coverage
+        run: bun run test --coverage
       - name: Upload coverage on Codacy
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage/lcov.info
         env:

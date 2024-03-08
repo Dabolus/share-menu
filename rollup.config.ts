@@ -20,7 +20,7 @@ export default defineConfig({
   plugins: [
     ...(prod
       ? [
-          (minifyHtml as unknown as { default: typeof minifyHtml }).default({
+          minifyHtml({
             options: {
               shouldMinify: (template) =>
                 template.parts[0].text.startsWith('<!-- html -->'),
@@ -68,7 +68,9 @@ export default defineConfig({
       ? [
           filesize({
             showMinifiedSize: false,
-            showBrotliSize: true,
+            // TODO: set this to true as soon as Bun gets support for Brotli in its zlib implementation
+            // See: https://github.com/oven-sh/bun/issues/267
+            showBrotliSize: false,
           }),
         ]
       : []),
