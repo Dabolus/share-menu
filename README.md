@@ -224,11 +224,14 @@ The following custom properties and shadow parts are available for styling:
 | `--sm-handle-color`               | The color of the handle on top of the dialog            | `#79747e` |
 | `--sm-divider-color`              | The color of the dividers                               | `#c4c7c5` |
 | `--sm-preview-color`              | The color of the preview of what is being shared        | `#49454e` |
-| `dialog`                          | The part assigned to the dialog                         | -         |
-| `backdrop`                        | The part assigned to the backdrop                       | -         |
-| `title`                           | The part assigned to the title                          | -         |
-| `social-button`                   | The part assigned to each social button                 | -         |
-| `social-icon`                     | The part assigned to each social icon                   | -         |
-| `social-label`                    | The part assigned to each social label                  | -         |
+
+| Part            | Description                             |
+| --------------- | --------------------------------------- |
+| `dialog`        | The part assigned to the dialog         |
+| `backdrop`      | The part assigned to the backdrop       |
+| `title`         | The part assigned to the title          |
+| `social-button` | The part assigned to each social button |
+| `social-icon`   | The part assigned to each social icon   |
+| `social-label`  | The part assigned to each social label  |
 
 _Note: for obvious reasons, these custom properties and shadow parts are not available when using the native share menu._
