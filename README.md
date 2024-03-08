@@ -47,20 +47,20 @@ bun i share-menu
 
 ## Without npm/yarn/bun
 
-If you just want to directly include the script without installing it as a dependency, use the `unpkg` CDN:
+If you just want to directly include the script without installing it as a dependency, use the `jsDelivr` ESM CDN (`esm.run`):
 
 ```html
 <!-- Main component -->
-<script type="module" src="https://unpkg.com/share-menu@5.0.1?module"></script>
+<script type="module" src="https://esm.run/share-menu@5.0.1"></script>
 <!-- Single share target -->
 <script
   type="module"
-  src="https://unpkg.com/share-menu@5.0.1/targets/email.js?module"
+  src="https://esm.run/share-menu@5.0.1/targets/email.js"
 ></script>
 <!-- Share target preset -->
 <script
   type="module"
-  src="https://unpkg.com/share-menu@5.0.1/targets/presets/all.js?module"
+  src="https://esm.run/share-menu@5.0.1/targets/presets/all.js"
 ></script>
 ```
 
@@ -72,7 +72,7 @@ Try copy-pasting this code on your browser's console in any website:
 var a = document.createElement('script');
 a.type = 'module';
 a.textContent =
-  'import"https://unpkg.com/share-menu@5.0.1?module";import"https://unpkg.com/share-menu@5.0.1/targets/presets/all.js?module";var b=document.createElement("share-menu"),c=document.createElement("share-target-preset-all");b.appendChild(c),document.body.appendChild(b),b.share();';
+  'import"https://esm.run/share-menu@5.0.1";import"https://esm.run/share-menu@5.0.1/targets/presets/all.js";var b=document.createElement("share-menu"),c=document.createElement("share-target-preset-all");b.appendChild(c),document.body.appendChild(b),b.share();';
 document.head.appendChild(a);
 ```
 

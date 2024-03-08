@@ -7,7 +7,7 @@
     <title>share-menu demo</title>
     <meta name="description" content="share-menu demo description">
 
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.8.0/webcomponents-loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.8.0/webcomponents-loader.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans&family=Google+Sans+Mono&family=Material+Symbols+Outlined&display=swap">
 
@@ -101,20 +101,36 @@
         }
     </style>
 
-    <script defer src="https://unpkg.com/prismjs@1.29.0"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "lit": "https://cdn.jsdelivr.net/npm/lit@3.1.2/index.js",
+          "lit/": "https://cdn.jsdelivr.net/npm/lit@3.1.2/",
+          "@material/web/": "https://cdn.jsdelivr.net/npm/@material/web/",
+          "@lit/localize": "https://cdn.jsdelivr.net/npm/@lit/localize/lit-localize.js",
+          "@lit/reactive-element": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@1/reactive-element.js",
+          "@lit/reactive-element/": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@1/",
+          "lit-element/lit-element.js": "https://cdn.jsdelivr.net/npm/lit-element@3/lit-element.js",
+          "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@3.1.2/lit-html.js",
+          "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3.1.2/",
+          "tslib": "https://cdn.jsdelivr.net/npm/tslib@2.6.2/tslib.es6.mjs"
+        }
+      }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0"></script>
     <script type="module">
-      import 'https://unpkg.com/@material/web@1.0.0-pre.14/textfield/outlined-text-field.js?module';
-      import 'https://unpkg.com/@material/web@1.0.0-pre.14/switch/switch.js?module';
-      import 'https://unpkg.com/@material/web@1.0.0-pre.14/button/filled-button.js?module';
-      import 'https://unpkg.com/@material/web@1.0.0-pre.14/icon/icon.js?module';
+      import '@material/web/textfield/outlined-text-field.js';
+      import '@material/web/switch/switch.js';
+      import '@material/web/button/filled-button.js';
+      import '@material/web/icon/icon.js';
       import '../share-menu.js';
       import '../targets/presets/all.js';
 
-      import { LitElement, css, html } from 'https://unpkg.com/lit@2.8.0?module';
+      import { LitElement, css, html } from 'lit';
 
       const mql = window.matchMedia('(prefers-color-scheme: dark)');
       const getPrismStyles = async dark => {
-        const res = await fetch(`https://unpkg.com/prism-themes@1.9.0/themes/prism-coldark-${mql.matches ? 'dark' : 'cold'}.min.css`);
+        const res = await fetch(`https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/prism-coldark-${mql.matches ? 'dark' : 'cold'}.min.css`);
         return res.text();
       };
 
@@ -235,13 +251,31 @@
               <share-target-preset-all></share-target-preset-all>
             </share-menu>
 
+            <script type="importmap">
+              {
+                "imports": {
+                  "lit": "https://cdn.jsdelivr.net/npm/lit@3.1.2/index.js",
+                  "lit/": "https://cdn.jsdelivr.net/npm/lit@3.1.2/",
+                  "@material/web/": "https://cdn.jsdelivr.net/npm/@material/web/",
+                  "@lit/localize": "https://cdn.jsdelivr.net/npm/@lit/localize/lit-localize.js",
+                  "@lit/reactive-element": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@1/reactive-element.js",
+                  "@lit/reactive-element/": "https://cdn.jsdelivr.net/npm/@lit/reactive-element@1/",
+                  "lit-element/lit-element.js": "https://cdn.jsdelivr.net/npm/lit-element@3/lit-element.js",
+                  "lit-html": "https://cdn.jsdelivr.net/npm/lit-html@3.1.2/lit-html.js",
+                  "lit-html/": "https://cdn.jsdelivr.net/npm/lit-html@3.1.2/",
+                  "tslib": "https://cdn.jsdelivr.net/npm/tslib@2.6.2/tslib.es6.mjs",
+                  "share-menu": "https://cdn.jsdelivr.net/npm/share-menu@5.0.1/share-menu.js",
+                  "share-menu/" : "https://cdn.jsdelivr.net/npm/share-menu@5.0.1/",
+                }
+              }
+            </script>
             <script type="module">
-              import 'https://unpkg.com/@material/web@1.0.0-pre.14/textfield/outlined-text-field.js?module';
-              import 'https://unpkg.com/@material/web@1.0.0-pre.14/switch/switch.js?module';
-              import 'https://unpkg.com/@material/web@1.0.0-pre.14/button/filled-button.js?module';
-              import 'https://unpkg.com/@material/web@1.0.0-pre.14/icon/icon.js?module';
-              import 'https://unpkg.com/share-menu@5.0.1/share-menu.js?module';
-              import 'https://unpkg.com/share-menu@5.0.1/targets/presets/all.js?module';
+              import '@material/web/textfield/outlined-text-field.js';
+              import '@material/web/switch/switch.js';
+              import '@material/web/button/filled-button.js';
+              import '@material/web/icon/icon.js';
+              import 'share-menu';
+              import 'share-menu/targets/presets/all.js';
             <\/script>
           `.replace(/ {12}/g, '');
 
