@@ -287,6 +287,12 @@ describe('share menu targets', async () => {
     });
   });
 
+  describe('bluesky', () => {
+    it('opens a window with Bluesky share screen', async () => {
+      await openTargetAndCheckWindow('bluesky', 'bsky.app');
+    });
+  });
+
   describe('qzone', () => {
     it('opens a window with Qzone share screen', async () => {
       await openTargetAndCheckWindow('qzone');

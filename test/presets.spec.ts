@@ -28,6 +28,7 @@ import { DiasporaShareTarget } from '../src/targets/diaspora.js';
 import { XINGShareTarget } from '../src/targets/xing.js';
 import { SkypeShareTarget } from '../src/targets/skype.js';
 import { LINEShareTarget } from '../src/targets/line.js';
+import { BlueskyShareTarget } from '../src/targets/bluesky.js';
 import { SubstackShareTarget } from '../src/targets/substack.js';
 import { KakaoTalkShareTarget } from '../src/targets/kakaotalk.js';
 import { MixShareTarget } from '../src/targets/mix.js';
@@ -73,6 +74,7 @@ describe('share menu presets', async () => {
       XINGShareTarget,
       SkypeShareTarget,
       LINEShareTarget,
+      BlueskyShareTarget,
       SubstackShareTarget,
       KakaoTalkShareTarget,
       MixShareTarget,

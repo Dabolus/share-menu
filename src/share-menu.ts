@@ -47,6 +47,7 @@ const isShareTarget = (node: Node): node is ShareTarget => {
  *
  * - Copy to clipboard
  * - Blogger
+ * - Bluesky
  * - Diaspora - _URL and title only_
  * - Douban
  * - Email

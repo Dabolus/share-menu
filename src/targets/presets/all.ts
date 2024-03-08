@@ -25,6 +25,7 @@ import '../diaspora.js';
 import '../xing.js';
 import '../skype.js';
 import '../line.js';
+import '../bluesky.js';
 import '../substack.js';
 import '../kakaotalk.js';
 import '../mix.js';
@@ -94,6 +95,7 @@ export class AllShareTargetPreset extends HTMLElement {
       <share-target-xing></share-target-xing>
       <share-target-skype></share-target-skype>
       <share-target-line></share-target-line>
+      <share-target-bluesky></share-target-bluesky>
       <share-target-substack></share-target-substack>
       <share-target-kakaotalk></share-target-kakaotalk>
       <share-target-mix></share-target-mix>
